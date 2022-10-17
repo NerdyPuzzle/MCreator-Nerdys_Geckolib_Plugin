@@ -1,0 +1,11 @@
+{
+  "dependencies_provided": [
+	{
+      "name": "entity",
+      "type": "entity"
+    }
+  ],
+  "cancelable": "false",
+  "has_result": "false",
+  "side": "both"
+}
