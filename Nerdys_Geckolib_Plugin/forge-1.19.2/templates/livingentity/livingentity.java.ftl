@@ -815,25 +815,7 @@ public class ${name}Entity extends ${extendsClass} <#if data.ranged && !settings
 
         <#if settings.getMCreatorDependencies().contains("geckolib")>
 	private <E extends IAnimatable> PlayState movementPredicate(AnimationEvent<E> event) {
-	  event.getController().animationSpeed = 1.25;
-	  event.getController().transitionLengthTicks = 5;
-	  double d1 = this.getX() - this.xOld;
-	  double d0 = this.getZ() - this.zOld;
-	  float velocity = (float) Math.sqrt(d1 * d1 + d0 * d0);
-        if (getAttackAnim(event.getPartialTick()) > 0f && !this.swinging) {
-            this.swinging = true;
-            this.lastSwing = level.getGameTime();
-        }
-        if (this.swinging && this.lastSwing + 15L <= level.getGameTime()) {
-            this.swinging = false;
-        }
-        if (this.swinging) {
-            event.getController().transitionLengthTicks = 0;
-            event.getController().animationSpeed = 0.8;
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("attack"));
-            return PlayState.CONTINUE;
-        }
-		if (event.isMoving() && !this.swinging && !this.isSprinting() && !this.isShiftKeyDown()) {
+		if (event.isMoving()) {
 			event.getController().setAnimation(new AnimationBuilder().addAnimation("walk", true));
 			return PlayState.CONTINUE;
 		}
@@ -845,33 +827,51 @@ public class ${name}Entity extends ${extendsClass} <#if data.ranged && !settings
 			event.getController().setAnimation(new AnimationBuilder().addAnimation("swim", true));
 			return PlayState.CONTINUE;
 		}
-		if (this.isSprinting()) {
-			event.getController().setAnimation(new AnimationBuilder().addAnimation("sprint", false));
-			return PlayState.CONTINUE;
-		}
 		if (this.isShiftKeyDown()) {
 			event.getController().setAnimation(new AnimationBuilder().addAnimation("sneak", false));
 			return PlayState.CONTINUE;
 		}
-        if (!this.swinging && !this.isSprinting() && !this.isShiftKeyDown()){
-		event.getController().setAnimation(new AnimationBuilder().addAnimation("idle", true));
+		    else if (this.isSprinting()) {
+			event.getController().setAnimation(new AnimationBuilder().addAnimation("sprint", false));
+			return PlayState.CONTINUE;
+		}
+			event.getController().setAnimation(new AnimationBuilder().addAnimation("idle", true));
 		return PlayState.CONTINUE;
 	}
-return PlayState.CONTINUE;
+
+   private <E extends IAnimatable> PlayState attackingPredicate(AnimationEvent<E> event) {
+		double d1 = this.getX() - this.xOld;
+		double d0 = this.getZ() - this.zOld;
+		float velocity = (float) Math.sqrt(d1 * d1 + d0 * d0);
+		if (getAttackAnim(event.getPartialTick()) > 0f && !this.swinging) {
+			this.swinging = true;
+			this.lastSwing = level.getGameTime();
+		}
+		if (this.swinging && this.lastSwing + 15L <= level.getGameTime()) {
+			this.swinging = false;
+		}
+		if (this.swinging && event.getController().getAnimationState().equals(software.bernie.geckolib3.core.AnimationState.Stopped)) {
+			event.getController().markNeedsReload();
+			event.getController().setAnimation(new AnimationBuilder().addAnimation("attack"));
+			return PlayState.CONTINUE;
+		}
+	 return PlayState.CONTINUE;
+   }
+
+	@Override
+	protected void tickDeath() {
+		++this.deathTime;
+		if (this.deathTime == 20) {
+			this.remove(BroEntity.RemovalReason.KILLED);
+		}
 	}
 
-       @Override
-        protected void tickDeath() {
-         ++this.deathTime;
-        if (this.deathTime == 20) {
-         this.remove(${name}Entity.RemovalReason.KILLED);
-        }
-      }
+	@Override
+	public void registerControllers(AnimationData data) {
+		data.addAnimationController(new AnimationController<>(this, "movement", 5, this::movementPredicate));
+		data.addAnimationController(new AnimationController<>(this, "attacking", 5, this::attackingPredicate));
+	}
 
-      @Override
-       public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController<>(this, "movement", 4, this::movementPredicate));
-      }
 
       @Override
        public AnimationFactory getFactory() {
