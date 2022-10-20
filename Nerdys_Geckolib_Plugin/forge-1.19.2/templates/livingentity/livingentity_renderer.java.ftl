@@ -41,8 +41,19 @@ public class ${name}Renderer extends GeoEntityRenderer<${name}Entity> {
   public ${name}Renderer(EntityRendererProvider.Context renderManager) {
      super(renderManager, new ${name}ModelProcedure());
      ${shadowRadius}
+     <#if data.mobModelGlowTexture?has_content>
+     this.addLayer(new ${name}LayerProcedure(this));
+     </#if>
   }
 
+<#if data.mobModelGlowTexture?has_content>
+@Override
+   public RenderType getRenderType(${name}Entity animatable, float partialTicks, PoseStack stack,
+		MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn,
+		ResourceLocation textureLocation) {
+		return RenderType.entityTranslucent(getTextureLocation(animatable));
+	}
+<#else>
   @Override
   public RenderType getRenderType(${name}Entity animatable, float partialTicks, PoseStack stack,
                           MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn,
@@ -50,6 +61,7 @@ public class ${name}Renderer extends GeoEntityRenderer<${name}Entity> {
      stack.scale(1.0F, 1.0F, 1.0F);
      return super.getRenderType(animatable, partialTicks, stack, renderTypeBuffer, vertexBuilder, packedLightIn, textureLocation);
   }
+</#if>
 }
 </#if>
 
