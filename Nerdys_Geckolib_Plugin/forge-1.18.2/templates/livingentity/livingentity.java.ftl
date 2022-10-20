@@ -853,7 +853,7 @@ public class ${name}Entity extends ${extendsClass} <#if data.ranged && !settings
             event.getController().setAnimation(new AnimationBuilder().addAnimation("attack"));
             return PlayState.CONTINUE;
         }
-		if (event.isMoving() && !this.swinging) {
+		if (event.isMoving() && !this.swinging && !this.isSprinting() && !this.isShiftKeyDown()) {
 			event.getController().setAnimation(new AnimationBuilder().addAnimation("walk", true));
 			return PlayState.CONTINUE;
 		}
@@ -873,7 +873,7 @@ public class ${name}Entity extends ${extendsClass} <#if data.ranged && !settings
 			event.getController().setAnimation(new AnimationBuilder().addAnimation("sneak", false));
 			return PlayState.CONTINUE;
 		}
-        if (!this.swinging){
+        if (!this.swinging && !this.isSprinting() && !this.isShiftKeyDown()){
 		event.getController().setAnimation(new AnimationBuilder().addAnimation("idle", true));
 		return PlayState.CONTINUE;
 	}
