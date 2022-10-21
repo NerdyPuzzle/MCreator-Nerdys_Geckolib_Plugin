@@ -882,7 +882,7 @@ public class ${name}Entity extends ${extendsClass} <#if data.ranged && !settings
 	protected void tickDeath() {
 		++this.deathTime;
 		if (this.deathTime == 20) {
-			this.remove(BroEntity.RemovalReason.KILLED);
+			this.remove(${name}Entity.RemovalReason.KILLED);
 		}
 	}
 
