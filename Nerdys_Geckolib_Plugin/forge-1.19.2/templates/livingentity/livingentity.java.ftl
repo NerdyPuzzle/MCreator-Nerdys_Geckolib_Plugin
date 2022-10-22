@@ -64,6 +64,7 @@ public class ${name}Entity extends ${extendsClass} <#if data.ranged && !settings
       private AnimationFactory factory = new AnimationFactory(this);
 	private boolean swinging;
 	private long lastSwing;
+        private String animationprocedure;
    </#if>
 	<#if data.isBoss>
 	private final ServerBossEvent bossInfo = new ServerBossEvent(this.getDisplayName(),
@@ -815,6 +816,8 @@ public class ${name}Entity extends ${extendsClass} <#if data.ranged && !settings
 
         <#if settings.getMCreatorDependencies().contains("geckolib")>
 	private <E extends IAnimatable> PlayState movementPredicate(AnimationEvent<E> event) {
+              this.animationprocedure = this.getPersistentData().getString("animation");
+	      if (this.animationprocedure == "empty" || this.animationprocedure.isEmpty()) {
 		if (event.isMoving()) {
 			event.getController().setAnimation(new AnimationBuilder().addAnimation("walk", true));
 			return PlayState.CONTINUE;
@@ -828,15 +831,17 @@ public class ${name}Entity extends ${extendsClass} <#if data.ranged && !settings
 			return PlayState.CONTINUE;
 		}
 		if (this.isShiftKeyDown()) {
-			event.getController().setAnimation(new AnimationBuilder().addAnimation("sneak", false));
+			event.getController().setAnimation(new AnimationBuilder().addAnimation("sneak", true));
 			return PlayState.CONTINUE;
 		}
 		    else if (this.isSprinting()) {
-			event.getController().setAnimation(new AnimationBuilder().addAnimation("sprint", false));
+			event.getController().setAnimation(new AnimationBuilder().addAnimation("sprint", true));
 			return PlayState.CONTINUE;
 		}
 			event.getController().setAnimation(new AnimationBuilder().addAnimation("idle", true));
 		return PlayState.CONTINUE;
+	}
+        return PlayState.STOP;
 	}
 
    private <E extends IAnimatable> PlayState attackingPredicate(AnimationEvent<E> event) {
@@ -858,6 +863,22 @@ public class ${name}Entity extends ${extendsClass} <#if data.ranged && !settings
 	 return PlayState.CONTINUE;
    }
 
+   private <E extends IAnimatable> PlayState procedurePredicate(AnimationEvent<E> event) {
+		this.animationprocedure = this.getPersistentData().getString("animation");
+	    if (!this.animationprocedure.equals("empty") && !this.animationprocedure.isEmpty() && event.getController().getAnimationState().equals(software.bernie.geckolib3.core.AnimationState.Stopped)) {
+			event.getController().setAnimation(new AnimationBuilder().addAnimation(this.animationprocedure));
+			this.getPersistentData().putString("animation", "empty");
+			this.animationprocedure = "empty";
+            return PlayState.CONTINUE;
+        }
+        else if (event.getController().getAnimationState().equals(software.bernie.geckolib3.core.AnimationState.Stopped)) {
+        	this.getPersistentData().putString("animation", "empty");
+			this.animationprocedure = "empty";
+			event.getController().markNeedsReload();
+        }
+        return PlayState.CONTINUE;
+	}
+
 	@Override
 	protected void tickDeath() {
 		++this.deathTime;
@@ -870,6 +891,7 @@ public class ${name}Entity extends ${extendsClass} <#if data.ranged && !settings
 	public void registerControllers(AnimationData data) {
 		data.addAnimationController(new AnimationController<>(this, "movement", 4, this::movementPredicate));
 		data.addAnimationController(new AnimationController<>(this, "attacking", 4, this::attackingPredicate));
+                data.addAnimationController(new AnimationController<>(this, "procedure", 4, this::procedurePredicate));
 	}
 
 
