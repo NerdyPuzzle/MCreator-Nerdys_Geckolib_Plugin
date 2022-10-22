@@ -888,8 +888,8 @@ public class ${name}Entity extends ${extendsClass} <#if data.ranged && !settings
 
 	@Override
 	public void registerControllers(AnimationData data) {
-		data.addAnimationController(new AnimationController<>(this, "movement", 5, this::movementPredicate));
-		data.addAnimationController(new AnimationController<>(this, "attacking", 5, this::attackingPredicate));
+		data.addAnimationController(new AnimationController<>(this, "movement", 4, this::movementPredicate));
+		data.addAnimationController(new AnimationController<>(this, "attacking", 4, this::attackingPredicate));
 	}
 
 
