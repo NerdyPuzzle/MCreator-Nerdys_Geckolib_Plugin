@@ -51,6 +51,7 @@ public class ${name}Renderer extends GeoEntityRenderer<${name}Entity> {
    public RenderType getRenderType(${name}Entity animatable, float partialTicks, PoseStack stack,
 		MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn,
 		ResourceLocation textureLocation) {
+                stack.scale(1.0F, 1.0F, 1.0F);
 		return RenderType.entityTranslucent(getTextureLocation(animatable));
 	}
 <#else>
@@ -62,8 +63,15 @@ public class ${name}Renderer extends GeoEntityRenderer<${name}Entity> {
      return super.getRenderType(animatable, partialTicks, stack, renderTypeBuffer, vertexBuilder, packedLightIn, textureLocation);
   }
 </#if>
+
+<#if data.mobModelName == "Chicken">
+ @Override
+	protected float getDeathMaxRotation(${name}Entity entityLivingBaseIn) {
+		return 0.0F;
+	} 
+</#if>
 }
-</#if> 
+</#if>
 
 <#if !settings.getMCreatorDependencies().contains("geckolib")>
 <#assign humanoid = false>
