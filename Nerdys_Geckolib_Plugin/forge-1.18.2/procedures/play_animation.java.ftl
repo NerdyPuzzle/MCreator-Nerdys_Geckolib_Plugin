@@ -1,0 +1,1 @@
+${input$entity}.getPersistentData().putString("animation", ${input$animation});
