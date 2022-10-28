@@ -818,7 +818,7 @@ public class ${name}Entity extends ${extendsClass} <#if data.ranged && !settings
 	private <E extends IAnimatable> PlayState movementPredicate(AnimationEvent<E> event) {
               this.animationprocedure = this.getPersistentData().getString("animation");
 	      if (this.animationprocedure == "empty" || this.animationprocedure.isEmpty()) {
-		if (event.isMoving()) {
+		if (event.isMoving() || !(event.getLimbSwingAmount() > -0.15F && event.getLimbSwingAmount() < 0.15F)) {
 			event.getController().setAnimation(new AnimationBuilder().addAnimation("walk", true));
 			return PlayState.CONTINUE;
 		}
