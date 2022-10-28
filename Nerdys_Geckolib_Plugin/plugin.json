@@ -1,10 +1,10 @@
 {
   "id": "geckolib_plugin",
   "minversion": 202200200000,
-  "weight": 1000,
+  "weight": 40,
   "info": {
     "name": "GeckoLib Plugin",
-    "version": "2.0",
+    "version": "2.2",
     "description": "Adds GeckoLib support for 1.18.2 and 1.19.2",
     "author": "NerdyPuzzle",
     "pluginPageID": 91484
