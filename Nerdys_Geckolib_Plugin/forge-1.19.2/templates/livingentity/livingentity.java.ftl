@@ -64,7 +64,7 @@ public class ${name}Entity extends ${extendsClass} <#if data.ranged && !settings
       private AnimationFactory factory = new AnimationFactory(this);
 	private boolean swinging;
 	private long lastSwing;
-        private String animationprocedure;
+        public String animationprocedure = "empty";
    </#if>
 	<#if data.isBoss>
 	private final ServerBossEvent bossInfo = new ServerBossEvent(this.getDisplayName(),
@@ -816,8 +816,7 @@ public class ${name}Entity extends ${extendsClass} <#if data.ranged && !settings
 
         <#if settings.getMCreatorDependencies().contains("geckolib")>
 	private <E extends IAnimatable> PlayState movementPredicate(AnimationEvent<E> event) {
-              this.animationprocedure = this.getPersistentData().getString("animation");
-	      if (this.animationprocedure == "empty" || this.animationprocedure.isEmpty()) {
+	      if (this.animationprocedure == "empty") {
 		if (event.isMoving() || !(event.getLimbSwingAmount() > -0.15F && event.getLimbSwingAmount() < 0.15F)) {
 			event.getController().setAnimation(new AnimationBuilder().addAnimation("walk", true));
 			return PlayState.CONTINUE;
@@ -863,20 +862,15 @@ public class ${name}Entity extends ${extendsClass} <#if data.ranged && !settings
 	 return PlayState.CONTINUE;
    }
 
-   private <E extends IAnimatable> PlayState procedurePredicate(AnimationEvent<E> event) {
-		this.animationprocedure = this.getPersistentData().getString("animation");
-	    if (!this.animationprocedure.equals("empty") && !this.animationprocedure.isEmpty() && event.getController().getAnimationState().equals(software.bernie.geckolib3.core.AnimationState.Stopped)) {
-			event.getController().setAnimation(new AnimationBuilder().addAnimation(this.animationprocedure));
-			this.getPersistentData().putString("animation", "empty");
-			this.animationprocedure = "empty";
-            return PlayState.CONTINUE;
-        }
-        else if (event.getController().getAnimationState().equals(software.bernie.geckolib3.core.AnimationState.Stopped)) {
-        	this.getPersistentData().putString("animation", "empty");
+	private <E extends IAnimatable> PlayState procedurePredicate(AnimationEvent<E> event) {
+		if (!(this.animationprocedure == "empty") && event.getController().getAnimationState().equals(software.bernie.geckolib3.core.AnimationState.Stopped)) {
+			event.getController().setAnimation(new AnimationBuilder().addAnimation(this.animationprocedure, false));
+	        if (event.getController().getAnimationState().equals(software.bernie.geckolib3.core.AnimationState.Stopped)) {
 			this.animationprocedure = "empty";
 			event.getController().markNeedsReload();
-        }
-        return PlayState.CONTINUE;
+		}
+		}  
+		return PlayState.CONTINUE;
 	}
 
 	@Override
