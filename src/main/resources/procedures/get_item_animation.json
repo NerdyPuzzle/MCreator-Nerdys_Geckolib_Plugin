@@ -1,0 +1,28 @@
+{
+ "args0": [
+    {
+     "type": "field_input",
+     "name": "itemname"
+    },
+    {
+     "type": "input_value",
+     "name": "item",
+     "check": "MCItem"
+    }
+],
+   "inputsInline": true,
+   "output": "String",
+   "colour": 364,
+   "mcreator": {
+     "toolbox_id": "geckolib",
+     "toolbox_init": [
+       "<value name=\"item\"><block type=\"itemstack_to_mcitem\"><field name=\"value\"></field></block></value>"
+],
+  "inputs": [
+    "item"
+   ],
+  "fields": [
+    "itemname"
+   ]
+  }
+}

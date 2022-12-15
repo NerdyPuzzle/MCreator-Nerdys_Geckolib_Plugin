@@ -1,0 +1,39 @@
+apply plugin: 'java'
+
+if (project.hasProperty("mcreator_path")) {
+    project.ext.MCREATOR_PATH = project.getProperty("mcreator_path")
+} else {
+    throw new GradleException('Missing mcreator_path property in gradle.properties')
+}
+
+// workaround for IDEA-265203
+System.setProperty("user.dir", projectDir.toString())
+
+group = 'net.nerdypuzzle.geckolib'
+version = '1.0'
+
+sourceCompatibility = 17
+targetCompatibility = 17
+
+dependencies {
+    implementation fileTree(dir: MCREATOR_PATH + '/lib', include: ['*.jar'])
+}
+
+tasks.jar {
+    archiveFileName.set("Nerdys_Geckolib_Plugin.zip")
+}
+
+task runMCreatorWithPlugin(type: JavaExec) {
+    dependsOn jar
+
+    environment("MCREATOR_PLUGINS_FOLDER", file("./build/libs"))
+
+    jvmArgs '--add-opens', 'java.base/java.lang=ALL-UNNAMED'
+
+    classpath = sourceSets.main.runtimeClasspath.filter(e -> {
+        return !e.getAbsolutePath().startsWith(file("./").getAbsolutePath())
+    })
+    main = 'net.mcreator.Launcher'
+
+    workingDir = MCREATOR_PATH
+}
