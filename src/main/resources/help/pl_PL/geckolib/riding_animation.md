@@ -1,0 +1,1 @@
+Ta animacja zastąpi animację chodzenia, jeśli istota jest ujeżdżana.

@@ -15,6 +15,7 @@ import net.mcreator.minecraft.ElementUtil;
 import net.mcreator.ui.MCreator;
 import net.mcreator.ui.component.JColor;
 import net.mcreator.ui.component.JEmptyBox;
+import net.mcreator.ui.component.SearchableComboBox;
 import net.mcreator.ui.component.util.ComboBoxFullWidthPopup;
 import net.mcreator.ui.component.util.ComboBoxUtil;
 import net.mcreator.ui.component.util.ComponentUtils;
@@ -34,6 +35,8 @@ import net.mcreator.ui.procedure.ProcedureSelector;
 import net.mcreator.ui.validation.AggregatedValidationResult;
 import net.mcreator.ui.validation.IValidable;
 import net.mcreator.ui.validation.ValidationGroup;
+import net.mcreator.ui.validation.Validator;
+import net.mcreator.ui.validation.component.VComboBox;
 import net.mcreator.ui.validation.component.VTextField;
 import net.mcreator.ui.validation.validators.*;
 import net.mcreator.ui.workspace.resources.TextureType;
@@ -42,10 +45,14 @@ import net.mcreator.util.StringUtils;
 import net.mcreator.workspace.elements.ModElement;
 import net.mcreator.workspace.elements.VariableTypeLoader;
 import net.nerdypuzzle.geckolib.element.types.AnimatedBlock;
+import net.nerdypuzzle.geckolib.element.types.GeckolibElement;
+import net.nerdypuzzle.geckolib.parts.GeomodelRenderer;
+import net.nerdypuzzle.geckolib.parts.PluginModelActions;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
@@ -53,7 +60,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> {
+public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements GeckolibElement {
     private final DataListComboBox material;
     private TextureHolder texture;
     private TextureHolder textureTop;
@@ -152,7 +159,6 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> {
     private final JSpinner breakHarvestLevel;
     private final JCheckBox requiresCorrectTool;
     private final JCheckBox spawnParticles;
-    private final VTextField normal;
     private final JComboBox<String> transparencyType;
     private final JCheckBox hasInventory;
     private final JCheckBox openGUIOnRightClick;
@@ -170,9 +176,13 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> {
     private final JSpinner flammability;
     private final JSpinner fireSpreadSpeed;
     private final JCheckBox useLootTableForDrops;
+    private final VComboBox<String> geoModel;
+    private final VComboBox<String> displaySettings;
 
     public AnimatedBlockGUI(MCreator mcreator, ModElement modElement, boolean editingMode) {
         super(mcreator, modElement, editingMode);
+        this.geoModel = new SearchableComboBox();
+        this.displaySettings = new SearchableComboBox();
         this.material = new DataListComboBox(this.mcreator, ElementUtil.loadMaterials());
         this.disableOffset = L10N.checkbox("elementgui.common.enable", new Object[0]);
         this.hardness = new JSpinner(new SpinnerNumberModel(1.0, -1.0, 64000.0, 0.05));
@@ -240,8 +250,6 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> {
         this.breakHarvestLevel = new JSpinner(new SpinnerNumberModel(1, -1, 100, 1));
         this.requiresCorrectTool = L10N.checkbox("elementgui.common.enable", new Object[0]);
         this.spawnParticles = L10N.checkbox("elementgui.block.spawn_particles", new Object[0]);
-
-        this.normal = new VTextField(19);
         this.transparencyType = new JComboBox(new String[]{"SOLID", "CUTOUT", "CUTOUT_MIPPED", "TRANSLUCENT"});
         this.hasInventory = L10N.checkbox("elementgui.block.has_inventory", new Object[0]);
         this.openGUIOnRightClick = L10N.checkbox("elementgui.common.enable", new Object[0]);
@@ -431,11 +439,18 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> {
         transparencySettings.add(HelpUtils.wrapWithHelpButton(this.withEntry("block/fluid_overlay"), L10N.label("elementgui.block.fluid_overlay", new Object[0])));
         transparencySettings.add(this.displayFluidOverlay);
         ComponentUtils.deriveFont(this.rotationMode, 16.0F);
-        ComponentUtils.deriveFont(this.normal, 25F);
-        JPanel rent = new JPanel(new GridLayout(4, 2, 0, 2));
+        JPanel rent = new JPanel(new GridLayout(5, 2, 0, 2));
         rent.setOpaque(false);
         rent.add(HelpUtils.wrapWithHelpButton(this.withEntry("geckolib/name"), L10N.label("elementgui.animatedblock.model", new Object[0])));
-        rent.add(this.normal);
+        this.geoModel.setPrototypeDisplayValue("XXXXXXXXXXXXXXXXXXXXXXXXXX");
+        this.geoModel.setRenderer(new GeomodelRenderer());
+        ComponentUtils.deriveFont(this.geoModel, 16.0F);
+        rent.add(this.geoModel);
+        rent.add(HelpUtils.wrapWithHelpButton(this.withEntry("geckolib/display_settings"), L10N.label("elementgui.aniblockitems.display_settings", new Object[0])));
+        this.displaySettings.setPrototypeDisplayValue("XXXXXXXXXXXXXXXXXXXXXXXXXX");
+        this.displaySettings.setRenderer(new GeomodelRenderer());
+        ComponentUtils.deriveFont(this.displaySettings, 16.0F);
+        rent.add(this.displaySettings);
         rent.add(HelpUtils.wrapWithHelpButton(this.withEntry("block/rotation_mode"), L10N.label("elementgui.block.rotation_mode", new Object[0])));
         rent.add(this.rotationMode);
         rent.add(HelpUtils.wrapWithHelpButton(this.withEntry("block/enable_pitch"), L10N.label("elementgui.block.enable_pitch", new Object[0])));
@@ -807,7 +822,8 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> {
         pane9.add("Center", PanelUtils.totalCenterInPanel(PanelUtils.centerInPanel(enderpanel2)));
         this.texture.setValidator(new TileHolderValidator(this.texture));
         this.page1group.addValidationElement(this.texture);
-        this.page1group.addValidationElement(this.normal);
+        this.page1group.addValidationElement(this.geoModel);
+        this.page1group.addValidationElement(this.displaySettings);
         this.name.setValidator(new TextFieldValidator(this.name, L10N.t("elementgui.block.error_block_must_have_name", new Object[0])));
         this.name.enableRealtimeValidation();
         this.page3group.addValidationElement(this.name);
@@ -836,8 +852,19 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> {
 
         this.updateSoundType();
 
-        this.normal.setValidator((new RegistryNameValidator(this.normal, L10N.t("elementgui.animatedblock.modelname", new Object[0]))).setValidChars(Arrays.asList('_', '/')));
-        this.normal.enableRealtimeValidation();
+        geoModel.setValidator(() -> {
+            if (geoModel.getSelectedItem() == null || geoModel.getSelectedItem().equals(""))
+                return new Validator.ValidationResult(Validator.ValidationResultType.ERROR,
+                        L10N.t("elementgui.animatedentity.modelname"));
+            return Validator.ValidationResult.PASSED;
+        });
+
+        displaySettings.setValidator(() -> {
+            if (displaySettings.getSelectedItem() == null || displaySettings.getSelectedItem().equals(""))
+                return new Validator.ValidationResult(Validator.ValidationResultType.ERROR,
+                        L10N.t("elementgui.aniblockitems.display_settings_missing"));
+            return Validator.ValidationResult.PASSED;
+        });
 
         this.textureTop.setVisible(false);
         this.textureLeft.setVisible(false);
@@ -934,6 +961,14 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> {
         ComboBoxUtil.updateComboBoxContents(this.colorOnMap, Arrays.asList(ElementUtil.getDataListAsStringArray("mapcolors")), "DEFAULT");
         ComboBoxUtil.updateComboBoxContents(this.aiPathNodeType, Arrays.asList(ElementUtil.getDataListAsStringArray("pathnodetypes")), "DEFAULT");
         ComboBoxUtil.updateComboBoxContents(this.particleToSpawn, ElementUtil.loadAllParticles(this.mcreator.getWorkspace()));
+
+        ComboBoxUtil.updateComboBoxContents(this.geoModel, ListUtils.merge(Collections.singleton(""), (Collection) PluginModelActions.getGeomodels(this.mcreator).stream().map(File::getName).filter((s) -> {
+            return s.endsWith(".geo.json");
+        }).collect(Collectors.toList())), "");
+
+        ComboBoxUtil.updateComboBoxContents(this.displaySettings, ListUtils.merge(Collections.singleton(""), (Collection) PluginModelActions.getDisplaysettings(this.mcreator).stream().map(File::getName).filter((s) -> {
+            return s.endsWith(".json");
+        }).collect(Collectors.toList())), "");
     }
 
     protected AggregatedValidationResult validatePage(int page) {
@@ -1064,7 +1099,8 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> {
         this.slipperiness.setValue(block.slipperiness);
         this.jumpFactor.setValue(block.jumpFactor);
         this.speedFactor.setValue(block.speedFactor);
-        this.normal.setText(block.normal);
+        this.geoModel.setSelectedItem(block.normal);
+        this.displaySettings.setSelectedItem(block.displaySettings);
         this.disableOffset.setSelected(block.disableOffset);
         this.boundingBoxList.setBoundingBoxes(block.boundingBoxes);
         this.specialInfo.setText((String)block.specialInfo.stream().map((info) -> {
@@ -1210,7 +1246,8 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> {
         block.speedFactor = (Double)this.speedFactor.getValue();
         block.jumpFactor = (Double)this.jumpFactor.getValue();
         block.specialInfo = StringUtils.splitCommaSeparatedStringListWithEscapes(this.specialInfo.getText());
-        block.normal = this.normal.getText();
+        block.normal = (String)this.geoModel.getSelectedItem();
+        block.displaySettings = (String)this.displaySettings.getSelectedItem();
         if (this.blockBase.getSelectedIndex() != 0) {
             block.blockBase = (String)this.blockBase.getSelectedItem();
         }

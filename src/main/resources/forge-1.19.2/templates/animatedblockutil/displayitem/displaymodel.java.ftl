@@ -6,12 +6,12 @@ package ${package}.block.model;
 public class ${name}DisplayModel extends AnimatedGeoModel<${name}DisplayItem> {
 	@Override
 	public ResourceLocation getAnimationResource(${name}DisplayItem animatable) {
-		return new ResourceLocation("${modid}", "animations/${geomodel}.animation.json");
+		return new ResourceLocation("${modid}", "animations/${geomodel?replace(".geo.json", "")}.animation.json");
 	}
 
 	@Override
 	public ResourceLocation getModelResource(${name}DisplayItem animatable) {
-		return new ResourceLocation("${modid}", "geo/${geomodel}.geo.json");
+		return new ResourceLocation("${modid}", "geo/${geomodel}");
 	}
 
 	@Override

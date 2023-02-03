@@ -1,0 +1,1 @@
+Cuando este parámetro está habilitado, anulará la posición de la altura del ojo de la entidad del hitbox al valor especificado.

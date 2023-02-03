@@ -1,0 +1,2 @@
+Zaznaczenie tego parametru umożliwia określenie grupy modelu, do której zostanie zastosowana domyślna animacja ruchu głowy.
+Upewnij się, że wpisałeś dokładną nazwę grupy, w przeciwnym razie spowoduje to crashem gry podczas spawnowania jednostki.

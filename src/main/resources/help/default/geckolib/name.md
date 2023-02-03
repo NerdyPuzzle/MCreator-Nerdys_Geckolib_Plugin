@@ -1,1 +1,1 @@
-The name of the GeckoLib json files
+The name of the GeckoLib json files.

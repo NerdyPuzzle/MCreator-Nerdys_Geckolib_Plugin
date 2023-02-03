@@ -8,7 +8,7 @@
 }
 <#else>
 {
-    "parent": "${modid}:custom/${registryname}"
+    "parent": "${modid}:displaysettings/${data.displaySettings?replace(".json", "")}"
 }
 </#if>
 <#-- @formatter:on -->

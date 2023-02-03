@@ -1,0 +1,1 @@
+Este parámetro determina la cantidad de ticks que la entidad permanecerá muerta después de morir.

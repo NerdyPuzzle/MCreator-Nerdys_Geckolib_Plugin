@@ -1,0 +1,1 @@
+Esta animación se reproducirá si la entidad está siendo agresiva hacia otra entidad y reemplazará la animación de caminar.

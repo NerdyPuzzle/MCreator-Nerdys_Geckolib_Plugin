@@ -1,0 +1,2 @@
+Esta animación se reproducirá mientras la entidad está volando, y se detendrá una vez que la entidad esté de vuelta en el suelo.
+No debes usar esto si tu entidad sólo vuela, ya que esto evitará que la animación de caminar se reproduzca mientras está en el aire.

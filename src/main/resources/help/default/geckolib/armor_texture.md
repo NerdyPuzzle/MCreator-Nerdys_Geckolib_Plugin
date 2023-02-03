@@ -1,0 +1,1 @@
+The texture of the GeckoLib armor model.

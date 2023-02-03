@@ -1,12 +1,13 @@
 {
   "id": "geckolib_plugin",
-  "minversion": 202200200000,
-  "weight": 1012,
+  "minversion": 202300104717,
+  "maxversion": 202300104717,
+  "weight": 3001,
   "javaplugin": "net.nerdypuzzle.geckolib.Launcher",
   "info": {
     "name": "GeckoLib Plugin",
-    "version": "3.5",
-    "description": "Adds GeckoLib support for 1.16.5, 1.18.2 and 1.19.2",
+    "version": "4.4",
+    "description": "Adds GeckoLib support for 1.18.2, 1.19.2",
     "author": "NerdyPuzzle",
     "pluginPageID": 91484
   }

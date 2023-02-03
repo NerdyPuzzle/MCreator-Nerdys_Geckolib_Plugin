@@ -1,0 +1,1 @@
+This parameter controls the scale the entity's model will have if it is the child spawned using spawn eggs or by breeding two entities together.

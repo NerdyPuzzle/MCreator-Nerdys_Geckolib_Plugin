@@ -1,3 +1,3 @@
-if (${input$entity} instanceof ${field$name}Entity) {
-((${field$name}Entity) ${input$entity}).animationprocedure = "empty";
+if (${input$entity} instanceof ${(field$name)?replace("CUSTOM:", "")}Entity) {
+((${(field$name)?replace("CUSTOM:", "")}Entity) ${input$entity}).setAnimation("empty");
 }

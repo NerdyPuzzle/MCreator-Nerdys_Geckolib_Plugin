@@ -1,0 +1,2 @@
+Esta es la animación que se reproducirá mientras la entidad esté caminando, y ninguna otra animación esté activa.
+Si la entidad tiene una animación de vuelo, ésta sólo se reproducirá mientras la entidad esté caminando por el suelo.

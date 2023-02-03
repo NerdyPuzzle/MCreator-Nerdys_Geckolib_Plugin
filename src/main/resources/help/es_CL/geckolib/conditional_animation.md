@@ -1,0 +1,1 @@
+Mientras se devuelva un nombre de animación válido, reproducirá esa animación a la entidad.

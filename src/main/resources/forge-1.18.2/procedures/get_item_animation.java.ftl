@@ -1,3 +1,2 @@
-<#include "mcelements.ftl">
 <#include "mcitems.ftl">
-((${field$itemname}Item) ${mappedMCItemToItem(input$item)}).animationprocedure
+((${(field$itemname)?replace("CUSTOM:", "")}Item) ${mappedMCItemToItem(input$item)}).animationprocedure

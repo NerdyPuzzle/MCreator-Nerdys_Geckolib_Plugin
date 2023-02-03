@@ -3,9 +3,12 @@ package net.nerdypuzzle.geckolib.element.types;
 import net.mcreator.element.BaseType;
 import net.mcreator.element.GeneratableElement;
 import net.mcreator.element.parts.*;
+import net.mcreator.element.parts.procedure.NumberProcedure;
+import net.mcreator.element.parts.procedure.Procedure;
 import net.mcreator.element.types.interfaces.IBlock;
 import net.mcreator.element.types.interfaces.IBlockWithBoundingBox;
 import net.mcreator.element.types.interfaces.ITabContainedElement;
+import net.mcreator.minecraft.MCItem;
 import net.mcreator.minecraft.MinecraftImageGenerator;
 import net.mcreator.ui.workspace.resources.TextureType;
 import net.mcreator.util.image.ImageUtils;
@@ -134,6 +137,7 @@ public class AnimatedBlock extends GeneratableElement implements IBlock, ITabCon
     public int maxGenerateHeight;
     public Procedure generateCondition;
     public String normal;
+    public String displaySettings;
 
     private AnimatedBlock() {
         this((ModElement)null);
@@ -208,6 +212,10 @@ public class AnimatedBlock extends GeneratableElement implements IBlock, ITabCon
     @Nonnull
     public List<IBlockWithBoundingBox.BoxEntry> getValidBoundingBoxes() {
         return (List)this.boundingBoxes.stream().filter(IBlockWithBoundingBox.BoxEntry::isNotEmpty).collect(Collectors.toList());
+    }
+
+    @Override public List<MCItem> providedMCItems() {
+        return List.of(new MCItem.Custom(this.getModElement(), null, "block"));
     }
 
     public BufferedImage generateModElementPicture() {

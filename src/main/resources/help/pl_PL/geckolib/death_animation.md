@@ -1,0 +1,1 @@
+Ta animacja zostanie odtworzona, gdy byt umrze. Idealnie jest mieć wyłączoną rotację śmierci podczas korzystania z tej funkcji.

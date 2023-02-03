@@ -1,3 +1,3 @@
-<#include "mcelements.ftl">
 <#include "mcitems.ftl">
-((${field$name}Item) ${mappedMCItemToItem(input$item)}).animationprocedure = "empty";
+if (${mappedMCItemToItem(input$item)} instanceof ${(field$name)?replace("CUSTOM:", "")}Item)
+${mappedMCItemToItemStackCode(input$item, 1)}.getOrCreateTag().putString("geckoAnim", "empty");

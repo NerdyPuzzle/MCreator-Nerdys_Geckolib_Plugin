@@ -1,8 +1,10 @@
 {
   "args0": [
     {
-      "type": "field_input",
-      "name": "name"
+      "type": "field_data_list_selector",
+      "name": "name",
+	  "datalist": "animateditem",
+	  "customEntryProviders": "animateditem"
     },
     {
       "type": "input_value",

@@ -1,0 +1,1 @@
+This procedure is triggered when the entity reaches the end of its death time.

@@ -1,0 +1,2 @@
+Il doit s'agir du nom de l'animation que vous souhaitez faire jouer à ce champ spécifique.
+Par exemple, une entrée valide peut être animation.exemple.idle ou si vous n'avez pas utilisé ce nom, taper simplement idle fonctionnerait de la même manière.

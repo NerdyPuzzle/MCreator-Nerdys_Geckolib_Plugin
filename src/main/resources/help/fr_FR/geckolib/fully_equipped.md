@@ -1,0 +1,1 @@
+Si cette case est cochée, les animations d'armure ne seront jouées que lorsqu'un ensemble complet de cette armure est porté.

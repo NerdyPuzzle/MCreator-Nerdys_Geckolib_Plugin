@@ -1,0 +1,1 @@
+Este procedimiento se activa cuando la entidad alcanza el final de su tiempo de muerte.

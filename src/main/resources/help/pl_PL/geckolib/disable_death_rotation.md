@@ -1,0 +1,1 @@
+Zaznaczenie tego parametru zapobiega obracaniu się modelu bytu na boki, kiedy ten umiera.

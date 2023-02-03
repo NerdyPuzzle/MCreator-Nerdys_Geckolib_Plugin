@@ -1,0 +1,1 @@
+Le fait de cocher ce paramètre empêche le modèle de l'entité de pivoter sur le côté lorsque l'entité meurt.

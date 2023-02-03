@@ -1,0 +1,1 @@
+This is the animation that will play while the entity is in an idle state, and no other animation is active.

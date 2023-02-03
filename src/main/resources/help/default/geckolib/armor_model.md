@@ -1,0 +1,1 @@
+The name of the GeckoLib json model and animation.

@@ -1,0 +1,1 @@
+This animation will play if the entity is being aggressive towards another entity and will replace the walking animation.

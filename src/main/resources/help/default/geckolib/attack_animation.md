@@ -1,0 +1,1 @@
+This animation will play once every time the entity performs an attack.

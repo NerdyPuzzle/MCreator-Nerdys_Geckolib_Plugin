@@ -1,0 +1,2 @@
+This animation will play while the entity is flying, and will stop once the entity is back on the ground.
+You should not use this if your entity only flies, as this will prevent the walking animation from playing while in the air.

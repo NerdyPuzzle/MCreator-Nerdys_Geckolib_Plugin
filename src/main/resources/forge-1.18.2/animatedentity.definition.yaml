@@ -1,0 +1,35 @@
+global_templates:
+  - template: aentity/livingentity_item.java.ftl
+    name: "@SRCROOT/@BASEPACKAGEPATH/entity/spawneggs/GeckoLibSpawnEggs.java"
+  - template: aentity/livingentity_registry.java.ftl
+    name: "@SRCROOT/@BASEPACKAGEPATH/init/@JavaModNameGeckoLibEntities.java"
+  - template: aentity/animation_sync_factory.java.ftl
+    name: "@SRCROOT/@BASEPACKAGEPATH/init/EntityAnimationFactory.java"
+
+templates:
+  - template: aentity/livingentity.java.ftl
+    name: "@SRCROOT/@BASEPACKAGEPATH/entity/@NAMEEntity.java"
+  - template: aentity/livingentity_renderer.java.ftl
+    name: "@SRCROOT/@BASEPACKAGEPATH/client/renderer/@NAMERenderer.java"
+  - template: aentity/livingentity_projectile.java.ftl
+    name: "@SRCROOT/@BASEPACKAGEPATH/entity/@NAMEEntityProjectile.java"
+    condition: hasCustomProjectile()
+  - template: aentity/livingentity_model.java.ftl
+    name: "@SRCROOT/@BASEPACKAGEPATH/entity/model/@NAMEModel.java"
+  - template: aentity/livingentity_layer.java.ftl
+    name: "@SRCROOT/@BASEPACKAGEPATH/entity/layer/@NAMELayer.java"
+    condition: hasGlowTexture()
+  - template: ajson/spawn_egg.json.ftl
+    writer: json
+    name: "@MODASSETSROOT/models/item/@registryname_spawn_egg.json"
+    condition: hasSpawnEgg
+
+unmodifiable_ai_bases: [ Bat, MagmaCube, Slime ]
+field_exclusions: [ isShakingCondition, transparentModelCondition ]
+
+localizationkeys:
+  - key: item.@modid.@registryname_spawn_egg
+    mapto: mobName
+    suffix: " Spawn Egg"
+  - key: entity.@modid.@registryname
+    mapto: mobName

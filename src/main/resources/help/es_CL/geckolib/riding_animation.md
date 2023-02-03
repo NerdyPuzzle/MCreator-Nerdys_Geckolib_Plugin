@@ -1,0 +1,1 @@
+Esta animación reemplazará a la animación de caminar si la entidad está siendo montada.

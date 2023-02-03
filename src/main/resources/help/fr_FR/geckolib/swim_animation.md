@@ -1,0 +1,1 @@
+Cette animation remplacera l'animation de ralenti lorsque l'entité est dans l'eau.

@@ -37,12 +37,15 @@ package ${package}.item;
 
 import software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes;
 
+import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+
 import javax.annotation.Nullable;
 
 public class ${name}Item extends Item implements IAnimatable {
 	public AnimationFactory factory = GeckoLibUtil.createFactory(this);
 	public String animationprocedure = "empty";
+	public static ItemTransforms.TransformType transformType;
 
 	public ${name}Item() {
 		super(new Item.Properties()
@@ -82,23 +85,92 @@ public class ${name}Item extends Item implements IAnimatable {
 		});
 	}
 
+
+	public void getTransformType(ItemTransforms.TransformType type) {
+		this.transformType = type;
+	}
+
+	<#if data.firstPersonArms>
+	protected <P extends IAnimatable> void customInstructionListener(CustomInstructionKeyframeEvent<P> event) {
+		List<String> instructions = Arrays.stream(event.instructions.split(";")).filter(s -> s.length() > 0).collect				(Collectors.toList());
+		List<List<String>> instructionTokens = instructions.stream()
+				.map(s -> Arrays.asList(s.split(" ")).stream().filter(tk -> tk.length() > 0).collect(Collectors.toList()))
+				.filter(tks -> !tks.isEmpty()).collect(Collectors.toList());
+		if (instructionTokens.isEmpty())
+			return;
+		BlockEntityWithoutLevelRenderer ister = new ${name}ItemRenderer();
+		if (!(ister instanceof ${name}ItemRenderer))
+			return;
+		${name}ItemRenderer renderer = (${name}ItemRenderer) ister;
+		instructionTokens.stream().filter(tks -> !tks.isEmpty()).forEach(tks -> this.interpretFirstPersonInstructions(tks, renderer));
+	}
+	</#if>
+
+	protected void interpretFirstPersonInstructions(List<String> tokens, ${name}ItemRenderer renderer) {
+		String firstTok = tokens.get(0);
+		if (tokens.size() < 2)
+			return;
+		String boneName = tokens.get(1);
+		if (firstTok.equals("set_hidden")) {
+			boolean hidden = Boolean.valueOf(tokens.get(2));
+			renderer.hideBone(boneName, hidden);
+		} else if (firstTok.equals("move")) {
+			float x = Float.valueOf(tokens.get(2));
+			float y = Float.valueOf(tokens.get(3));
+			float z = Float.valueOf(tokens.get(4));
+			renderer.setBonePosition(boneName, x, y, z);
+		} else if (firstTok.equals("rotate")) {
+			float x = Float.valueOf(tokens.get(2));
+			float y = Float.valueOf(tokens.get(3));
+			float z = Float.valueOf(tokens.get(4));
+			renderer.setBoneRotation(boneName, x, y, z);
+		} else if (firstTok.equals("suppress_mod")) {
+			renderer.suppressModification(boneName);
+		} else if (firstTok.equals("allow_mod")) {
+			renderer.allowModification(boneName);
+		}
+	}
+
 	private <P extends Item & IAnimatable> PlayState idlePredicate(AnimationEvent<P> event) {
-		if (this.animationprocedure == "empty") {
-			event.getController().setAnimation(new AnimationBuilder().addAnimation("idle", EDefaultLoopTypes.LOOP));
+		if (this.transformType != null ?
+		<#if ((data.perspective) == "All Perspectives")>
+		true
+		<#elseif ((data.perspective) == "First Person")>
+		this.transformType.firstPerson()
+		<#else>
+		!this.transformType.firstPerson()
+		</#if>
+		: false) {
+		if (this.animationprocedure.equals("empty")) {
+			event.getController().setAnimation(new AnimationBuilder().addAnimation("${data.idle}", EDefaultLoopTypes.LOOP));
 		return PlayState.CONTINUE;
+		}
 	}
         return PlayState.STOP;
 	}
 
 	private <P extends Item & IAnimatable> PlayState procedurePredicate(AnimationEvent<P> event) {
-		if (!(this.animationprocedure == "empty") && event.getController().getAnimationState().equals(software.bernie.geckolib3.core.AnimationState.Stopped)) {
-			event.getController().setAnimation(new AnimationBuilder().addAnimation(this.animationprocedure, EDefaultLoopTypes.PLAY_ONCE));
+		if (this.transformType != null ?
+		<#if ((data.perspective) == "All Perspectives")>
+		true
+		<#elseif ((data.perspective) == "First Person")>
+		this.transformType.firstPerson()
+		<#else>
+		!this.transformType.firstPerson()
+		</#if>
+		: false) {
+		if (!(this.animationprocedure.equals("empty")) && event.getController().getAnimationState().equals							(software.bernie.geckolib3.core.AnimationState.Stopped)) {
+			event.getController().setAnimation(new AnimationBuilder().addAnimation(this.animationprocedure, 						EDefaultLoopTypes.PLAY_ONCE));
 	        if (event.getController().getAnimationState().equals(software.bernie.geckolib3.core.AnimationState.Stopped)) {
 			this.animationprocedure = "empty";
 			event.getController().markNeedsReload();
-		}
+				}
+			}
 		}  
 		return PlayState.CONTINUE;
+	}
+
+	public void setupAnimationState(${name}ItemRenderer renderer, ItemStack stack, PoseStack matrixStack, float aimProgress) {
 	}
 
 	@Override
@@ -180,6 +252,7 @@ public class ${name}Item extends Item implements IAnimatable {
 				builder.putAll(super.getDefaultAttributeModifiers(equipmentSlot));
 				builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Item modifier", ${data.damageVsEntity - 2}d, AttributeModifier.Operation.ADDITION));
 				builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Item modifier", -2.4, AttributeModifier.Operation.ADDITION));
+			return builder.build();
 			}
 			return super.getDefaultAttributeModifiers(equipmentSlot);
 		}

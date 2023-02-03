@@ -1,1 +1,1 @@
-((${field$entityname}Entity} ${input$entity}).animationprocedure
+((${(field$entityname)?replace("CUSTOM:", "")}Entity) ${input$entity}).animationprocedure

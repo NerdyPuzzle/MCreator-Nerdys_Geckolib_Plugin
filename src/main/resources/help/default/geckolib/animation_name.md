@@ -1,0 +1,2 @@
+This should be the name of the animation you want this specific field to play.
+For example, a valid input can be animation.example.idle or if you didn't use that, just typing idle would work the same way.

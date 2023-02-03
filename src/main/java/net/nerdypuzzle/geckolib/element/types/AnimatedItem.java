@@ -2,12 +2,13 @@ package net.nerdypuzzle.geckolib.element.types;
 
 import net.mcreator.element.GeneratableElement;
 import net.mcreator.element.parts.MItemBlock;
-import net.mcreator.element.parts.Procedure;
 import net.mcreator.element.parts.TabEntry;
+import net.mcreator.element.parts.procedure.Procedure;
 import net.mcreator.element.types.interfaces.IItem;
 import net.mcreator.element.types.interfaces.IItemWithModel;
 import net.mcreator.element.types.interfaces.IItemWithTexture;
 import net.mcreator.element.types.interfaces.ITabContainedElement;
+import net.mcreator.minecraft.MCItem;
 import net.mcreator.ui.workspace.resources.TextureType;
 import net.mcreator.util.image.ImageUtils;
 import net.mcreator.workspace.elements.ModElement;
@@ -23,8 +24,14 @@ public class AnimatedItem extends GeneratableElement implements IItem, IItemWith
     public String texture;
     public String customModelName;
     public String name;
+    public String idle;
     public String rarity;
+    public String displaySettings;
+    public String leftArm;
+    public String rightArm;
+    public String perspective;
     public TabEntry creativeTab;
+    public boolean firstPersonArms;
     public int stackSize;
     public int enchantability;
     public int useDuration;
@@ -77,6 +84,10 @@ public class AnimatedItem extends GeneratableElement implements IItem, IItemWith
 
     public BufferedImage generateModElementPicture() {
         return ImageUtils.resizeAndCrop(this.getModElement().getFolderManager().getTextureImageIcon(this.texture, TextureType.ITEM).getImage(), 32);
+    }
+
+    @Override public List<MCItem> providedMCItems() {
+        return List.of(new MCItem.Custom(this.getModElement(), null, "item"));
     }
 
     public Model getItemModel() {

@@ -50,6 +50,7 @@ public class ${JavaModName} implements ModInitializer {
 		<#if w.hasElementsOfType("gamerule")>${JavaModName}GameRules.load();</#if>
 		<#if w.hasElementsOfType("enchantment")>${JavaModName}Enchantments.load();</#if>
 		<#if w.hasElementsOfType("potion")>${JavaModName}Potions.load();</#if>
+		<#if w.hasElementsOfType("potioneffect")>${JavaModName}MobEffects.load();</#if>
 		<#if w.hasElementsOfBaseType("entity")>${JavaModName}Entities.load();</#if>
 		<#if w.hasElementsOfBaseType("block")>${JavaModName}Blocks.load();</#if>
 		<#if w.hasElementsOfBaseType("item")>${JavaModName}Items.load();</#if>
@@ -64,9 +65,28 @@ public class ${JavaModName} implements ModInitializer {
 		<#if w.hasElementsOfType("keybind")>${JavaModName}KeyMappings.serverLoad();</#if>
 		<#if w.getRecipesOfType("Brewing")?has_content>${JavaModName}BrewingRecipes.load();</#if>
 		<#if w.hasSounds()>${JavaModName}Sounds.load();</#if>
+		<#if w.hasVariablesOfScope("GLOBAL_WORLD") || w.hasVariablesOfScope("GLOBAL_MAP")>${JavaModName}Variables.SyncJoin();</#if>
+		<#if w.hasVariablesOfScope("GLOBAL_WORLD") || w.hasVariablesOfScope("GLOBAL_MAP")>${JavaModName}Variables.SyncChangeWorld();</#if>
 
 		<#if settings.getMCreatorDependencies().contains("geckolib")>
 		GeckoLib.initialize();
+		</#if>
+
+		<#if w.hasElementsOfType("animatedentity")>
+		GeckoLibSpawnEggs.load();
+		</#if>
+
+		<#if w.hasElementsOfType("animatedarmor")>
+		${JavaModName}GeckoLibArmors.loadItems();
+		</#if>
+
+		<#if settings.getMCreatorDependencies().contains("portinglib")>
+		ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
+			if (handler.getPlayer().getExtraCustomData().getCompound("PlayerPersisted").isEmpty()) {
+				handler.getPlayer().getExtraCustomData().put("PlayerPersisted", new CompoundTag());
+			}
+			${JavaModName}.LOGGER.info(handler.getPlayer().getExtraCustomData());
+		});
 		</#if>
 	}
 }

@@ -1,0 +1,30 @@
+{
+ "args0": [
+    {
+     "type": "field_data_list_selector",
+     "name": "element",
+     "datalist": "animatedentity",
+	 "customEntryProviders": "animatedentity"
+    },
+    {
+     "type": "input_value",
+     "name": "entity",
+     "check": "Entity"
+    }
+],
+   "inputsInline": true,
+   "output": "String",
+   "colour": 364,
+   "mcreator": {
+     "toolbox_id": "geckolib",
+     "toolbox_init": [
+       "<value name=\"entity\"><block type=\"entity_from_deps\"></block></value>"
+],
+  "inputs": [
+    "entity"
+   ],
+  "fields": [
+    "element"
+   ]
+  }
+}

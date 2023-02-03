@@ -5,10 +5,10 @@ import net.mcreator.element.GeneratableElement;
 import net.mcreator.element.ModElementType;
 import net.mcreator.element.parts.TabEntry;
 import net.mcreator.element.types.GUI;
-import net.mcreator.element.types.Item;
 import net.mcreator.minecraft.DataListEntry;
 import net.mcreator.minecraft.ElementUtil;
 import net.mcreator.ui.MCreator;
+import net.mcreator.ui.component.JEmptyBox;
 import net.mcreator.ui.component.SearchableComboBox;
 import net.mcreator.ui.component.util.ComboBoxUtil;
 import net.mcreator.ui.component.util.ComponentUtils;
@@ -16,7 +16,6 @@ import net.mcreator.ui.component.util.PanelUtils;
 import net.mcreator.ui.dialogs.TypedTextureSelectorDialog;
 import net.mcreator.ui.help.HelpUtils;
 import net.mcreator.ui.init.L10N;
-import net.mcreator.ui.laf.renderer.ModelComboBoxRenderer;
 import net.mcreator.ui.minecraft.DataListComboBox;
 import net.mcreator.ui.minecraft.MCItemHolder;
 import net.mcreator.ui.minecraft.TextureHolder;
@@ -26,8 +25,9 @@ import net.mcreator.ui.procedure.ProcedureSelector;
 import net.mcreator.ui.validation.AggregatedValidationResult;
 import net.mcreator.ui.validation.IValidable;
 import net.mcreator.ui.validation.ValidationGroup;
+import net.mcreator.ui.validation.Validator;
+import net.mcreator.ui.validation.component.VComboBox;
 import net.mcreator.ui.validation.component.VTextField;
-import net.mcreator.ui.validation.validators.RegistryNameValidator;
 import net.mcreator.ui.validation.validators.TextFieldValidator;
 import net.mcreator.ui.validation.validators.TileHolderValidator;
 import net.mcreator.ui.workspace.resources.TextureType;
@@ -35,26 +35,28 @@ import net.mcreator.util.ListUtils;
 import net.mcreator.util.StringUtils;
 import net.mcreator.workspace.elements.ModElement;
 import net.mcreator.workspace.elements.VariableTypeLoader;
-import net.mcreator.workspace.resources.Model;
 import net.nerdypuzzle.geckolib.element.types.AnimatedItem;
+import net.nerdypuzzle.geckolib.element.types.GeckolibElement;
+import net.nerdypuzzle.geckolib.parts.GeomodelRenderer;
+import net.nerdypuzzle.geckolib.parts.PluginModelActions;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
-public class AnimatedItemGUI extends ModElementGUI<AnimatedItem> {
+public class AnimatedItemGUI extends ModElementGUI<AnimatedItem> implements GeckolibElement {
     private TextureHolder texture;
     private final JTextField specialInfo = new JTextField(20);
+    private final VTextField idle = new VTextField(20);
     private final JSpinner stackSize = new JSpinner(new SpinnerNumberModel(64, 0, 64, 1));
     private final VTextField name = new VTextField(20);
     private final JComboBox<String> rarity = new JComboBox(new String[]{"COMMON", "UNCOMMON", "RARE", "EPIC"});
+    private final JComboBox<String> perspective = new JComboBox(new String[]{"All Perspectives", "First Person", "Third/Second Person"});
     private final MCItemHolder recipeRemainder;
     private final JSpinner enchantability;
     private final JSpinner useDuration;
@@ -67,7 +69,6 @@ public class AnimatedItemGUI extends ModElementGUI<AnimatedItem> {
     private final JCheckBox hasGlow;
     private ProcedureSelector glowCondition;
     private final DataListComboBox creativeTab;
-    private final VTextField normal;
     private ProcedureSelector onRightClickedInAir;
     private ProcedureSelector onCrafted;
     private ProcedureSelector onRightClickedOnBlock;
@@ -91,9 +92,17 @@ public class AnimatedItemGUI extends ModElementGUI<AnimatedItem> {
     private final JCheckBox isAlwaysEdible;
     private final JComboBox<String> animation;
     private final MCItemHolder eatResultItem;
+    private final JCheckBox firstPersonArms = L10N.checkbox("elementgui.common.enable", new Object[0]);
+    private final JTextField leftArm = new JTextField(20);
+    private final JTextField rightArm = new JTextField(20);
+
+    private final VComboBox<String> geoModel;
+    private final VComboBox<String> displaySettings;
 
     public AnimatedItemGUI(MCreator mcreator, ModElement modElement, boolean editingMode) {
         super(mcreator, modElement, editingMode);
+        this.geoModel = new SearchableComboBox();
+        this.displaySettings = new SearchableComboBox();
         this.recipeRemainder = new MCItemHolder(this.mcreator, ElementUtil::loadBlocksAndItems);
         this.enchantability = new JSpinner(new SpinnerNumberModel(0, -100, 128000, 1));
         this.useDuration = new JSpinner(new SpinnerNumberModel(0, -100, 128000, 1));
@@ -105,7 +114,6 @@ public class AnimatedItemGUI extends ModElementGUI<AnimatedItem> {
         this.damageOnCrafting = L10N.checkbox("elementgui.common.enable", new Object[0]);
         this.hasGlow = L10N.checkbox("elementgui.common.enable", new Object[0]);
         this.creativeTab = new DataListComboBox(this.mcreator);
-        this.normal = new VTextField(19);
         this.page1group = new ValidationGroup();
         this.damageVsEntity = new JSpinner(new SpinnerNumberModel(0.0, 0.0, 128000.0, 0.1));
         this.enableMeleeDamage = new JCheckBox();
@@ -163,11 +171,34 @@ public class AnimatedItemGUI extends ModElementGUI<AnimatedItem> {
         destal3.setOpaque(false);
         destal3.add("West", PanelUtils.totalCenterInPanel(ComponentUtils.squareAndBorder(this.texture, L10N.t("elementgui.item.texture", new Object[0]))));
         destal2.add("North", destal3);
-        JPanel destal = new JPanel(new GridLayout(1, 2, 15, 15));
+
+
+        JPanel destal = new JPanel(new GridLayout(8, 2, 15, 5));
         destal.setOpaque(false);
         JComponent destal1 = PanelUtils.join(0, new Component[]{HelpUtils.wrapWithHelpButton(this.withEntry("item/glowing_effect"), L10N.label("elementgui.item.glowing_effect", new Object[0])), this.hasGlow, this.glowCondition});
         destal.add(HelpUtils.wrapWithHelpButton(this.withEntry("item/special_information"), L10N.label("elementgui.item.tooltip_tip", new Object[0])));
         destal.add(this.specialInfo);
+        destal.add(HelpUtils.wrapWithHelpButton(this.withEntry("geckolib/animation_name"), L10N.label("elementgui.animateditem.idle_animation", new Object[0])));
+        destal.add(this.idle);
+        destal.add(HelpUtils.wrapWithHelpButton(this.withEntry("geckolib/animation_perspective"), L10N.label("elementgui.animateditem.perspective", new Object[0])));
+        destal.add(this.perspective);
+        destal.add(new JEmptyBox()); destal.add(new JEmptyBox());
+        destal.add(HelpUtils.wrapWithHelpButton(this.withEntry("geckolib/first_person"), L10N.label("elementgui.animateditem.first_person", new Object[0])));
+        destal.add(this.firstPersonArms);
+        destal.add(HelpUtils.wrapWithHelpButton(this.withEntry("geckolib/model_arm"), L10N.label("elementgui.animateditem.left_arm", new Object[0])));
+        destal.add(this.leftArm);
+        destal.add(HelpUtils.wrapWithHelpButton(this.withEntry("geckolib/model_arm"), L10N.label("elementgui.animateditem.right_arm", new Object[0])));
+        destal.add(this.rightArm);
+
+        this.leftArm.setEnabled(firstPersonArms.isSelected());
+        this.rightArm.setEnabled(firstPersonArms.isSelected());
+
+        this.firstPersonArms.addActionListener((e) -> {
+            this.leftArm.setEnabled(firstPersonArms.isSelected());
+            this.rightArm.setEnabled(firstPersonArms.isSelected());
+        });
+
+        this.firstPersonArms.setOpaque(false);
         this.hasGlow.setOpaque(false);
         this.hasGlow.setSelected(false);
         this.hasGlow.addActionListener((e) -> {
@@ -175,11 +206,21 @@ public class AnimatedItemGUI extends ModElementGUI<AnimatedItem> {
         });
         destal2.add("Center", PanelUtils.northAndCenterElement(destal, destal1, 10, 10));
         ComponentUtils.deriveFont(this.specialInfo, 16.0F);
-        ComponentUtils.deriveFont(this.normal, 25F);
-        JPanel rent = new JPanel();
-        rent.setLayout(new BoxLayout(rent, 3));
+        ComponentUtils.deriveFont(this.idle, 16.0F);
+        ComponentUtils.deriveFont(this.leftArm, 16.0F);
+        ComponentUtils.deriveFont(this.rightArm, 16.0F);
+        JPanel rent = new JPanel(new GridLayout(2, 1, 3, 3));
         rent.setOpaque(false);
-        rent.add(this.normal);
+        this.geoModel.setPrototypeDisplayValue("XXXXXXXXXXXXXXXXXXXXXXXXXX");
+        this.geoModel.setRenderer(new GeomodelRenderer());
+        ComponentUtils.deriveFont(this.geoModel, 16.0F);
+        rent.add(PanelUtils.join(
+                HelpUtils.wrapWithHelpButton(this.withEntry("item/model"), L10N.label("elementgui.animateditem.geckolib_model")), this.geoModel));
+        this.displaySettings.setPrototypeDisplayValue("XXXXXXXXXXXXXXXXXXXXXXXXXX");
+        this.displaySettings.setRenderer(new GeomodelRenderer());
+        ComponentUtils.deriveFont(this.displaySettings, 16.0F);
+        rent.add(PanelUtils.join(
+                HelpUtils.wrapWithHelpButton(this.withEntry("geckolib/display_settings"), L10N.label("elementgui.aniblockitems.display_settings")), this.displaySettings));
         destal3.add("Center", rent);
         rent.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder((Color)UIManager.get("MCreatorLAF.BRIGHT_COLOR"), 1), L10N.t("elementgui.animateditem.model", new Object[0]), 0, 0, this.getFont().deriveFont(12.0F), (Color)UIManager.get("MCreatorLAF.BRIGHT_COLOR")));
         JPanel sbbp2 = new JPanel(new BorderLayout());
@@ -287,7 +328,9 @@ public class AnimatedItemGUI extends ModElementGUI<AnimatedItem> {
         advancedProperties.add("Center", PanelUtils.totalCenterInPanel(inventoryProperties));
         this.texture.setValidator(new TileHolderValidator(this.texture));
         this.page1group.addValidationElement(this.texture);
-        this.page1group.addValidationElement(this.normal);
+        this.page1group.addValidationElement(this.idle);
+        this.page1group.addValidationElement(this.geoModel);
+        this.page1group.addValidationElement(this.displaySettings);
         this.name.setValidator(new TextFieldValidator(this.name, L10N.t("elementgui.item.error_item_needs_name", new Object[0])));
         this.name.enableRealtimeValidation();
         this.addPage(L10N.t("elementgui.common.page_visual", new Object[0]), pane2);
@@ -300,8 +343,22 @@ public class AnimatedItemGUI extends ModElementGUI<AnimatedItem> {
             this.name.setText(readableNameFromModElement);
         }
 
-        this.normal.setValidator((new RegistryNameValidator(this.normal, L10N.t("elementgui.animateditem.modelname", new Object[0]))).setValidChars(Arrays.asList('_', '/')));
-        this.normal.enableRealtimeValidation();
+        geoModel.setValidator(() -> {
+            if (geoModel.getSelectedItem() == null || geoModel.getSelectedItem().equals(""))
+                return new Validator.ValidationResult(Validator.ValidationResultType.ERROR,
+                        L10N.t("elementgui.animatedentity.modelname"));
+            return Validator.ValidationResult.PASSED;
+        });
+
+        displaySettings.setValidator(() -> {
+            if (displaySettings.getSelectedItem() == null || displaySettings.getSelectedItem().equals(""))
+                return new Validator.ValidationResult(Validator.ValidationResultType.ERROR,
+                        L10N.t("elementgui.animatedentity.modelname"));
+            return Validator.ValidationResult.PASSED;
+        });
+
+        this.idle.setValidator(new TextFieldValidator(this.idle, L10N.t("elementgui.animateditem.needs_idle", new Object[0])));
+        this.idle.enableRealtimeValidation();
 
     }
 
@@ -343,6 +400,14 @@ public class AnimatedItemGUI extends ModElementGUI<AnimatedItem> {
         ComboBoxUtil.updateComboBoxContents(this.guiBoundTo, ListUtils.merge(Collections.singleton("<NONE>"), (Collection)this.mcreator.getWorkspace().getModElements().stream().filter((var) -> {
             return var.getType() == ModElementType.GUI;
         }).map(ModElement::getName).collect(Collectors.toList())), "<NONE>");
+
+        ComboBoxUtil.updateComboBoxContents(this.geoModel, ListUtils.merge(Collections.singleton(""), (Collection)PluginModelActions.getGeomodels(this.mcreator).stream().map(File::getName).filter((s) -> {
+            return s.endsWith(".geo.json");
+        }).collect(Collectors.toList())), "");
+
+        ComboBoxUtil.updateComboBoxContents(this.displaySettings, ListUtils.merge(Collections.singleton(""), (Collection)PluginModelActions.getDisplaysettings(this.mcreator).stream().map(File::getName).filter((s) -> {
+            return s.endsWith(".json");
+        }).collect(Collectors.toList())), "");
     }
 
     protected AggregatedValidationResult validatePage(int page) {
@@ -355,7 +420,12 @@ public class AnimatedItemGUI extends ModElementGUI<AnimatedItem> {
 
     public void openInEditingMode(AnimatedItem item) {
         this.name.setText(item.name);
+        this.idle.setText(item.idle);
+        this.leftArm.setText(item.leftArm);
+        this.rightArm.setText(item.rightArm);
+        this.firstPersonArms.setSelected(item.firstPersonArms);
         this.rarity.setSelectedItem(item.rarity);
+        this.perspective.setSelectedItem(item.perspective);
         this.texture.setTextureFromTextureName(item.texture);
         this.specialInfo.setText((String)item.specialInfo.stream().map((info) -> {
             return info.replace(",", "\\,");
@@ -397,14 +467,22 @@ public class AnimatedItemGUI extends ModElementGUI<AnimatedItem> {
         this.eatResultItem.setBlock(item.eatResultItem);
         this.updateGlowElements();
         this.updateFoodPanel();
-        this.normal.setText(item.normal);
+        this.geoModel.setSelectedItem(item.normal);
+        this.displaySettings.setSelectedItem(item.displaySettings);
 
+        this.leftArm.setEnabled(firstPersonArms.isSelected());
+        this.rightArm.setEnabled(firstPersonArms.isSelected());
     }
 
     public AnimatedItem getElementFromGUI() {
         AnimatedItem item = new AnimatedItem(this.modElement);
         item.name = this.name.getText();
+        item.idle = this.idle.getText();
+        item.leftArm = this.leftArm.getText();
+        item.rightArm = this.rightArm.getText();
+        item.firstPersonArms = this.firstPersonArms.isSelected();
         item.rarity = (String)this.rarity.getSelectedItem();
+        item.perspective = (String)this.perspective.getSelectedItem();
         item.creativeTab = new TabEntry(this.mcreator.getWorkspace(), this.creativeTab.getSelectedItem());
         item.stackSize = (Integer)this.stackSize.getValue();
         item.enchantability = (Integer)this.enchantability.getValue();
@@ -443,7 +521,8 @@ public class AnimatedItemGUI extends ModElementGUI<AnimatedItem> {
         item.specialInfo = StringUtils.splitCommaSeparatedStringListWithEscapes(this.specialInfo.getText());
         item.texture = this.texture.getID();
         item.renderType = 0;
-        item.normal = this.normal.getText();
+        item.normal = (String)this.geoModel.getSelectedItem();
+        item.displaySettings = (String)this.displaySettings.getSelectedItem();
 
         return item;
     }

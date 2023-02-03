@@ -1,0 +1,44 @@
+{
+ "args0": [
+    {
+     "type": "field_dropdown",
+     "name": "slot",
+	 "options": [
+	 [
+		"Helmet",
+		"HELMET"
+	 ],
+	 [
+		"Chestplate",
+		"CHESTPLATE"
+	 ],
+	 [
+		"Leggings",
+		"LEGGINGS"
+	 ],
+	 [
+		"Boots",
+		"BOOTS"
+	 ]
+	 ]
+    },
+    {
+     "type": "field_data_list_selector",
+     "name": "element",
+	 "datalist": "animatedarmor",
+	 "customEntryProviders": "animatedarmor"
+    }
+],
+   "inputsInline": true,
+   "output": "MCItem",
+   "colour": 350,
+   "mcreator": {
+     "toolbox_id": "geckolib",
+     "toolbox_init": [
+],
+  "fields": [
+    "slot",
+    "element"
+   ]
+  }
+}

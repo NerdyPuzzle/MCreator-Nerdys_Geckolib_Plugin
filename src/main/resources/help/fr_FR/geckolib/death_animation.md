@@ -1,0 +1,1 @@
+Cette animation est jouée lorsque l'entité meurt. L'idéal est d'avoir la rotation de mort désactivée lorsque vous l'utilisez.

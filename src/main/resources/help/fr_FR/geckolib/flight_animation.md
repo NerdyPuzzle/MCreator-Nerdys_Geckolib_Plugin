@@ -1,0 +1,2 @@
+Cette animation sera jouée pendant que l'entité vole, et s'arrêtera une fois que l'entité sera de retour au sol.
+Vous ne devez pas utiliser cette option si votre entité ne fait que voler, car elle empêchera l'animation de marche de se dérouler en l'air.

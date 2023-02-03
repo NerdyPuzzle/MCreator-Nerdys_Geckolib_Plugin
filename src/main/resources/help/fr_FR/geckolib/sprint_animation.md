@@ -1,0 +1,1 @@
+Cette animation sera jouée lorsque l'entité aura activé la fonction de sprint, ce qui peut être fait par le biais du bloc de procédure de sprint.

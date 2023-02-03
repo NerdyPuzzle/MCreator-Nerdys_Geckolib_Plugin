@@ -1,0 +1,1 @@
+This animation will play when the entity dies. It is ideal to have death rotation disabled when using it.

@@ -1,0 +1,1 @@
+Ce paramètre détermine le nombre de ticks pendant lesquels l'entité restera morte après sa mort.

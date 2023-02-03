@@ -1,0 +1,1 @@
+Gdy zwrócona wartość jest prawidłowa, animacje odtwarzane przez zwrócony warunek animacji lub procedury animacji będą się zapętlać.

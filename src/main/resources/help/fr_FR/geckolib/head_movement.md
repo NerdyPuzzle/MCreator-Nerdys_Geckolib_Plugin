@@ -1,0 +1,2 @@
+En cochant ce paramètre, vous pouvez spécifier un groupe de modèles auquel l'animation par défaut du mouvement de la tête sera appliquée.
+Veillez à écrire le nom exact du groupe, sinon cela fera planter votre jeu lors du lancement de l'entité.

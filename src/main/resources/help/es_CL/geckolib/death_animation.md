@@ -1,0 +1,1 @@
+Esta animación se reproducirá cuando la entidad muera. Lo ideal es tener desactivada la rotación de la muerte cuando se utiliza.

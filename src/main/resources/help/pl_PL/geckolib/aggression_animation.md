@@ -1,0 +1,1 @@
+Ta animacja zostanie odtworzona, jeśli byt jest agresywny w stosunku do innego bytu oraz zastąpi animację chodzenia.

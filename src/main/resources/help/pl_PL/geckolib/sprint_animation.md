@@ -1,0 +1,1 @@
+Ta animacja będzie odtwarzana gdy jednostka ma ustawiony sprint wartość true, co można zrobić za pomocą bloku procedury sprintu.

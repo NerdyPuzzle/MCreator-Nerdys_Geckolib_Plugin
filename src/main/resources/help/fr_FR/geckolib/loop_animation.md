@@ -1,0 +1,1 @@
+Si la valeur renvoyée est vraie, les animations jouées par le biais de la condition d'animation renvoyée ou des procédures d'animation tourneront en boucle.

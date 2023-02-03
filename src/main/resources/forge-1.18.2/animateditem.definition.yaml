@@ -1,10 +1,19 @@
+global_templates:
+  - template: aitem/firstperson/anim_utils.java.ftl
+    name: "@SRCROOT/@BASEPACKAGEPATH/utils/AnimUtils.java"
+  - template: aitem/firstperson/nothing_layer.java.ftl
+    name: "@SRCROOT/@BASEPACKAGEPATH/utils/NothingLayer.java"
+  - template: aitem/firstperson/renders_player_arms.java.ftl
+    name: "@SRCROOT/@BASEPACKAGEPATH/interfaces/RendersPlayerArms.java"
+  - template: aitem/animation_sync_factory.java.ftl
+    name: "@SRCROOT/@BASEPACKAGEPATH/init/ItemAnimationFactory.java"
+
 templates:
   - template: aitem/item.java.ftl
     name: "@SRCROOT/@BASEPACKAGEPATH/item/@NAMEItem.java"
   - template: aitem/item_container.java.ftl
     name: "@SRCROOT/@BASEPACKAGEPATH/item/inventory/@NAMEInventoryCapability.java"
     condition: hasInventory()
-    deleteWhenConditionFalse: true
   - template: aitem/item_model.java.ftl
     name: "@SRCROOT/@BASEPACKAGEPATH/item/model/@NAMEItemModel.java"
   - template: aitem/item_renderer.java.ftl
@@ -13,6 +22,8 @@ templates:
   - template: ajson/item.json.ftl
     writer: json
     name: "@MODASSETSROOT/models/item/@registryname.json"
+
+field_exclusions: [ hasGlow, glowCondition ]
 
 localizationkeys:
   - key: item.@modid.@registryname

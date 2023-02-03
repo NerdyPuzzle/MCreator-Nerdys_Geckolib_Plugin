@@ -1,0 +1,1 @@
+Ta animacja zastąpi animację bezczynności gdy istota jest w wodzie.

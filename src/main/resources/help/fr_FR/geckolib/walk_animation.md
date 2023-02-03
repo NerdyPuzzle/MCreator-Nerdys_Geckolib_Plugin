@@ -1,0 +1,2 @@
+Il s'agit de l'animation qui sera jouée lorsque l'entité marche et qu'aucune autre animation n'est active.
+Si l'entité possède une animation de vol, celle-ci ne sera jouée que lorsque l'entité marchera sur le sol.

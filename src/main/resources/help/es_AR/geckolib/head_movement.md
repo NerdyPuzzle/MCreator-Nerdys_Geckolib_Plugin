@@ -1,0 +1,2 @@
+Marcando este parámetro se habilita la opción de especificar un grupo de modelos al que se aplicará la animación de movimiento de cabeza por defecto.
+Asegúrate de escribir el nombre exacto del grupo, de lo contrario se bloqueará el juego al generar la entidad.
