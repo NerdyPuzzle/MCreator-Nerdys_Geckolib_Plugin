@@ -64,13 +64,13 @@ import software.bernie.geckolib3.core.builder.ILoopType.EDefaultLoopTypes;
 </#if>
 
 public class ${name}Entity extends ${extendsClass} <#if data.ranged>implements RangedAttackMob, IAnimatable</#if><#if !data.ranged>implements IAnimatable</#if> {
-      public static final EntityDataAccessor<Boolean> SHOOT = SynchedEntityData.defineId(
+    public static final EntityDataAccessor<Boolean> SHOOT = SynchedEntityData.defineId(
       ${name}Entity.class, EntityDataSerializers.BOOLEAN);
-      public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(
+    public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(
       ${name}Entity.class, EntityDataSerializers.STRING);
-      public static final EntityDataAccessor<String> TEXTURE = SynchedEntityData.defineId(
+    public static final EntityDataAccessor<String> TEXTURE = SynchedEntityData.defineId(
       ${name}Entity.class, EntityDataSerializers.STRING);
-      private AnimationFactory factory = GeckoLibUtil.createFactory(this);
+    private AnimationFactory factory = GeckoLibUtil.createFactory(this);
 	private boolean swinging;
 	private boolean lastloop;
 	private long lastSwing;
@@ -653,9 +653,10 @@ public class ${name}Entity extends ${extendsClass} <#if data.ranged>implements R
 	}
     </#if>
 
-	<#if hasProcedure(data.onMobTickUpdate)>
+	<#if hasProcedure(data.onMobTickUpdate) || data.boundingBoxScale??>
 	@Override public void baseTick() {
 		super.baseTick();
+		<#if hasProcedure(data.onMobTickUpdate)>
 		<@procedureCode data.onMobTickUpdate, {
 			"x": "this.getX()",
 			"y": "this.getY()",
@@ -663,7 +664,26 @@ public class ${name}Entity extends ${extendsClass} <#if data.ranged>implements R
 			"entity": "this",
 			"world": "this.level"
 		}/>
+		</#if>
+		<#if data.boundingBoxScale??>
+        	this.refreshDimensions();
+        </#if>
 	}
+    </#if>
+
+    <#if data.boundingBoxScale??>
+    @Override public EntityDimensions getDimensions(Pose p_33597_) {
+    	<#if hasProcedure(data.boundingBoxScale)>
+    		Entity entity = this;
+    		Level world = this.level;
+    		double x = this.getX();
+    		double y = entity.getY();
+    		double z = entity.getZ();
+    		return super.getDimensions(p_33597_).scale((float) <@procedureOBJToNumberCode data.boundingBoxScale/>);
+    	<#else>
+    		return super.getDimensions(p_33597_).scale((float) ${data.boundingBoxScale.getFixedValue()});
+    	</#if>
+    }
     </#if>
 
 	<#if hasProcedure(data.onPlayerCollidesWith)>

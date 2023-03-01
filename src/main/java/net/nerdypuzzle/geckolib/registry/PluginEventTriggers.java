@@ -7,6 +7,7 @@ import net.mcreator.ui.modgui.ModElementGUI;
 import net.mcreator.util.image.ImageUtils;
 import net.nerdypuzzle.geckolib.Launcher;
 import net.nerdypuzzle.geckolib.element.types.GeckolibElement;
+import net.nerdypuzzle.geckolib.parts.PluginPanelGeckolib;
 
 import javax.swing.*;
 
@@ -26,7 +27,16 @@ public class PluginEventTriggers {
         geckolib.add(Launcher.ACTION_REGISTRY.importGeckoLibModel);
         geckolib.add(Launcher.ACTION_REGISTRY.importDisplaySettings);
         geckolib.addSeparator();
+        geckolib.add(Launcher.ACTION_REGISTRY.convertion_to_geckolib);
+        geckolib.add(Launcher.ACTION_REGISTRY.convertion_from_geckolib);
+        geckolib.addSeparator();
         geckolib.add(Launcher.ACTION_REGISTRY.tutorial);
+
+        PluginPanelGeckolib panel = new PluginPanelGeckolib(mcreator.mv);
+        panel.setOpaque(false);
+
+        mcreator.mv.resourcesPan.addTab(L10N.t("menubar.geckolib", new Object[0]), panel);
         mcreator.getMainMenuBar().add(geckolib);
     }
+
 }

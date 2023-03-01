@@ -23,10 +23,8 @@
 	 ]
     },
     {
-     "type": "field_data_list_selector",
-     "name": "element",
-	 "datalist": "animatedarmor",
-	 "customEntryProviders": "animatedarmor"
+     "type": "field_input",
+     "name": "element"
     }
 ],
    "inputsInline": true,

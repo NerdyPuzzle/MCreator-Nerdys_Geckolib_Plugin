@@ -80,6 +80,11 @@ public class ${JavaModName} implements ModInitializer {
 		${JavaModName}GeckoLibArmors.loadItems();
 		</#if>
 
+		<#if w.hasElementsOfType("animatedblock")>
+		TileRegistry.load();
+		DisplayRegistry.load();
+		</#if>
+
 		<#if settings.getMCreatorDependencies().contains("portinglib")>
 		ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
 			if (handler.getPlayer().getExtraCustomData().getCompound("PlayerPersisted").isEmpty()) {

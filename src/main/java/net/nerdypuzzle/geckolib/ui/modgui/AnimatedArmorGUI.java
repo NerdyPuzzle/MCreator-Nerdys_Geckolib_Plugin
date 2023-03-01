@@ -824,8 +824,4 @@ public class AnimatedArmorGUI extends ModElementGUI<AnimatedArmor> implements Ge
         return armor;
     }
 
-    @Override public @Nullable URI contextURL() throws URISyntaxException {
-        return new URI(MCreatorApplication.SERVER_DOMAIN + "/wiki/how-make-armor");
-    }
-
 }

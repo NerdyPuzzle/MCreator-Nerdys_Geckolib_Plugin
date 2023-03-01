@@ -602,7 +602,7 @@ public class ${name}Block extends BaseEntityBlock <#if data.isWaterloggable>impl
 		@Override public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
 			if (state.getBlock() != newState.getBlock()) {
 				BlockEntity blockEntity = world.getBlockEntity(pos);
-				if (blockEntity instanceof ${name}BlockEntity be) {
+				if (blockEntity instanceof ${name}TileEntity be) {
 					Containers.dropContents(world, pos, be);
 					world.updateNeighbourForOutputSignal(pos, this);
 				}
@@ -619,7 +619,7 @@ public class ${name}Block extends BaseEntityBlock <#if data.isWaterloggable>impl
 
 	    @Override public int getAnalogOutputSignal(BlockState blockState, Level world, BlockPos pos) {
 			BlockEntity tileentity = world.getBlockEntity(pos);
-			if (tileentity instanceof ${name}BlockEntity be)
+			if (tileentity instanceof ${name}TileEntity be)
 				return AbstractContainerMenu.getRedstoneSignalFromContainer(be);
 			else
 				return 0;

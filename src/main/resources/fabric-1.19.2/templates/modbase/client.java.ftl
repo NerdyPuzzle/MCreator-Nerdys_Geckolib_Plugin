@@ -44,6 +44,7 @@ import net.fabricmc.api.Environment;
 		<#if w.hasJavaModels()>${JavaModName}Models.load();</#if>
 		<#if w.hasElementsOfBaseType("entity")>${JavaModName}EntityRenderers.load();</#if>
 		<#if w.hasElementsOfType("animatedarmor")>${JavaModName}GeckoLibArmors.loadRenderers();</#if>
+		<#if w.hasElementsOfType("animatedblock")>ClientListener.registerRenderers();</#if>
 	}
 }
 

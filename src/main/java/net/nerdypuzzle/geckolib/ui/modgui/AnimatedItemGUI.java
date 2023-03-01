@@ -527,9 +527,5 @@ public class AnimatedItemGUI extends ModElementGUI<AnimatedItem> implements Geck
         return item;
     }
 
-    @Nullable
-    public URI contextURL() throws URISyntaxException {
-        return new URI("https://mcreator.net/wiki/how-make-item");
-    }
 }
 

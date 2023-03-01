@@ -31,6 +31,8 @@ import net.mcreator.ui.init.UIRES;
 import net.mcreator.ui.laf.renderer.WTextureComboBoxRenderer;
 import net.mcreator.ui.minecraft.*;
 import net.mcreator.ui.modgui.ModElementGUI;
+import net.mcreator.ui.procedure.AbstractProcedureSelector;
+import net.mcreator.ui.procedure.NumberProcedureSelector;
 import net.mcreator.ui.procedure.ProcedureSelector;
 import net.mcreator.ui.validation.AggregatedValidationResult;
 import net.mcreator.ui.validation.Validator;
@@ -72,8 +74,8 @@ public class AnimatedEntityGUI extends ModElementGUI<AnimatedEntity> implements 
     private ProcedureSelector onInitialSpawn;
 
     private ProcedureSelector spawningCondition;
-    private ProcedureSelector transparentModelCondition;
-    private ProcedureSelector isShakingCondition;
+    public NumberProcedureSelector visualScale;
+    public NumberProcedureSelector boundingBoxScale;
     private ProcedureSelector solidBoundingBox;
 
     private final SoundSelector livingSound = new SoundSelector(mcreator);
@@ -204,7 +206,6 @@ public class AnimatedEntityGUI extends ModElementGUI<AnimatedEntity> implements 
     private final JCheckBox disableDeathRotation = L10N.checkbox("elementgui.common.enable", new Object[0]);
     private final JSpinner deathTime = new JSpinner(new SpinnerNumberModel(20, 0, 10000, 1));
     private final JSpinner lerp = new JSpinner(new SpinnerNumberModel(4, 0, 1000, 1));
-    private final JSpinner babyScale = new JSpinner(new SpinnerNumberModel(0.5, 0.1, 1, 0.1));
     private final JSpinner height = new JSpinner(new SpinnerNumberModel(1, 0.1, 100, 0.1));
 
     private final VTextField animation1 = new VTextField();
@@ -327,16 +328,14 @@ public class AnimatedEntityGUI extends ModElementGUI<AnimatedEntity> implements 
                 L10N.t("elementgui.living_entity.condition_natural_spawn"), VariableTypeLoader.BuiltInTypes.LOGIC,
                 Dependency.fromString("x:number/y:number/z:number/world:world")).setDefaultName(
                 L10N.t("condition.common.use_vanilla")).makeInline();
-        transparentModelCondition = new ProcedureSelector(this.withEntry("entity/condition_is_model_transparent"),
-                mcreator, L10N.t("elementgui.living_entity.condition_is_model_transparent"),
-                ProcedureSelector.Side.CLIENT, true, VariableTypeLoader.BuiltInTypes.LOGIC,
-                Dependency.fromString("x:number/y:number/z:number/world:world/entity:entity")).setDefaultName(
-                L10N.t("condition.common.false")).makeInline();
-        isShakingCondition = new ProcedureSelector(this.withEntry("entity/condition_is_shaking"), mcreator,
-                L10N.t("elementgui.living_entity.condition_is_shaking"), ProcedureSelector.Side.CLIENT, true,
-                VariableTypeLoader.BuiltInTypes.LOGIC,
-                Dependency.fromString("x:number/y:number/z:number/world:world/entity:entity")).setDefaultName(
-                L10N.t("condition.common.false")).makeInline();
+        visualScale = new NumberProcedureSelector(this.withEntry("geckolib/visual_scale"), mcreator,
+                L10N.t("elementgui.animatedentity.visual_scale"), AbstractProcedureSelector.Side.BOTH,
+                new JSpinner(new SpinnerNumberModel(1, 0.1, 1024, 0.1)), 300, Dependency.fromString(
+                "x:number/y:number/z:number/world:world/entity:entity"));
+        boundingBoxScale = new NumberProcedureSelector(this.withEntry("geckolib/bounding_box_scale"), mcreator,
+                L10N.t("elementgui.animatedentity.bounding_box_scale"), AbstractProcedureSelector.Side.BOTH,
+                new JSpinner(new SpinnerNumberModel(1, 0.1, 1024, 0.1)), 300, Dependency.fromString(
+                "x:number/y:number/z:number/world:world/entity:entity"));
         solidBoundingBox = new ProcedureSelector(this.withEntry("geckolib/condition_solid_bounding_box"), mcreator,
                 L10N.t("elementgui.living_entity.condition_solid_bounding_box"),
                 VariableTypeLoader.BuiltInTypes.LOGIC,
@@ -510,10 +509,10 @@ public class AnimatedEntityGUI extends ModElementGUI<AnimatedEntity> implements 
         spo2.add(this.geoModel);
 
         spo2.add(new JEmptyBox());
-        spo2.add(transparentModelCondition);
+        spo2.add(visualScale);
 
         spo2.add(new JEmptyBox());
-        spo2.add(isShakingCondition);
+        spo2.add(boundingBoxScale);
 
         spo2.add(new JEmptyBox());
         spo2.add(solidBoundingBox);
@@ -640,12 +639,8 @@ public class AnimatedEntityGUI extends ModElementGUI<AnimatedEntity> implements 
                 HelpUtils.wrapWithHelpButton(this.withEntry("entity/do_ranged_attacks"), ranged),
                 rangedItemType, rangedAttackItem, rangedAttackInterval, rangedAttackRadius));
 
-        JPanel aitop3 = new JPanel(new GridLayout(2, 1, 0, 0));
+        JPanel aitop3 = new JPanel(new GridLayout(1, 1, 0, 0));
         aitop3.setOpaque(false);
-
-        aitop3.add(PanelUtils.join(FlowLayout.LEFT,
-                HelpUtils.wrapWithHelpButton(this.withEntry("geckolib/baby_model"),
-                        L10N.label("elementgui.animatedentity.baby_model")), babyScale));
 
         aitop3.add(PanelUtils.join(FlowLayout.LEFT,
                 HelpUtils.wrapWithHelpButton(this.withEntry("geckolib/eye_height"),
@@ -1092,8 +1087,8 @@ public class AnimatedEntityGUI extends ModElementGUI<AnimatedEntity> implements 
         finishedDying.refreshListKeepSelected();;
 
         spawningCondition.refreshListKeepSelected();
-        transparentModelCondition.refreshListKeepSelected();
-        isShakingCondition.refreshListKeepSelected();
+        visualScale.refreshListKeepSelected();
+        boundingBoxScale.refreshListKeepSelected();
         solidBoundingBox.refreshListKeepSelected();
         conditionalAnimation.refreshListKeepSelected();
         loop.refreshListKeepSelected();
@@ -1172,15 +1167,14 @@ public class AnimatedEntityGUI extends ModElementGUI<AnimatedEntity> implements 
         groupName.setText(livingEntity.groupName);
         conditionalAnimation.setSelectedProcedure(livingEntity.conditionalAnimation);
         lerp.setValue(livingEntity.lerp);
-        babyScale.setValue(livingEntity.babyScale);
         loop.setSelectedProcedure(livingEntity.loop);
         eyeHeight.setSelected(livingEntity.eyeHeight);
         height.setValue(livingEntity.height);
         mobName.setText(livingEntity.mobName);
         mobModelTexture.setSelectedItem(livingEntity.mobModelTexture);
         mobModelGlowTexture.setSelectedItem(livingEntity.mobModelGlowTexture);
-        transparentModelCondition.setSelectedProcedure(livingEntity.transparentModelCondition);
-        isShakingCondition.setSelectedProcedure(livingEntity.isShakingCondition);
+        visualScale.setSelectedProcedure(livingEntity.visualScale);
+        boundingBoxScale.setSelectedProcedure(livingEntity.boundingBoxScale);
         solidBoundingBox.setSelectedProcedure(livingEntity.solidBoundingBox);
         mobSpawningType.setSelectedItem(livingEntity.mobSpawningType);
         rangedItemType.setSelectedItem(livingEntity.rangedItemType);
@@ -1341,7 +1335,6 @@ public class AnimatedEntityGUI extends ModElementGUI<AnimatedEntity> implements 
         livingEntity.groupName = groupName.getText();
         livingEntity.conditionalAnimation = conditionalAnimation.getSelectedProcedure();
         livingEntity.lerp = (int) lerp.getValue();
-        livingEntity.babyScale = (double) babyScale.getValue();
         livingEntity.loop = loop.getSelectedProcedure();
         livingEntity.eyeHeight = eyeHeight.isSelected();
         livingEntity.height = (double) height.getValue();
@@ -1350,8 +1343,8 @@ public class AnimatedEntityGUI extends ModElementGUI<AnimatedEntity> implements 
         livingEntity.mobModelTexture = mobModelTexture.getSelectedItem();
         livingEntity.mobModelGlowTexture = mobModelGlowTexture.getSelectedItem();
         livingEntity.spawnEggBaseColor = spawnEggBaseColor.getColor();
-        livingEntity.transparentModelCondition = transparentModelCondition.getSelectedProcedure();
-        livingEntity.isShakingCondition = isShakingCondition.getSelectedProcedure();
+        livingEntity.visualScale = visualScale.getSelectedProcedure();
+        livingEntity.boundingBoxScale = boundingBoxScale.getSelectedProcedure();
         livingEntity.solidBoundingBox = solidBoundingBox.getSelectedProcedure();
         livingEntity.spawnEggDotColor = spawnEggDotColor.getColor();
         livingEntity.hasSpawnEgg = hasSpawnEgg.isSelected();
@@ -1437,10 +1430,6 @@ public class AnimatedEntityGUI extends ModElementGUI<AnimatedEntity> implements 
         livingEntity.inventoryStackSize = (int) inventoryStackSize.getValue();
         livingEntity.guiBoundTo = (String) guiBoundTo.getSelectedItem();
         return livingEntity;
-    }
-
-    @Override public @Nullable URI contextURL() throws URISyntaxException {
-        return new URI(MCreatorApplication.SERVER_DOMAIN + "/wiki/how-make-mob");
     }
 
 }

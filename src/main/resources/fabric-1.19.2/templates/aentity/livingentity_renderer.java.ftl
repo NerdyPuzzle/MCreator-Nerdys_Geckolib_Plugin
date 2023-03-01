@@ -36,14 +36,22 @@ public class ${name}Renderer extends GeoEntityRenderer<${name}Entity> {
    }
 
    @Override
-   public RenderType getRenderType(${name}Entity animatable, float partialTicks, PoseStack stack,
+   public RenderType getRenderType(${name}Entity entity, float partialTicks, PoseStack stack,
                 MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn,
                 ResourceLocation textureLocation) {
-		if (!animatable.isBaby())
-                stack.scale(1.0F, 1.0F, 1.0F);
-		else
-		stack.scale(${data.babyScale}F, ${data.babyScale}F, ${data.babyScale}F); 
-      return RenderType.entityTranslucent(getTextureLocation(animatable));
+        <#if data.visualScale??>
+			<#if hasProcedure(data.visualScale)>
+        		Level world = entity.level;
+        		double x = entity.getX();
+        		double y = entity.getY();
+        		double z = entity.getZ();
+        		float scale = (float) <@procedureOBJToNumberCode data.visualScale/>;
+        		stack.scale(scale, scale, scale);
+        	<#else>
+        		stack.scale(${data.visualScale.getFixedValue()}f, ${data.visualScale.getFixedValue()}f, ${data.visualScale.getFixedValue()}f);
+        	</#if>
+		</#if>
+      return RenderType.entityTranslucent(getTextureLocation(entity));
    }
 
    <#if data.disableDeathRotation>

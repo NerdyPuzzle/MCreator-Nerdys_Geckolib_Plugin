@@ -1,1 +1,1 @@
-${JavaModName}GeckoLibArmors.GeckoLibArmorItems.${((field$element)?replace("CUSTOM:", ""))?upper_case}_${field$slot}
+${JavaModName}GeckoLibArmors.GeckoLibArmorItems.${(field$element)?upper_case}_${field$slot}

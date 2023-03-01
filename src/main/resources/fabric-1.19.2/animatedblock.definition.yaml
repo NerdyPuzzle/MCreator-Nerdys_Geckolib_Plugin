@@ -1,0 +1,105 @@
+templates:
+  - template: ablock/block.java.ftl
+    name: "@SRCROOT/@BASEPACKAGEPATH/block/@NAMEBlock.java"
+  - template: animatedblockutil/blockentitytile.java.ftl
+    name: "@SRCROOT/@BASEPACKAGEPATH/block/entity/@NAMETileEntity.java"
+  - template: animatedblockutil/blockentityrenderer.java.ftl
+    name: "@SRCROOT/@BASEPACKAGEPATH/block/renderer/@NAMETileRenderer.java"
+  - template: animatedblockutil/blockentitymodel.java.ftl
+    name: "@SRCROOT/@BASEPACKAGEPATH/block/model/@NAMEBlockModel.java"
+
+
+  - template: animatedblockutil/displayitem/displayrenderer.java.ftl
+    name: "@SRCROOT/@BASEPACKAGEPATH/block/renderer/@NAMEDisplayItemRenderer.java"
+  - template: animatedblockutil/displayitem/displaymodel.java.ftl
+    name: "@SRCROOT/@BASEPACKAGEPATH/block/model/@NAMEDisplayModel.java"
+  - template: animatedblockutil/displayitem/displayitem.java.ftl
+    name: "@SRCROOT/@BASEPACKAGEPATH/block/display/@NAMEDisplayItem.java"
+
+
+  - template: ablock/oregen.java.ftl
+    condition: doesGenerateInWorld()
+    name: "@SRCROOT/@BASEPACKAGEPATH/world/features/ores/@NAMEFeature.java"
+  - template: ablock/blockentity.java.ftl
+    condition: hasInventory
+    name: "@SRCROOT/@BASEPACKAGEPATH/block/entity/@NAMEBlockEntity.java"
+
+  # Normal block templates
+  - template: ajson/block_states.json.ftl
+    writer: json
+    variables: "variant= "
+    name: "@MODASSETSROOT/blockstates/@registryname.json"
+
+  # Block item templates
+  - template: ajson/block_item.json.ftl
+    writer: json
+    name: "@MODASSETSROOT/models/item/@registryname_item.json"
+  - template: ajson/block_particle.json.ftl
+    name: "@MODASSETSROOT/models/custom/@registryname_particle.json"
+
+localizationkeys:
+  - key: block.@modid.@registryname
+    mapto: name
+
+global_templates:
+  - template: ablock/mineable_tag.json.ftl
+    writer: json
+    variables: "type=pickaxe"
+    name: "@RESROOT/data/minecraft/tags/blocks/mineable/pickaxe.json"
+    condition: ${w.hasBlocksMineableWith('pickaxe')}
+  - template: ablock/mineable_tag.json.ftl
+    writer: json
+    variables: "type=axe"
+    name: "@RESROOT/data/minecraft/tags/blocks/mineable/axe.json"
+    condition: ${w.hasBlocksMineableWith('axe')}
+  - template: ablock/mineable_tag.json.ftl
+    writer: json
+    variables: "type=shovel"
+    name: "@RESROOT/data/minecraft/tags/blocks/mineable/shovel.json"
+    condition: ${w.hasBlocksMineableWith('shovel')}
+  - template: ablock/mineable_tag.json.ftl
+    writer: json
+    variables: "type=hoe"
+    name: "@RESROOT/data/minecraft/tags/blocks/mineable/hoe.json"
+    condition: ${w.hasBlocksMineableWith('hoe')}
+  - template: animatedblockutil/displayitem/itemregistry/displayregistry.java.ftl
+    name: "@SRCROOT/@BASEPACKAGEPATH/block/registry/DisplayRegistry.java"
+  - template: animatedblockutil/registertile/tileregistry.java.ftl
+    name: "@SRCROOT/@BASEPACKAGEPATH/block/registry/TileRegistry.java"
+  - template: animatedblockutil/listeners/blocklistener.java.ftl
+    name: "@SRCROOT/@BASEPACKAGEPATH/block/listener/ClientListener.java"
+  - template: ablock/mineable_level_tag.json.ftl
+    writer: json
+    variables: level=0
+    name: "@RESROOT/data/fabric/tags/blocks/mineable/needs_tool_level_0.json"
+  - template: ablock/mineable_level_tag.json.ftl
+    writer: json
+    variables: level=1
+    name: "@RESROOT/data/fabric/tags/blocks/mineable/needs_tool_level_1.json"
+  - template: ablock/mineable_level_tag.json.ftl
+    writer: json
+    variables: level=2
+    name: "@RESROOT/data/fabric/tags/blocks/mineable/needs_tool_level_2.json"
+  - template: ablock/mineable_level_tag.json.ftl
+    writer: json
+    variables: level=3
+    name: "@RESROOT/data/fabric/tags/blocks/mineable/needs_tool_level_3.json"
+  - template: ablock/mineable_level_tag.json.ftl
+    writer: json
+    variables: level=4
+    name: "@RESROOT/data/fabric/tags/blocks/mineable/needs_tool_level_4.json"
+  - template: ablock/mineable_level_tag.json.ftl
+    writer: json
+    variables: level=5
+    name: "@RESROOT/data/fabric/tags/blocks/mineable/needs_tool_level_5.json"
+  - template: ablock/mineable_level_tag.json.ftl
+    writer: json
+    variables: level=6
+    name: "@RESROOT/data/fabric/tags/blocks/mineable/needs_tool_level_6.json"
+  - template: ablock/mineable_level_tag.json.ftl
+    writer: json
+    variables: level=7
+    name: "@RESROOT/data/fabric/tags/blocks/mineable/needs_tool_level_7.json"
+
+field_exclusions: [ displayFluidOverlay, plantsGrowOn, beaconColorModifier, isLadder, enchantPowerBonus, aiPathNodeType,
+                    hasEnergyStorage, isFluidTank, energyInitial, energyCapacity, energyMaxReceive, energyMaxExtract, fluidCapacity, fluidRestrictions, canRedstoneConnect ]

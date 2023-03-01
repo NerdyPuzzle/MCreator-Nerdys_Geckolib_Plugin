@@ -6,6 +6,7 @@ import net.mcreator.element.BaseType;
 import net.mcreator.element.GeneratableElement;
 import net.mcreator.element.ModElementType;
 import net.mcreator.element.parts.*;
+import net.mcreator.element.parts.procedure.NumberProcedure;
 import net.mcreator.element.parts.procedure.Procedure;
 import net.mcreator.element.types.interfaces.ICommonType;
 import net.mcreator.element.types.interfaces.IEntityWithModel;
@@ -34,8 +35,8 @@ public class AnimatedEntity extends GeneratableElement
     public String mobModelName;
     public String mobModelTexture;
     public String mobModelGlowTexture;
-    public Procedure transparentModelCondition;
-    public Procedure isShakingCondition;
+    public NumberProcedure visualScale;
+    public NumberProcedure boundingBoxScale;
     public Procedure solidBoundingBox;
 
     public double modelWidth, modelHeight, modelShadowSize;
@@ -76,7 +77,6 @@ public class AnimatedEntity extends GeneratableElement
     public int inventoryStackSize;
     public int deathTime;
     public int lerp;
-    public double babyScale;
 
     public boolean disableCollisions;
 
@@ -174,10 +174,6 @@ public class AnimatedEntity extends GeneratableElement
     public int maxNumberOfMobsPerGroup;
     public List<BiomeEntry> restrictionBiomes;
     public boolean spawnInDungeons;
-
-    private AnimatedEntity() {
-        this(null);
-    }
 
     public AnimatedEntity(ModElement element) {
         super(element);

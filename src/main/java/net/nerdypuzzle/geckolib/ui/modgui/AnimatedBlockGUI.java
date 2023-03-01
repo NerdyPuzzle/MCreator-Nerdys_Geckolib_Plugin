@@ -364,8 +364,8 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
         pane8.setOpaque(false);
         JPanel destal = new JPanel(new GridLayout(3, 4));
         destal.setOpaque(false);
-        this.texture = (new TextureHolder(new TypedTextureSelectorDialog(this.mcreator, TextureType.BLOCK))).flipOnX();
-        this.textureTop = (new TextureHolder(new TypedTextureSelectorDialog(this.mcreator, TextureType.BLOCK))).flipOnX();
+        this.texture = (new TextureHolder(new TypedTextureSelectorDialog(this.mcreator, TextureType.BLOCK))).setFlipUV(true);
+        this.textureTop = (new TextureHolder(new TypedTextureSelectorDialog(this.mcreator, TextureType.BLOCK))).setFlipUV(true);
         this.textureLeft = new TextureHolder(new TypedTextureSelectorDialog(this.mcreator, TextureType.BLOCK));
         this.textureFront = new TextureHolder(new TypedTextureSelectorDialog(this.mcreator, TextureType.BLOCK));
         this.textureRight = new TextureHolder(new TypedTextureSelectorDialog(this.mcreator, TextureType.BLOCK));
@@ -897,13 +897,13 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
     }
 
     private void updateTextureOptions() {
-        this.texture.setVisible(true);
-
-            this.textureTop.setVisible(false);
-            this.textureLeft.setVisible(false);
-            this.textureFront.setVisible(false);
-            this.textureRight.setVisible(false);
-            this.textureBack.setVisible(false);
+        texture.setFlipUV(false);
+        textureTop.setFlipUV(false);
+        textureTop.setVisible(false);
+        textureLeft.setVisible(false);
+        textureFront.setVisible(false);
+        textureRight.setVisible(false);
+        textureBack.setVisible(false);
 
     }
 
@@ -1255,8 +1255,4 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
         return block;
     }
 
-    @Nullable
-    public URI contextURL() throws URISyntaxException {
-        return new URI("https://mcreator.net/wiki/how-make-block");
-    }
 }

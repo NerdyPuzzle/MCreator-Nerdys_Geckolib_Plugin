@@ -25,7 +25,6 @@ templates:
     condition: hasSpawnEgg
 
 unmodifiable_ai_bases: [ Bat, MagmaCube, Slime ]
-field_exclusions: [ isShakingCondition, transparentModelCondition ]
 
 localizationkeys:
   - key: item.@modid.@registryname_spawn_egg
