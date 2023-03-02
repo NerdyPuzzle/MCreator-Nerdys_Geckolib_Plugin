@@ -23,8 +23,6 @@ templates:
     writer: json
     name: "@MODASSETSROOT/models/item/@registryname.json"
 
-field_exclusions: [ hasGlow, glowCondition ]
-
 localizationkeys:
   - key: item.@modid.@registryname
     mapto: name

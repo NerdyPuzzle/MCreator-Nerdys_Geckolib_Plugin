@@ -165,7 +165,7 @@ public class ${name}Block extends BaseEntityBlock <#if data.isWaterloggable>impl
 	@Nullable
 	@Override
 	public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
-		return TileRegistry.${(data.getModElement().getRegistryName())?upper_case}.get().create(blockPos, blockState);
+		return ${JavaModName}BlockEntities.${(data.getModElement().getRegistryName())?upper_case}.get().create(blockPos, blockState);
 	}
 
 	<#if data.blockBase?has_content && data.blockBase == "Stairs">

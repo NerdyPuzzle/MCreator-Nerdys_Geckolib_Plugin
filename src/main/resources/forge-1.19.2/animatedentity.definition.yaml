@@ -1,8 +1,4 @@
 global_templates:
-  - template: aentity/livingentity_item.java.ftl
-    name: "@SRCROOT/@BASEPACKAGEPATH/entity/spawneggs/GeckoLibSpawnEggs.java"
-  - template: aentity/livingentity_registry.java.ftl
-    name: "@SRCROOT/@BASEPACKAGEPATH/init/@JavaModNameGeckoLibEntities.java"
   - template: aentity/animation_sync_factory.java.ftl
     name: "@SRCROOT/@BASEPACKAGEPATH/init/EntityAnimationFactory.java"
 

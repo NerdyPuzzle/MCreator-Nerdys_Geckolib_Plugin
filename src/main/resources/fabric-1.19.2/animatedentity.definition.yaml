@@ -1,7 +1,3 @@
-global_templates:
-  - template: aentity/livingentity_item.java.ftl
-    name: "@SRCROOT/@BASEPACKAGEPATH/entity/spawneggs/GeckoLibSpawnEggs.java"
-
 templates:
   - template: aentity/livingentity.java.ftl
     name: "@SRCROOT/@BASEPACKAGEPATH/entity/@NAMEEntity.java"

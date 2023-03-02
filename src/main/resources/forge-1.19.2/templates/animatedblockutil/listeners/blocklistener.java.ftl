@@ -7,17 +7,9 @@ public class ClientListener {
 	@SubscribeEvent
 	public static void registerRenderers(final EntityRenderersEvent.RegisterRenderers event) {
 		<#list animatedblocks as ablock>
-			event.registerBlockEntityRenderer(TileRegistry.${ablock.getModElement().getRegistryNameUpper()}.get(), 
+			event.registerBlockEntityRenderer(${JavaModName}BlockEntities.${ablock.getModElement().getRegistryNameUpper()}.get(), 
 			${ablock.getModElement().getName()}TileRenderer::new);
 		</#list>
-	}
-
-	@SubscribeEvent
-	public static void register(FMLConstructModEvent event) {
-		event.enqueueWork(() -> {
-			TileRegistry.TILES.register(FMLJavaModLoadingContext.get().getModEventBus());
-			DisplayRegistry.DISPLAY.register(FMLJavaModLoadingContext.get().getModEventBus());
-		});
 	}
 
 }

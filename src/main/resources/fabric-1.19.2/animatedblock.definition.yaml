@@ -1,8 +1,6 @@
 templates:
   - template: ablock/block.java.ftl
     name: "@SRCROOT/@BASEPACKAGEPATH/block/@NAMEBlock.java"
-  - template: animatedblockutil/blockentitytile.java.ftl
-    name: "@SRCROOT/@BASEPACKAGEPATH/block/entity/@NAMETileEntity.java"
   - template: animatedblockutil/blockentityrenderer.java.ftl
     name: "@SRCROOT/@BASEPACKAGEPATH/block/renderer/@NAMETileRenderer.java"
   - template: animatedblockutil/blockentitymodel.java.ftl
@@ -21,8 +19,7 @@ templates:
     condition: doesGenerateInWorld()
     name: "@SRCROOT/@BASEPACKAGEPATH/world/features/ores/@NAMEFeature.java"
   - template: ablock/blockentity.java.ftl
-    condition: hasInventory
-    name: "@SRCROOT/@BASEPACKAGEPATH/block/entity/@NAMEBlockEntity.java"
+    name: "@SRCROOT/@BASEPACKAGEPATH/block/entity/@NAMETileEntity.java"
 
   # Normal block templates
   - template: ajson/block_states.json.ftl
@@ -62,10 +59,6 @@ global_templates:
     variables: "type=hoe"
     name: "@RESROOT/data/minecraft/tags/blocks/mineable/hoe.json"
     condition: ${w.hasBlocksMineableWith('hoe')}
-  - template: animatedblockutil/displayitem/itemregistry/displayregistry.java.ftl
-    name: "@SRCROOT/@BASEPACKAGEPATH/block/registry/DisplayRegistry.java"
-  - template: animatedblockutil/registertile/tileregistry.java.ftl
-    name: "@SRCROOT/@BASEPACKAGEPATH/block/registry/TileRegistry.java"
   - template: animatedblockutil/listeners/blocklistener.java.ftl
     name: "@SRCROOT/@BASEPACKAGEPATH/block/listener/ClientListener.java"
   - template: ablock/mineable_level_tag.json.ftl

@@ -72,17 +72,8 @@ public class ${JavaModName} implements ModInitializer {
 		GeckoLib.initialize();
 		</#if>
 
-		<#if w.hasElementsOfType("animatedentity")>
-		GeckoLibSpawnEggs.load();
-		</#if>
-
 		<#if w.hasElementsOfType("animatedarmor")>
 		${JavaModName}GeckoLibArmors.loadItems();
-		</#if>
-
-		<#if w.hasElementsOfType("animatedblock")>
-		TileRegistry.load();
-		DisplayRegistry.load();
 		</#if>
 
 		<#if settings.getMCreatorDependencies().contains("portinglib")>

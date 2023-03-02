@@ -10,6 +10,7 @@ import net.nerdypuzzle.geckolib.element.types.GeckolibElement;
 import net.nerdypuzzle.geckolib.parts.PluginPanelGeckolib;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class PluginEventTriggers {
     public static void dependencyWarning(MCreator mcreator, ModElementGUI modElement) {

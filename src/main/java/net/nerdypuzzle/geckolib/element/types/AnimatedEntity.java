@@ -10,10 +10,12 @@ import net.mcreator.element.parts.procedure.NumberProcedure;
 import net.mcreator.element.parts.procedure.Procedure;
 import net.mcreator.element.types.interfaces.ICommonType;
 import net.mcreator.element.types.interfaces.IEntityWithModel;
+import net.mcreator.element.types.interfaces.IMCItemProvider;
 import net.mcreator.element.types.interfaces.ITabContainedElement;
 import net.mcreator.generator.blockly.BlocklyBlockCodeGenerator;
 import net.mcreator.generator.blockly.ProceduralBlockCodeGenerator;
 import net.mcreator.generator.template.IAdditionalTemplateDataProvider;
+import net.mcreator.minecraft.MCItem;
 import net.mcreator.minecraft.MinecraftImageGenerator;
 import net.mcreator.ui.blockly.BlocklyEditorType;
 import net.mcreator.workspace.elements.ModElement;
@@ -27,7 +29,7 @@ import java.util.List;
 
 @SuppressWarnings("unused")
 public class AnimatedEntity extends GeneratableElement
-        implements IEntityWithModel, ITabContainedElement, ICommonType {
+        implements IEntityWithModel, ITabContainedElement, ICommonType, IMCItemProvider {
 
     public String mobName;
     public String mobLabel;
@@ -175,6 +177,10 @@ public class AnimatedEntity extends GeneratableElement
     public List<BiomeEntry> restrictionBiomes;
     public boolean spawnInDungeons;
 
+    private AnimatedEntity() {
+        this(null);
+    }
+
     public AnimatedEntity(ModElement element) {
         super(element);
 
@@ -196,8 +202,8 @@ public class AnimatedEntity extends GeneratableElement
         return null;
     }
 
-    @Override public Collection<BaseType> getBaseTypesProvided() {
-            return List.of(BaseType.ENTITY);
+    public Collection<BaseType> getBaseTypesProvided() {
+        return this.hasSpawnEgg ? List.of(BaseType.ITEM, BaseType.ENTITY) : List.of(BaseType.ENTITY);
     }
 
     public boolean hasGlowTexture() {
@@ -219,6 +225,10 @@ public class AnimatedEntity extends GeneratableElement
 
     public boolean hasCustomProjectile() {
         return ranged && "Default item".equals(rangedItemType) && !rangedAttackItem.isEmpty();
+    }
+
+    public List<MCItem> providedMCItems() {
+        return this.hasSpawnEgg ? List.of(new MCItem.Custom(this.getModElement(), "spawn_egg", "item", "Spawn egg")) : Collections.emptyList();
     }
 
     @Override public @Nullable IAdditionalTemplateDataProvider getAdditionalTemplateData() {

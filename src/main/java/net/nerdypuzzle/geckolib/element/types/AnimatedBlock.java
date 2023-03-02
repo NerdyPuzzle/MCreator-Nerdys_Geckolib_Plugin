@@ -262,13 +262,9 @@ public class AnimatedBlock extends GeneratableElement implements IBlock, ITabCon
     }
 
     public Collection<BaseType> getBaseTypesProvided() {
-        List<BaseType> baseTypes = new ArrayList(List.of(BaseType.BLOCK, BaseType.ITEM));
+        List<BaseType> baseTypes = new ArrayList(List.of(BaseType.BLOCK, BaseType.ITEM, BaseType.BLOCKENTITY));
         if (this.doesGenerateInWorld()) {
             baseTypes.add(BaseType.FEATURE);
-        }
-
-        if (this.hasInventory) {
-            baseTypes.add(BaseType.BLOCKENTITY);
         }
 
         return baseTypes;
