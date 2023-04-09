@@ -30,7 +30,7 @@ templates:
   # Block item templates
   - template: ajson/block_item.json.ftl
     writer: json
-    name: "@MODASSETSROOT/models/item/@registryname_item.json"
+    name: "@MODASSETSROOT/models/item/@registryname.json"
   - template: ajson/block_particle.json.ftl
     name: "@MODASSETSROOT/models/custom/@registryname_particle.json"
 

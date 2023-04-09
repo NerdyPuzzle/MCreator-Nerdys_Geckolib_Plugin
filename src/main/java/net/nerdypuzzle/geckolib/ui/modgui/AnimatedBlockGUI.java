@@ -49,12 +49,9 @@ import net.nerdypuzzle.geckolib.element.types.GeckolibElement;
 import net.nerdypuzzle.geckolib.parts.GeomodelRenderer;
 import net.nerdypuzzle.geckolib.parts.PluginModelActions;
 
-import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -118,6 +115,7 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
     private final JSpinner energyMaxReceive;
     private final JSpinner energyMaxExtract;
     private final JSpinner fluidCapacity;
+    private final JSpinner animationCount;
     private FluidListField fluidRestrictions;
     private final DataListComboBox soundOnStep;
     private final JRadioButton defaultSoundType;
@@ -244,6 +242,7 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
         this.slipperiness = new JSpinner(new SpinnerNumberModel(0.6, 0.01, 5.0, 0.1));
         this.speedFactor = new JSpinner(new SpinnerNumberModel(1.0, -1000.0, 1000.0, 0.1));
         this.jumpFactor = new JSpinner(new SpinnerNumberModel(1.0, -1000.0, 1000.0, 0.1));
+        this.animationCount = new JSpinner(new SpinnerNumberModel(0.0, 0.0, 100, 1));
         this.rotationMode = new JComboBox(new String[]{"<html>No rotation<br><small>Fixed block orientation", "<html>Y axis rotation (S/W/N/E)<br><small>Rotation from player side", "<html>D/U/N/S/W/E rotation<br><small>Rotation from player side", "<html>Y axis rotation (S/W/N/E)<br><small>Rotation from block face", "<html>D/U/N/S/W/E rotation<br><small>Rotation from block face", "<html>Log rotation (X/Y/Z)<br><small>Imitates vanilla log rotation"});
         this.enablePitch = L10N.checkbox("elementgui.common.enable", new Object[0]);
         this.destroyTool = new JComboBox(new String[]{"Not specified", "pickaxe", "axe", "shovel", "hoe"});
@@ -439,7 +438,7 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
         transparencySettings.add(HelpUtils.wrapWithHelpButton(this.withEntry("block/fluid_overlay"), L10N.label("elementgui.block.fluid_overlay", new Object[0])));
         transparencySettings.add(this.displayFluidOverlay);
         ComponentUtils.deriveFont(this.rotationMode, 16.0F);
-        JPanel rent = new JPanel(new GridLayout(5, 2, 0, 2));
+        JPanel rent = new JPanel(new GridLayout(6, 2, 0, 2));
         rent.setOpaque(false);
         rent.add(HelpUtils.wrapWithHelpButton(this.withEntry("geckolib/name"), L10N.label("elementgui.animatedblock.model", new Object[0])));
         this.geoModel.setPrototypeDisplayValue("XXXXXXXXXXXXXXXXXXXXXXXXXX");
@@ -451,6 +450,8 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
         this.displaySettings.setRenderer(new GeomodelRenderer());
         ComponentUtils.deriveFont(this.displaySettings, 16.0F);
         rent.add(this.displaySettings);
+        rent.add(HelpUtils.wrapWithHelpButton(this.withEntry("geckolib/block_animations"), L10N.label("elementgui.aniblockitems.animation_count", new Object[0])));
+        rent.add(animationCount);
         rent.add(HelpUtils.wrapWithHelpButton(this.withEntry("block/rotation_mode"), L10N.label("elementgui.block.rotation_mode", new Object[0])));
         rent.add(this.rotationMode);
         rent.add(HelpUtils.wrapWithHelpButton(this.withEntry("block/enable_pitch"), L10N.label("elementgui.block.enable_pitch", new Object[0])));
@@ -1065,6 +1066,7 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
         this.transparencyType.setSelectedItem(block.transparencyType);
         this.tintType.setSelectedItem(block.tintType);
         this.isItemTinted.setSelected(block.isItemTinted);
+        this.animationCount.setValue((block.animationCount));
         if (block.blockBase == null) {
             this.blockBase.setSelectedIndex(0);
         } else {
@@ -1133,6 +1135,7 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
         block.enablePitch = this.enablePitch.isSelected();
         block.enchantPowerBonus = (Double)this.enchantPowerBonus.getValue();
         block.hardness = (Double)this.hardness.getValue();
+        block.animationCount = (Double)this.animationCount.getValue();
         block.resistance = (Double)this.resistance.getValue();
         block.hasGravity = this.hasGravity.isSelected();
         block.isWaterloggable = this.isWaterloggable.isSelected();

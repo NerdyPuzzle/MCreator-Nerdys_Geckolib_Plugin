@@ -5,7 +5,7 @@ public class ClientListener {
 
 	@OnlyIn(Dist.CLIENT)
 	@SubscribeEvent
-	public static void registerRenderers(final EntityRenderersEvent.RegisterRenderers event) {
+	public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
 		<#list animatedblocks as ablock>
 			event.registerBlockEntityRenderer(${JavaModName}BlockEntities.${ablock.getModElement().getRegistryNameUpper()}.get(), 
 			${ablock.getModElement().getName()}TileRenderer::new);

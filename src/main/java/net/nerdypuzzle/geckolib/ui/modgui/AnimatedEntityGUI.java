@@ -332,7 +332,7 @@ public class AnimatedEntityGUI extends ModElementGUI<AnimatedEntity> implements 
                 L10N.t("elementgui.animatedentity.visual_scale"), AbstractProcedureSelector.Side.BOTH,
                 new JSpinner(new SpinnerNumberModel(1, 0.1, 1024, 0.1)), 300, Dependency.fromString(
                 "x:number/y:number/z:number/world:world/entity:entity"));
-        boundingBoxScale = new NumberProcedureSelector(this.withEntry("geckolib/bounding_box_scale"), mcreator,
+        boundingBoxScale = new NumberProcedureSelector(this.withEntry("geckolib/bounding_box_scale.md"), mcreator,
                 L10N.t("elementgui.animatedentity.bounding_box_scale"), AbstractProcedureSelector.Side.BOTH,
                 new JSpinner(new SpinnerNumberModel(1, 0.1, 1024, 0.1)), 300, Dependency.fromString(
                 "x:number/y:number/z:number/world:world/entity:entity"));

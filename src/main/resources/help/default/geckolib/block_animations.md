@@ -1,0 +1,1 @@
+The amount of procedure animations that the block can use.
