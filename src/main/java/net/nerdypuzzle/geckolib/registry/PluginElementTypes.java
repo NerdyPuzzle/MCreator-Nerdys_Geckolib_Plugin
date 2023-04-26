@@ -34,7 +34,7 @@ public class PluginElementTypes {
         );
 
         ANIMATEDARMOR = register(
-                new ModElementType<>("animatedarmor", (Character) 'A', BaseType.OTHER, AnimatedArmorGUI::new, AnimatedArmor.class)
+                new ModElementType<>("animatedarmor", (Character) 'A', BaseType.ARMOR, AnimatedArmorGUI::new, AnimatedArmor.class)
         );
 
     }

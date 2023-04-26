@@ -90,6 +90,10 @@ public class AnimatedItem extends GeneratableElement implements IItem, IItemWith
         return List.of(new MCItem.Custom(this.getModElement(), null, "item"));
     }
 
+    @Override public List<MCItem> getCreativeTabItems() {
+        return providedMCItems();
+    }
+
     public Model getItemModel() {
         Model.Type modelType = Model.Type.BUILTIN;
         if (this.renderType == 1) {

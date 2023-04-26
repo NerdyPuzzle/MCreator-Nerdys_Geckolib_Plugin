@@ -72,10 +72,6 @@ public class ${JavaModName} implements ModInitializer {
 		GeckoLib.initialize();
 		</#if>
 
-		<#if w.hasElementsOfType("animatedarmor")>
-		${JavaModName}GeckoLibArmors.loadItems();
-		</#if>
-
 		<#if settings.getMCreatorDependencies().contains("portinglib")>
 		ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
 			if (handler.getPlayer().getExtraCustomData().getCompound("PlayerPersisted").isEmpty()) {

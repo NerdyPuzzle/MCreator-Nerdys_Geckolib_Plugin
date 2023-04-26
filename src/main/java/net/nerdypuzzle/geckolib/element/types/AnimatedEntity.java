@@ -20,6 +20,7 @@ import net.mcreator.minecraft.MinecraftImageGenerator;
 import net.mcreator.ui.blockly.BlocklyEditorType;
 import net.mcreator.workspace.elements.ModElement;
 import net.mcreator.workspace.resources.Model;
+import net.nerdypuzzle.geckolib.registry.PluginElementTypes;
 
 import javax.annotation.Nullable;
 import java.awt.*;
@@ -231,24 +232,31 @@ public class AnimatedEntity extends GeneratableElement
         return this.hasSpawnEgg ? List.of(new MCItem.Custom(this.getModElement(), "spawn_egg", "item", "Spawn egg")) : Collections.emptyList();
     }
 
+    @Override public List<MCItem> getCreativeTabItems() {
+        return providedMCItems();
+    }
+
     @Override public @Nullable IAdditionalTemplateDataProvider getAdditionalTemplateData() {
         return additionalData -> {
             BlocklyBlockCodeGenerator blocklyBlockCodeGenerator = new BlocklyBlockCodeGenerator(
                     BlocklyLoader.INSTANCE.getBlockLoader(BlocklyEditorType.AI_TASK).getDefinedBlocks(),
-                    this.getModElement().getGenerator().getTemplateGeneratorFromName(BlocklyEditorType.AI_TASK.registryName()),
+                    getModElement().getGenerator().getGeneratorStats().getBlocklyBlocks(BlocklyEditorType.AI_TASK),
+                    this.getModElement().getGenerator()
+                            .getTemplateGeneratorFromName(BlocklyEditorType.AI_TASK.registryName()),
                     additionalData).setTemplateExtension(
                     this.getModElement().getGeneratorConfiguration().getGeneratorFlavor().getBaseLanguage().name()
                             .toLowerCase(Locale.ENGLISH));
             BlocklyToJava blocklyToJava = new BlocklyToJava(this.getModElement().getWorkspace(), this.getModElement(),
-                    BlocklyEditorType.AI_TASK, this.aixml,
-                    this.getModElement().getGenerator().getTemplateGeneratorFromName(BlocklyEditorType.AI_TASK.registryName()),
+                    BlocklyEditorType.AI_TASK, this.aixml, this.getModElement().getGenerator()
+                    .getTemplateGeneratorFromName(BlocklyEditorType.AI_TASK.registryName()),
                     new ProceduralBlockCodeGenerator(blocklyBlockCodeGenerator));
 
             List<?> unmodifiableAIBases = (List<?>) getModElement().getWorkspace().getGenerator()
                     .getGeneratorConfiguration().getDefinitionsProvider()
-                    .getModElementDefinition(ModElementType.LIVINGENTITY).get("unmodifiable_ai_bases");
+                    .getModElementDefinition(PluginElementTypes.ANIMATEDENTITY).get("unmodifiable_ai_bases");
             additionalData.put("aicode", unmodifiableAIBases != null && !unmodifiableAIBases.contains(aiBase) ?
-                    blocklyToJava.getGeneratedCode() : "");
+                    blocklyToJava.getGeneratedCode() :
+                    "");
         };
     }
 

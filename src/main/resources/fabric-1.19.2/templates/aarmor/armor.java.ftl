@@ -126,16 +126,16 @@ public class ${name}Item extends ArmorItem implements IAnimatable {
 		<#if data.fullyEquipped>
 		boolean isWearingAll = armorList.containsAll(Arrays.asList(
 		<#if data.enableBoots>
-		${JavaModName}GeckoLibArmors.GeckoLibArmorItems.${(registryname)?upper_case}_BOOTS
+		${JavaModName}Items.${(registryname)?upper_case}_BOOTS
 		</#if><#if data.enableBoots && (data.enableLeggings || data.enableHelmet || data.enableBody)>,</#if>
 		<#if data.enableLeggings>
-		${JavaModName}GeckoLibArmors.GeckoLibArmorItems.${(registryname)?upper_case}_LEGGINGS
+		${JavaModName}Items.${(registryname)?upper_case}_LEGGINGS
 		</#if><#if data.enableLeggings && (data.enableBody || data.enableHelmet)>,</#if>
 		<#if data.enableBody> 
-		${JavaModName}GeckoLibArmors.GeckoLibArmorItems.${(registryname)?upper_case}_CHESTPLATE
+		${JavaModName}Items.${(registryname)?upper_case}_CHESTPLATE
 		</#if><#if data.enableBody && data.enableHelmet>,</#if>
 		<#if data.enableHelmet> 
-		${JavaModName}GeckoLibArmors.GeckoLibArmorItems.${(registryname)?upper_case}_HELMET
+		${JavaModName}Items.${(registryname)?upper_case}_HELMET
 		</#if>));
 		</#if>
 
@@ -174,16 +174,16 @@ public class ${name}Item extends ArmorItem implements IAnimatable {
 		<#if data.fullyEquipped>
 		boolean isWearingAll = armorList.containsAll(Arrays.asList(
 		<#if data.enableBoots>
-		${JavaModName}GeckoLibArmors.GeckoLibArmorItems.${(registryname)?upper_case}_BOOTS
+		${JavaModName}Items.${(registryname)?upper_case}_BOOTS
 		</#if><#if data.enableBoots && (data.enableLeggings || data.enableHelmet || data.enableBody)>,</#if>
 		<#if data.enableLeggings>
-		${JavaModName}GeckoLibArmors.GeckoLibArmorItems.${(registryname)?upper_case}_LEGGINGS
+		${JavaModName}Items.${(registryname)?upper_case}_LEGGINGS
 		</#if><#if data.enableLeggings && (data.enableBody || data.enableHelmet)>,</#if>
 		<#if data.enableBody> 
-		${JavaModName}GeckoLibArmors.GeckoLibArmorItems.${(registryname)?upper_case}_CHESTPLATE
+		${JavaModName}Items.${(registryname)?upper_case}_CHESTPLATE
 		</#if><#if data.enableBody && data.enableHelmet>,</#if>
 		<#if data.enableHelmet> 
-		${JavaModName}GeckoLibArmors.GeckoLibArmorItems.${(registryname)?upper_case}_HELMET
+		${JavaModName}Items.${(registryname)?upper_case}_HELMET
 		</#if>));
 		</#if>
 

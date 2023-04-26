@@ -61,6 +61,24 @@ public class ${JavaModName}Items {
             public static final RegistryObject<Item> ${item.getModElement().getRegistryNameUpper()}_BOOTS =
 				REGISTRY.register("${item.getModElement().getRegistryName()}_boots", () -> new ${item.getModElement().getName()}Item.Boots());
 			</#if>
+		<#elseif item.getModElement().getTypeString() == "animatedarmor">
+			<#if item.enableHelmet>
+            public static final RegistryObject<${item.getModElement().getName()}Item> ${item.getModElement().getRegistryNameUpper()}_HELMET = 
+				REGISTRY.register("${item.getModElement().getRegistryName()}_helmet", () -> new ${item.getModElement().getName()}Item(EquipmentSlot.HEAD, new Item.Properties().tab(${item.creativeTab})<#if item.helmetImmuneToFire>.fireResistant()</#if>));
+	
+			</#if>
+			<#if item.enableBody>
+            public static final RegistryObject<${item.getModElement().getName()}Item> ${item.getModElement().getRegistryNameUpper()}_CHESTPLATE =
+				REGISTRY.register("${item.getModElement().getRegistryName()}_chestplate", () -> new ${item.getModElement().getName()}Item(EquipmentSlot.CHEST, new Item.Properties().tab(${item.creativeTab})<#if item.bodyImmuneToFire>.fireResistant()</#if>));
+			</#if>
+			<#if item.enableLeggings>
+            public static final RegistryObject<${item.getModElement().getName()}Item> ${item.getModElement().getRegistryNameUpper()}_LEGGINGS =
+				REGISTRY.register("${item.getModElement().getRegistryName()}_leggings", () -> new ${item.getModElement().getName()}Item(EquipmentSlot.LEGS, new Item.Properties().tab(${item.creativeTab})<#if item.leggingsImmuneToFire>.fireResistant()</#if>));
+			</#if>
+			<#if item.enableBoots>
+            public static final RegistryObject<${item.getModElement().getName()}Item> ${item.getModElement().getRegistryNameUpper()}_BOOTS =
+				REGISTRY.register("${item.getModElement().getRegistryName()}_boots", () -> new ${item.getModElement().getName()}Item(EquipmentSlot.FEET, new Item.Properties().tab(${item.creativeTab})<#if item.bootsImmuneToFire>.fireResistant()</#if>));
+			</#if>
 		<#elseif item.getModElement().getTypeString() == "fluid" && item.generateBucket>
 			public static final RegistryObject<Item> ${item.getModElement().getRegistryNameUpper()}_BUCKET =
 				REGISTRY.register("${item.getModElement().getRegistryName()}_bucket", () -> new ${item.getModElement().getName()}Item());

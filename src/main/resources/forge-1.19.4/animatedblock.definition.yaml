@@ -1,0 +1,79 @@
+templates:
+  - template: ablock/block.java.ftl
+    name: "@SRCROOT/@BASEPACKAGEPATH/block/@NAMEBlock.java"
+  - template: animatedblockutil/blockentityrenderer.java.ftl
+    name: "@SRCROOT/@BASEPACKAGEPATH/block/renderer/@NAMETileRenderer.java"
+  - template: animatedblockutil/blockentitymodel.java.ftl
+    name: "@SRCROOT/@BASEPACKAGEPATH/block/model/@NAMEBlockModel.java"
+
+
+  - template: animatedblockutil/displayitem/displayrenderer.java.ftl
+    name: "@SRCROOT/@BASEPACKAGEPATH/block/renderer/@NAMEDisplayItemRenderer.java"
+  - template: animatedblockutil/displayitem/displaymodel.java.ftl
+    name: "@SRCROOT/@BASEPACKAGEPATH/block/model/@NAMEDisplayModel.java"
+  - template: animatedblockutil/displayitem/displayitem.java.ftl
+    name: "@SRCROOT/@BASEPACKAGEPATH/block/display/@NAMEDisplayItem.java"
+
+
+  # Worldgen
+  - template: ablock/oregen.java.ftl
+    condition: doesGenerateInWorld()
+    name: "@SRCROOT/@BASEPACKAGEPATH/world/features/ores/@NAMEFeature.java"
+  - template: json/block_feature_biome_modifier.json.ftl
+    writer: json
+    condition: doesGenerateInWorld()
+    name: "@MODDATAROOT/forge/biome_modifier/@registryname_biome_modifier.json"
+    variables: "step=underground_ores"
+  - template: ablock/configured_oregen.json.ftl
+    writer: json
+    condition: doesGenerateInWorld()
+    name: "@MODDATAROOT/worldgen/configured_feature/@registryname.json"
+  - template: ablock/placed_oregen.json.ftl
+    writer: json
+    condition: doesGenerateInWorld()
+    name: "@MODDATAROOT/worldgen/placed_feature/@registryname.json"
+
+
+  - template: ablock/blockentity.java.ftl
+    name: "@SRCROOT/@BASEPACKAGEPATH/block/entity/@NAMETileEntity.java"
+
+  # Normal block templates
+  - template: ajson/block_states.json.ftl
+    writer: json
+    variables: "variant= "
+    name: "@MODASSETSROOT/blockstates/@registryname.json"
+
+  # Block item templates
+  - template: ajson/block_item.json.ftl
+    writer: json
+    name: "@MODASSETSROOT/models/item/@registryname.json"
+  - template: ajson/block_particle.json.ftl
+    name: "@MODASSETSROOT/models/custom/@registryname_particle.json"
+
+localizationkeys:
+  - key: block.@modid.@registryname
+    mapto: name
+
+global_templates:
+  - template: ablock/mineable_tag.json.ftl
+    writer: json
+    variables: "type=pickaxe"
+    name: "@RESROOT/data/minecraft/tags/blocks/mineable/pickaxe.json"
+    condition: ${w.hasBlocksMineableWith('pickaxe')}
+  - template: ablock/mineable_tag.json.ftl
+    writer: json
+    variables: "type=axe"
+    name: "@RESROOT/data/minecraft/tags/blocks/mineable/axe.json"
+    condition: ${w.hasBlocksMineableWith('axe')}
+  - template: ablock/mineable_tag.json.ftl
+    writer: json
+    variables: "type=shovel"
+    name: "@RESROOT/data/minecraft/tags/blocks/mineable/shovel.json"
+    condition: ${w.hasBlocksMineableWith('shovel')}
+  - template: ablock/mineable_tag.json.ftl
+    writer: json
+    variables: "type=hoe"
+    name: "@RESROOT/data/minecraft/tags/blocks/mineable/hoe.json"
+    condition: ${w.hasBlocksMineableWith('hoe')}
+  - template: animatedblockutil/listeners/blocklistener.java.ftl
+    name: "@SRCROOT/@BASEPACKAGEPATH/block/listener/ClientListener.java"

@@ -5,7 +5,9 @@ import net.mcreator.element.parts.MItemBlock;
 import net.mcreator.element.parts.Sound;
 import net.mcreator.element.parts.TabEntry;
 import net.mcreator.element.parts.procedure.Procedure;
+import net.mcreator.element.types.interfaces.IItem;
 import net.mcreator.element.types.interfaces.ITabContainedElement;
+import net.mcreator.minecraft.MCItem;
 import net.mcreator.minecraft.MinecraftImageGenerator;
 import net.mcreator.ui.workspace.resources.TextureType;
 import net.mcreator.workspace.elements.ModElement;
@@ -17,7 +19,7 @@ import java.io.File;
 import java.util.*;
 
 @SuppressWarnings("unused")
-public class AnimatedArmor extends GeneratableElement implements ITabContainedElement {
+public class AnimatedArmor extends GeneratableElement implements IItem, ITabContainedElement {
 
     public boolean enableHelmet;
     public String textureHelmet;
@@ -236,6 +238,32 @@ public class AnimatedArmor extends GeneratableElement implements ITabContainedEl
 
     @Override public TabEntry getCreativeTab() {
         return creativeTab;
+    }
+
+    @Override
+    public List<MCItem> providedMCItems() {
+        ArrayList<MCItem> retval = new ArrayList();
+        if (this.enableHelmet) {
+            retval.add(new MCItem.Custom(this.getModElement(), "helmet", "item", "Helmet"));
+        }
+
+        if (this.enableBody) {
+            retval.add(new MCItem.Custom(this.getModElement(), "body", "item", "Chestplate"));
+        }
+
+        if (this.enableLeggings) {
+            retval.add(new MCItem.Custom(this.getModElement(), "legs", "item", "Leggings"));
+        }
+
+        if (this.enableBoots) {
+            retval.add(new MCItem.Custom(this.getModElement(), "boots", "item", "Boots"));
+        }
+
+        return retval;
+    }
+
+    @Override public List<MCItem> getCreativeTabItems() {
+        return providedMCItems();
     }
 
 }

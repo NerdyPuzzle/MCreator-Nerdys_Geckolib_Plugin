@@ -174,16 +174,16 @@ public class ${name}Item extends GeoArmorItem implements IAnimatable {
 		<#if data.fullyEquipped>
 		boolean isWearingAll = armorList.containsAll(Arrays.asList(
 		<#if data.enableBoots>
-		${JavaModName}GeckoLibArmors.GeckoLibArmorItems.${(registryname)?upper_case}_BOOTS.get()
+		${JavaModName}Items.${(registryname)?upper_case}_BOOTS.get()
 		</#if><#if data.enableBoots && (data.enableLeggings || data.enableBody || data.enableHelmet)>,</#if>
 		<#if data.enableLeggings>
-		${JavaModName}GeckoLibArmors.GeckoLibArmorItems.${(registryname)?upper_case}_LEGGINGS.get()
+		${JavaModName}Items.${(registryname)?upper_case}_LEGGINGS.get()
 		</#if><#if data.enableLeggings && (data.enableBody || data.enableHelmet)>,</#if>
 		<#if data.enableBody> 
-		${JavaModName}GeckoLibArmors.GeckoLibArmorItems.${(registryname)?upper_case}_CHESTPLATE.get()
+		${JavaModName}Items.${(registryname)?upper_case}_CHESTPLATE.get()
 		</#if><#if data.enableBody && data.enableBoots>,</#if>
 		<#if data.enableBoots> 
-		${JavaModName}GeckoLibArmors.GeckoLibArmorItems.${(registryname)?upper_case}_HELMET.get()
+		${JavaModName}Items.${(registryname)?upper_case}_HELMET.get()
 		</#if>));
 		</#if>
 
@@ -222,16 +222,16 @@ public class ${name}Item extends GeoArmorItem implements IAnimatable {
 		<#if data.fullyEquipped>
 		boolean isWearingAll = armorList.containsAll(Arrays.asList(
 		<#if data.enableBoots>
-		${JavaModName}GeckoLibArmors.GeckoLibArmorItems.${(registryname)?upper_case}_BOOTS.get()
+		${JavaModName}Items.${(registryname)?upper_case}_BOOTS.get()
 		</#if><#if data.enableBoots && (data.enableLeggings || data.enableBody || data.enableHelmet)>,</#if>
 		<#if data.enableLeggings>
-		${JavaModName}GeckoLibArmors.GeckoLibArmorItems.${(registryname)?upper_case}_LEGGINGS.get()
+		${JavaModName}Items.${(registryname)?upper_case}_LEGGINGS.get()
 		</#if><#if data.enableLeggings && (data.enableBody || data.enableHelmet)>,</#if>
 		<#if data.enableBody> 
-		${JavaModName}GeckoLibArmors.GeckoLibArmorItems.${(registryname)?upper_case}_CHESTPLATE.get()
+		${JavaModName}Items.${(registryname)?upper_case}_CHESTPLATE.get()
 		</#if><#if data.enableBody && data.enableBoots>,</#if>
 		<#if data.enableBoots> 
-		${JavaModName}GeckoLibArmors.GeckoLibArmorItems.${(registryname)?upper_case}_HELMET.get()
+		${JavaModName}Items.${(registryname)?upper_case}_HELMET.get()
 		</#if>));
 		</#if>
 
