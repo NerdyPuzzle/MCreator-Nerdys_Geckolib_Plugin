@@ -164,7 +164,7 @@ public class AnimatedBlock extends GeneratableElement implements IBlock, ITabCon
         this.energyMaxReceive = 200;
         this.energyMaxExtract = 200;
         this.fluidCapacity = 8000;
-        this.animationCount = 0;
+        this.animationCount = 1;
     }
 
     public int renderType() {

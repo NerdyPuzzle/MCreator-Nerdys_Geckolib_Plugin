@@ -1029,11 +1029,11 @@ public class ${name}Entity extends ${extendsClass} <#if data.ranged>implements R
 			this.swinging = true;
 			this.lastSwing = level.getGameTime();
 		}
-		if (this.swinging && this.lastSwing + 6L <= level.getGameTime()) {
+		if (this.swinging && this.lastSwing + 7L <= level.getGameTime()) {
 			this.swinging = false;
 		}
 		if (<#if data.ranged>(</#if>this.swinging<#if data.ranged> || this.entityData.get(SHOOT))</#if>
-		&& event.getController().hasAnimationFinished()) {
+		&& event.getController().getAnimationState() == AnimationController.State.STOPPED) {
 			event.getController().forceAnimationReset();
 			return event.setAndContinue(RawAnimation.begin().thenPlay("${data.animation4}"));
 		}
@@ -1063,10 +1063,10 @@ public class ${name}Entity extends ${extendsClass} <#if data.ranged>implements R
 
 		return PlayState.STOP;
 	}
-		if (!this.animationprocedure.equals("empty") && event.getController().hasAnimationFinished()) {
+		if (!this.animationprocedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
 		if (!loop) {
 			event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationprocedure));
-	        if (event.getController().hasAnimationFinished()) {
+	        if (event.getController().getAnimationState() == AnimationController.State.STOPPED) {
 			this.animationprocedure = "empty";
 			event.getController().forceAnimationReset();
 				}

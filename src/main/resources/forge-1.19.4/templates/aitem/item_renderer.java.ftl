@@ -74,6 +74,7 @@ public class ${name}ItemRenderer extends GeoItemRenderer<${name}Item> {
 				AnimUtils.renderPartOverBone(model.rightArm, bone, stack, armBuilder, packedLightIn, 					OverlayTexture.NO_OVERLAY, armsAlpha);
 				AnimUtils.renderPartOverBone(model.rightSleeve, bone, stack, sleeveBuilder, packedLightIn, 				OverlayTexture.NO_OVERLAY, armsAlpha);
 			}
+			this.currentBuffer.getBuffer(RenderType.entityTranslucent(getTextureLocation(this.animatable)));
 			stack.popPose();
 		}
 		super.renderRecursively(stack, animatable, bone, type, buffer, bufferIn, isReRender, partialTick, packedLightIn, packedOverlayIn, red, green, blue, alpha);
