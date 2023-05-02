@@ -1,5 +1,12 @@
 {
   "geckolib_plugin": {
-    "latest": "4.7.2"
+    "latest": "4.8.1",
+	"changes": [
+		"Added support for forge 1.19.4",
+		"Fixed animated armor not being available in the item selector",
+		"Fixed the game not being able to launch when animated blocks had 0 procedure animations",
+		"Dropped support for 2023.1 due to incompatibilities in the code",
+		"Blockbench loop types (play once, loop, hold onto last frame) now work in-game for forge 1.19.4"
+	]
   }
 }

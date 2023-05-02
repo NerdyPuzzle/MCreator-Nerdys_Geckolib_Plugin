@@ -242,7 +242,7 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
         this.slipperiness = new JSpinner(new SpinnerNumberModel(0.6, 0.01, 5.0, 0.1));
         this.speedFactor = new JSpinner(new SpinnerNumberModel(1.0, -1000.0, 1000.0, 0.1));
         this.jumpFactor = new JSpinner(new SpinnerNumberModel(1.0, -1000.0, 1000.0, 0.1));
-        this.animationCount = new JSpinner(new SpinnerNumberModel(0.0, 0.0, 100, 1));
+        this.animationCount = new JSpinner(new SpinnerNumberModel(1.0, 1.0, 100, 1));
         this.rotationMode = new JComboBox(new String[]{"<html>No rotation<br><small>Fixed block orientation", "<html>Y axis rotation (S/W/N/E)<br><small>Rotation from player side", "<html>D/U/N/S/W/E rotation<br><small>Rotation from player side", "<html>Y axis rotation (S/W/N/E)<br><small>Rotation from block face", "<html>D/U/N/S/W/E rotation<br><small>Rotation from block face", "<html>Log rotation (X/Y/Z)<br><small>Imitates vanilla log rotation"});
         this.enablePitch = L10N.checkbox("elementgui.common.enable", new Object[0]);
         this.destroyTool = new JComboBox(new String[]{"Not specified", "pickaxe", "axe", "shovel", "hoe"});
@@ -500,6 +500,7 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
         bbPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         if (!this.isEditingMode()) {
             this.boundingBoxList.setBoundingBoxes(Collections.singletonList(new IBlockWithBoundingBox.BoxEntry()));
+            this.animationCount.setValue(1);
         }
 
         this.boundingBoxList.addPropertyChangeListener("boundingBoxChanged", (e) -> {
