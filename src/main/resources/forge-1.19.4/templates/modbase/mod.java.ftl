@@ -27,8 +27,6 @@ import org.apache.logging.log4j.Logger;
 	public ${JavaModName}() {
 		MinecraftForge.EVENT_BUS.register(this);
 
-		<#if w.hasElementsOfType("tab")>${JavaModName}Tabs.load();</#if>
-
 		IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 		<#if w.hasSounds()>${JavaModName}Sounds.REGISTRY.register(bus);</#if>
 		<#if w.hasElementsOfBaseType("block")>${JavaModName}Blocks.REGISTRY.register(bus);</#if>

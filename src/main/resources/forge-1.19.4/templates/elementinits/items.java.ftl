@@ -93,11 +93,11 @@ public class ${JavaModName}Items {
 			<#if (item.getModElement().getTypeString() == "block" && item.isDoubleBlock()) || (item.getModElement().getTypeString() == "plant" && item.isDoubleBlock())>
 				<#assign hasDoubleBlocks = true>
 				public static final RegistryObject<Item> ${item.getModElement().getRegistryNameUpper()} =
-					doubleBlock(${JavaModName}Blocks.${item.getModElement().getRegistryNameUpper()}, ${item.creativeTab});
+					doubleBlock(${JavaModName}Blocks.${item.getModElement().getRegistryNameUpper()});
 			<#else>
 				<#assign hasBlocks = true>
 				public static final RegistryObject<Item> ${item.getModElement().getRegistryNameUpper()} =
-					block(${JavaModName}Blocks.${item.getModElement().getRegistryNameUpper()}, ${item.creativeTab});
+					block(${JavaModName}Blocks.${item.getModElement().getRegistryNameUpper()});
 			</#if>
 		<#elseif item.getModElement().getTypeString() == "livingentity" || item.getModElement().getTypeString() == "animatedentity">
             public static final RegistryObject<Item> ${item.getModElement().getRegistryNameUpper()}_SPAWN_EGG =

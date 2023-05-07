@@ -63,9 +63,9 @@ public class ${name}TileEntity extends RandomizableContainerBlockEntity implemen
     		+ ((this.getBlockState()).getBlock().getStateDefinition().getProperty("animation") instanceof IntegerProperty _getip1
     				? (this.getBlockState()).getValue(_getip1)
     				: 0));
-		if (!(animationprocedure.equals("0")) && event.getController().hasAnimationFinished()) {
+		if (!(animationprocedure.equals("0")) && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
 			event.getController().setAnimation(RawAnimation.begin().thenPlay(animationprocedure));
-	        if (event.getController().hasAnimationFinished()) {
+	        if (event.getController().getAnimationState() == AnimationController.State.STOPPED) {
 				if (this.getBlockState().getBlock().getStateDefinition().getProperty("animation") instanceof IntegerProperty _integerProp)
 					level.setBlock(this.getBlockPos(), this.getBlockState().setValue(_integerProp, 0), 3);
 			event.getController().forceAnimationReset();
