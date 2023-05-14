@@ -5,9 +5,10 @@
   "javaplugin": "net.nerdypuzzle.geckolib.Launcher",
   "info": {
     "name": "GeckoLib Plugin",
-    "version": "4.8",
+    "version": "4.8.3",
     "description": "Adds GeckoLib support for 1.18.2, 1.19.2 and 1.19.4",
     "author": "NerdyPuzzle",
-    "pluginPageID": 91484
+    "pluginPageID": 91484,
+	"updateJSONURL": "https://raw.githubusercontent.com/NerdyPuzzle/MCreator-Nerdys_Geckolib_Plugin/main/update.json"
   }
 }

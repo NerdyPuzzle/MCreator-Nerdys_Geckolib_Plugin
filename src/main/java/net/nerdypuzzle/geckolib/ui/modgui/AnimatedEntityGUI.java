@@ -669,7 +669,7 @@ public class AnimatedEntityGUI extends ModElementGUI<AnimatedEntity> implements 
 
         externalBlocks = BlocklyLoader.INSTANCE.getBlockLoader(BlocklyEditorType.AI_TASK).getDefinedBlocks();
 
-        blocklyPanel = new BlocklyPanel(mcreator);
+        blocklyPanel = new BlocklyPanel(mcreator, BlocklyEditorType.AI_TASK);
         blocklyPanel.addTaskToRunAfterLoaded(() -> {
             BlocklyLoader.INSTANCE.getBlockLoader(BlocklyEditorType.AI_TASK)
                     .loadBlocksAndCategoriesInPanel(blocklyPanel, ToolboxType.AI_BUILDER);
