@@ -36,7 +36,7 @@ public class PluginEventTriggers {
         PluginPanelGeckolib panel = new PluginPanelGeckolib(mcreator.mv);
         panel.setOpaque(false);
 
-        mcreator.mv.resourcesPan.addTab(L10N.t("menubar.geckolib", new Object[0]), panel);
+        mcreator.mv.resourcesPan.addResourcesTab(L10N.t("menubar.geckolib", new Object[0]), panel);
         mcreator.getMainMenuBar().add(geckolib);
     }
 

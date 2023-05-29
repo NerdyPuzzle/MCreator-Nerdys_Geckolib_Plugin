@@ -51,20 +51,23 @@ public class ${name}Renderer extends GeoEntityRenderer<${name}Entity> {
 	}
 
 	@Override
-	public GeoEntityRenderer<${name}Entity> withScale(float amount) {
-		        <#if data.visualScale??>
+	public void preRender(PoseStack poseStack, ${name}Entity entity, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green,
+			float blue, float alpha) {
+			<#if data.visualScale??>
 			<#if hasProcedure(data.visualScale)>
         		Level world = entity.level;
         		double x = entity.getX();
         		double y = entity.getY();
         		double z = entity.getZ();
         		float scale = (float) <@procedureOBJToNumberCode data.visualScale/>;
-        		amount = scale;
+
         	<#else>
-        		amount = ${data.visualScale.getFixedValue()}f;
+        		float scale = ${data.visualScale.getFixedValue()}f;
         	</#if>
-		return withScale(amount, amount);
-		</#if>
+                this.scaleHeight = scale;
+                this.scaleWidth = scale;
+            </#if>
+                super.preRender(poseStack, entity, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
 	}
 
 <#if data.disableDeathRotation>

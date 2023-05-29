@@ -254,8 +254,6 @@ public class AnimatedArmorGUI extends ModElementGUI<AnimatedArmor> implements Ge
 
         helmetCollapsiblePanel = new CollapsiblePanel(L10N.t("elementgui.armor.advanced_helmet"), helmetSubPanel);
 
-        helmetCollapsiblePanel.toggleVisibility(PreferencesManager.PREFERENCES.ui.expandSectionsByDefault);
-
         JComponent helText = PanelUtils.centerAndSouthElement(PanelUtils.centerInPanelPadding(textureHelmet, 0, 0),
                 enableHelmet);
         helText.setBorder(BorderFactory.createCompoundBorder(
@@ -289,7 +287,6 @@ public class AnimatedArmorGUI extends ModElementGUI<AnimatedArmor> implements Ge
         bodySubPanel.add(bodyImmuneToFire);
 
         bodyCollapsiblePanel = new CollapsiblePanel(L10N.t("elementgui.armor.advanced_body"), bodySubPanel);
-        bodyCollapsiblePanel.toggleVisibility(PreferencesManager.PREFERENCES.ui.expandSectionsByDefault);
 
         destal.add(PanelUtils.westAndCenterElement(PanelUtils.pullElementUp(bodText), PanelUtils.centerAndSouthElement(
                 PanelUtils.join(FlowLayout.LEFT, L10N.label("elementgui.armor.body_name"), bodyName),
@@ -318,7 +315,6 @@ public class AnimatedArmorGUI extends ModElementGUI<AnimatedArmor> implements Ge
         leggingsSubPanel.add(leggingsImmuneToFire);
 
         leggingsCollapsiblePanel = new CollapsiblePanel(L10N.t("elementgui.armor.advanced_leggings"), leggingsSubPanel);
-        leggingsCollapsiblePanel.toggleVisibility(PreferencesManager.PREFERENCES.ui.expandSectionsByDefault);
 
         destal.add(PanelUtils.westAndCenterElement(PanelUtils.pullElementUp(legText), PanelUtils.centerAndSouthElement(
                 PanelUtils.join(FlowLayout.LEFT, L10N.label("elementgui.armor.leggings_name"), leggingsName),
@@ -347,7 +343,6 @@ public class AnimatedArmorGUI extends ModElementGUI<AnimatedArmor> implements Ge
         bootsSubPanel.add(bootsImmuneToFire);
 
         bootsCollapsiblePanel = new CollapsiblePanel(L10N.t("elementgui.armor.advanced_boots"), bootsSubPanel);
-        bootsCollapsiblePanel.toggleVisibility(PreferencesManager.PREFERENCES.ui.expandSectionsByDefault);
 
         destal.add(PanelUtils.westAndCenterElement(PanelUtils.pullElementUp(bootText), PanelUtils.centerAndSouthElement(
                 PanelUtils.join(FlowLayout.LEFT, L10N.label("elementgui.armor.boots_name"), bootsName),
@@ -663,6 +658,14 @@ public class AnimatedArmorGUI extends ModElementGUI<AnimatedArmor> implements Ge
     }
 
     @Override public void openInEditingMode(AnimatedArmor armor) {
+        helmetCollapsiblePanel.toggleVisibility(
+                !helmetSpecialInfo.getText().isEmpty());
+        bodyCollapsiblePanel.toggleVisibility(
+                !bodySpecialInfo.getText().isEmpty());
+        leggingsCollapsiblePanel.toggleVisibility(
+                !leggingsSpecialInfo.getText().isEmpty());
+        bootsCollapsiblePanel.toggleVisibility(
+                !bootsSpecialInfo.getText().isEmpty());
         textureHelmet.setTextureFromTextureName(armor.textureHelmet);
         textureBody.setTextureFromTextureName(armor.textureBody);
         this.geoModel.setSelectedItem(armor.model);

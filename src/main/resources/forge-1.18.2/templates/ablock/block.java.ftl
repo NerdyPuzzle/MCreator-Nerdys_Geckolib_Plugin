@@ -45,7 +45,7 @@ import net.minecraft.world.level.material.Material;
 
 public class ${name}Block extends BaseEntityBlock <#if data.isWaterloggable>implements SimpleWaterloggedBlock,EntityBlock<#else> implements EntityBlock</#if>
 {
-    public static final IntegerProperty ANIMATION = IntegerProperty.create("animation", 0, ${data.animationCount});
+    public static final IntegerProperty ANIMATION = IntegerProperty.create("animation", 0, (int)${data.animationCount});
 	<#if data.rotationMode == 1 || data.rotationMode == 3>
 	public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
 		<#if data.enablePitch>
