@@ -77,7 +77,7 @@ public class AnimatedBlock extends GeneratableElement implements IBlock, ITabCon
     public double slipperiness;
     public double speedFactor;
     public double jumpFactor;
-    public double animationCount;
+    public int animationCount;
     public String reactionToPushing;
     public boolean isNotColidable;
     public boolean isCustomSoundType;

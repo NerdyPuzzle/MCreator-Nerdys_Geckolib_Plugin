@@ -1136,7 +1136,7 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
         block.enablePitch = this.enablePitch.isSelected();
         block.enchantPowerBonus = (Double)this.enchantPowerBonus.getValue();
         block.hardness = (Double)this.hardness.getValue();
-        block.animationCount = (Double)this.animationCount.getValue();
+        block.animationCount = (int) this.animationCount.getValue();
         block.resistance = (Double)this.resistance.getValue();
         block.hasGravity = this.hasGravity.isSelected();
         block.isWaterloggable = this.isWaterloggable.isSelected();
