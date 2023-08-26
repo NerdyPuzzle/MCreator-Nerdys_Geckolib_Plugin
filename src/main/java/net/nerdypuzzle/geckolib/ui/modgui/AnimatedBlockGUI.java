@@ -242,7 +242,7 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
         this.slipperiness = new JSpinner(new SpinnerNumberModel(0.6, 0.01, 5.0, 0.1));
         this.speedFactor = new JSpinner(new SpinnerNumberModel(1.0, -1000.0, 1000.0, 0.1));
         this.jumpFactor = new JSpinner(new SpinnerNumberModel(1.0, -1000.0, 1000.0, 0.1));
-        this.animationCount = new JSpinner(new SpinnerNumberModel(0.0, 0.0, 100, 1));
+        this.animationCount = new JSpinner(new SpinnerNumberModel(1.0, 1.0, 100, 1));
         this.rotationMode = new JComboBox(new String[]{"<html>No rotation<br><small>Fixed block orientation", "<html>Y axis rotation (S/W/N/E)<br><small>Rotation from player side", "<html>D/U/N/S/W/E rotation<br><small>Rotation from player side", "<html>Y axis rotation (S/W/N/E)<br><small>Rotation from block face", "<html>D/U/N/S/W/E rotation<br><small>Rotation from block face", "<html>Log rotation (X/Y/Z)<br><small>Imitates vanilla log rotation"});
         this.enablePitch = L10N.checkbox("elementgui.common.enable", new Object[0]);
         this.destroyTool = new JComboBox(new String[]{"Not specified", "pickaxe", "axe", "shovel", "hoe"});
@@ -276,7 +276,7 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
         this.restrictionBiomes = new BiomeListField(this.mcreator);
         this.spawnWorldTypes = new DimensionListField(this.mcreator);
         this.fluidRestrictions = new FluidListField(this.mcreator);
-        this.boundingBoxList = new JBoundingBoxList(this.mcreator, this);
+        boundingBoxList = new JBoundingBoxList(mcreator, this, null);
         this.blocksToReplace.setListElements(new ArrayList(Collections.singleton(new MItemBlock(this.mcreator.getWorkspace(), "Blocks.STONE"))));
         this.onBlockAdded = new ProcedureSelector(this.withEntry("block/when_added"), this.mcreator, L10N.t("elementgui.block.event_on_block_added", new Object[0]), Dependency.fromString("x:number/y:number/z:number/world:world/blockstate:blockstate/oldState:blockstate/moving:logic"));
         this.onNeighbourBlockChanges = new ProcedureSelector(this.withEntry("block/when_neighbour_changes"), this.mcreator, L10N.t("elementgui.common.event_on_neighbour_block_changes", new Object[0]), Dependency.fromString("x:number/y:number/z:number/world:world/blockstate:blockstate"));
@@ -390,7 +390,7 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
         destal.add(ComponentUtils.squareAndBorder(this.textureRight, L10N.t("elementgui.block.texture_place_right", new Object[0])));
         destal.add(ComponentUtils.squareAndBorder(this.textureBack, L10N.t("elementgui.block.texture_place_back", new Object[0])));
         this.textureLeft.setActionListener((event) -> {
-            if (!this.texture.has() && !this.textureTop.has() && !this.textureBack.has() && !this.textureFront.has() && !this.textureRight.has()) {
+            if (!this.texture.hasTexture() && !this.textureTop.hasTexture() && !this.textureBack.hasTexture() && !this.textureFront.hasTexture() && !this.textureRight.hasTexture()) {
                 this.texture.setTextureFromTextureName(this.textureLeft.getID());
                 this.textureTop.setTextureFromTextureName(this.textureLeft.getID());
                 this.textureBack.setTextureFromTextureName(this.textureLeft.getID());
@@ -500,6 +500,7 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
         bbPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         if (!this.isEditingMode()) {
             this.boundingBoxList.setBoundingBoxes(Collections.singletonList(new IBlockWithBoundingBox.BoxEntry()));
+            this.animationCount.setValue(1);
         }
 
         this.boundingBoxList.addPropertyChangeListener("boundingBoxChanged", (e) -> {
@@ -1134,9 +1135,9 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
         block.rotationMode = this.rotationMode.getSelectedIndex();
         block.enablePitch = this.enablePitch.isSelected();
         block.enchantPowerBonus = (Double)this.enchantPowerBonus.getValue();
-        block.hardness = (Double)this.hardness.getValue();
-        block.animationCount = (Double)this.animationCount.getValue();
-        block.resistance = (Double)this.resistance.getValue();
+        block.hardness = (Double) this.hardness.getValue();
+        block.animationCount = (Number) this.animationCount.getValue();
+        block.resistance = (Double) this.resistance.getValue();
         block.hasGravity = this.hasGravity.isSelected();
         block.isWaterloggable = this.isWaterloggable.isSelected();
         block.emissiveRendering = this.emissiveRendering.isSelected();

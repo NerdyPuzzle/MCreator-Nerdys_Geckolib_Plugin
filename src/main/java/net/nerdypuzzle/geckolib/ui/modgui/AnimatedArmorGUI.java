@@ -4,9 +4,7 @@ import net.mcreator.blockly.data.Dependency;
 import net.mcreator.element.parts.TabEntry;
 import net.mcreator.minecraft.DataListEntry;
 import net.mcreator.minecraft.ElementUtil;
-import net.mcreator.preferences.PreferencesManager;
 import net.mcreator.ui.MCreator;
-import net.mcreator.ui.MCreatorApplication;
 import net.mcreator.ui.component.CollapsiblePanel;
 import net.mcreator.ui.component.JEmptyBox;
 import net.mcreator.ui.component.SearchableComboBox;
@@ -45,12 +43,9 @@ import net.nerdypuzzle.geckolib.parts.PluginModelActions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -76,7 +71,7 @@ public class AnimatedArmorGUI extends ModElementGUI<AnimatedArmor> implements Ge
     private final VComboBox<String> armorTextureFile;
 
     private final JCheckBox enableHelmet = L10N.checkbox("elementgui.armor.armor_helmet");
-    private final JCheckBox enableBody = L10N.checkbox("elementgui.armor.armor_body");
+    private final JCheckBox enableBody = L10N.checkbox("elementgui.armor.armor_chestplate");
     private final JCheckBox enableLeggings = L10N.checkbox("elementgui.armor.armor_leggings");
     private final JCheckBox enableBoots = L10N.checkbox("elementgui.armor.armor_boots");
 
@@ -151,7 +146,7 @@ public class AnimatedArmorGUI extends ModElementGUI<AnimatedArmor> implements Ge
         onHelmetTick = new ProcedureSelector(this.withEntry("armor/helmet_tick"), mcreator,
                 L10N.t("elementgui.armor.helmet_tick_event"),
                 Dependency.fromString("x:number/y:number/z:number/world:world/entity:entity/itemstack:itemstack"));
-        onBodyTick = new ProcedureSelector(this.withEntry("armor/body_tick"), mcreator,
+        onBodyTick = new ProcedureSelector(this.withEntry("armor/chestplate_tick"), mcreator,
                 L10N.t("elementgui.armor.chestplate_tick_event"),
                 Dependency.fromString("x:number/y:number/z:number/world:world/entity:entity/itemstack:itemstack"));
         onLeggingsTick = new ProcedureSelector(this.withEntry("armor/leggings_tick"), mcreator,
@@ -254,8 +249,6 @@ public class AnimatedArmorGUI extends ModElementGUI<AnimatedArmor> implements Ge
 
         helmetCollapsiblePanel = new CollapsiblePanel(L10N.t("elementgui.armor.advanced_helmet"), helmetSubPanel);
 
-        helmetCollapsiblePanel.toggleVisibility(PreferencesManager.PREFERENCES.ui.expandSectionsByDefault);
-
         JComponent helText = PanelUtils.centerAndSouthElement(PanelUtils.centerInPanelPadding(textureHelmet, 0, 0),
                 enableHelmet);
         helText.setBorder(BorderFactory.createCompoundBorder(
@@ -288,11 +281,10 @@ public class AnimatedArmorGUI extends ModElementGUI<AnimatedArmor> implements Ge
                 L10N.label("elementgui.item.is_immune_to_fire")));
         bodySubPanel.add(bodyImmuneToFire);
 
-        bodyCollapsiblePanel = new CollapsiblePanel(L10N.t("elementgui.armor.advanced_body"), bodySubPanel);
-        bodyCollapsiblePanel.toggleVisibility(PreferencesManager.PREFERENCES.ui.expandSectionsByDefault);
+        bodyCollapsiblePanel = new CollapsiblePanel(L10N.t("elementgui.armor.advanced_chestplate"), bodySubPanel);
 
         destal.add(PanelUtils.westAndCenterElement(PanelUtils.pullElementUp(bodText), PanelUtils.centerAndSouthElement(
-                PanelUtils.join(FlowLayout.LEFT, L10N.label("elementgui.armor.body_name"), bodyName),
+                PanelUtils.join(FlowLayout.LEFT, L10N.label("elementgui.armor.chestplate_name"), bodyName),
                 bodyCollapsiblePanel), 5, 0));
 
         destal.add(new JEmptyBox(10, 10));
@@ -318,7 +310,6 @@ public class AnimatedArmorGUI extends ModElementGUI<AnimatedArmor> implements Ge
         leggingsSubPanel.add(leggingsImmuneToFire);
 
         leggingsCollapsiblePanel = new CollapsiblePanel(L10N.t("elementgui.armor.advanced_leggings"), leggingsSubPanel);
-        leggingsCollapsiblePanel.toggleVisibility(PreferencesManager.PREFERENCES.ui.expandSectionsByDefault);
 
         destal.add(PanelUtils.westAndCenterElement(PanelUtils.pullElementUp(legText), PanelUtils.centerAndSouthElement(
                 PanelUtils.join(FlowLayout.LEFT, L10N.label("elementgui.armor.leggings_name"), leggingsName),
@@ -347,7 +338,6 @@ public class AnimatedArmorGUI extends ModElementGUI<AnimatedArmor> implements Ge
         bootsSubPanel.add(bootsImmuneToFire);
 
         bootsCollapsiblePanel = new CollapsiblePanel(L10N.t("elementgui.armor.advanced_boots"), bootsSubPanel);
-        bootsCollapsiblePanel.toggleVisibility(PreferencesManager.PREFERENCES.ui.expandSectionsByDefault);
 
         destal.add(PanelUtils.westAndCenterElement(PanelUtils.pullElementUp(bootText), PanelUtils.centerAndSouthElement(
                 PanelUtils.join(FlowLayout.LEFT, L10N.label("elementgui.armor.boots_name"), bootsName),
@@ -446,28 +436,28 @@ public class AnimatedArmorGUI extends ModElementGUI<AnimatedArmor> implements Ge
         pane5.add("Center", PanelUtils.totalCenterInPanel(clopa));
 
         textureHelmet.setValidator(() -> {
-            if (enableHelmet.isSelected() && !textureHelmet.has())
+            if (enableHelmet.isSelected() && !textureHelmet.hasTexture())
                 return new Validator.ValidationResult(Validator.ValidationResultType.ERROR,
                         L10N.t("elementgui.armor.need_texture"));
             return Validator.ValidationResult.PASSED;
         });
 
         textureBody.setValidator(() -> {
-            if (enableBody.isSelected() && !textureBody.has())
+            if (enableBody.isSelected() && !textureBody.hasTexture())
                 return new Validator.ValidationResult(Validator.ValidationResultType.ERROR,
                         L10N.t("elementgui.armor.need_texture"));
             return Validator.ValidationResult.PASSED;
         });
 
         textureLeggings.setValidator(() -> {
-            if (enableLeggings.isSelected() && !textureLeggings.has())
+            if (enableLeggings.isSelected() && !textureLeggings.hasTexture())
                 return new Validator.ValidationResult(Validator.ValidationResultType.ERROR,
                         L10N.t("elementgui.armor.need_texture"));
             return Validator.ValidationResult.PASSED;
         });
 
         textureBoots.setValidator(() -> {
-            if (enableBoots.isSelected() && !textureBoots.has())
+            if (enableBoots.isSelected() && !textureBoots.hasTexture())
                 return new Validator.ValidationResult(Validator.ValidationResultType.ERROR,
                         L10N.t("elementgui.armor.need_texture"));
             return Validator.ValidationResult.PASSED;
@@ -477,7 +467,7 @@ public class AnimatedArmorGUI extends ModElementGUI<AnimatedArmor> implements Ge
                 new ConditionalTextFieldValidator(bootsName, L10N.t("elementgui.armor.boots_need_name"), enableBoots,
                         true));
         bodyName.setValidator(
-                new ConditionalTextFieldValidator(bodyName, L10N.t("elementgui.armor.body_needs_name"), enableBody,
+                new ConditionalTextFieldValidator(bodyName, L10N.t("elementgui.armor.chestplate_needs_name"), enableBody,
                         true));
         leggingsName.setValidator(
                 new ConditionalTextFieldValidator(leggingsName, L10N.t("elementgui.armor.leggings_need_name"),
@@ -599,7 +589,7 @@ public class AnimatedArmorGUI extends ModElementGUI<AnimatedArmor> implements Ge
         if (!isEditingMode()) {
             String readableNameFromModElement = StringUtils.machineToReadableName(modElement.getName());
             helmetName.setText(L10N.t("elementgui.armor.helmet", readableNameFromModElement));
-            bodyName.setText(L10N.t("elementgui.armor.body", readableNameFromModElement));
+            bodyName.setText(L10N.t("elementgui.armor.chestplate", readableNameFromModElement));
             leggingsName.setText(L10N.t("elementgui.armor.leggings", readableNameFromModElement));
             bootsName.setText(L10N.t("elementgui.armor.boots", readableNameFromModElement));
             head.setText("armorHead");
@@ -663,6 +653,14 @@ public class AnimatedArmorGUI extends ModElementGUI<AnimatedArmor> implements Ge
     }
 
     @Override public void openInEditingMode(AnimatedArmor armor) {
+        helmetCollapsiblePanel.toggleVisibility(
+                !helmetSpecialInfo.getText().isEmpty());
+        bodyCollapsiblePanel.toggleVisibility(
+                !bodySpecialInfo.getText().isEmpty());
+        leggingsCollapsiblePanel.toggleVisibility(
+                !leggingsSpecialInfo.getText().isEmpty());
+        bootsCollapsiblePanel.toggleVisibility(
+                !bootsSpecialInfo.getText().isEmpty());
         textureHelmet.setTextureFromTextureName(armor.textureHelmet);
         textureBody.setTextureFromTextureName(armor.textureBody);
         this.geoModel.setSelectedItem(armor.model);

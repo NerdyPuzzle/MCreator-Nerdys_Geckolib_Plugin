@@ -10,7 +10,6 @@ import net.nerdypuzzle.geckolib.element.types.GeckolibElement;
 import net.nerdypuzzle.geckolib.parts.PluginPanelGeckolib;
 
 import javax.swing.*;
-import java.awt.*;
 
 public class PluginEventTriggers {
     public static void dependencyWarning(MCreator mcreator, ModElementGUI modElement) {
@@ -36,7 +35,7 @@ public class PluginEventTriggers {
         PluginPanelGeckolib panel = new PluginPanelGeckolib(mcreator.mv);
         panel.setOpaque(false);
 
-        mcreator.mv.resourcesPan.addTab(L10N.t("menubar.geckolib", new Object[0]), panel);
+        mcreator.mv.resourcesPan.addResourcesTab(L10N.t("menubar.geckolib", new Object[0]), panel);
         mcreator.getMainMenuBar().add(geckolib);
     }
 
