@@ -974,7 +974,7 @@ public class ${name}Entity extends ${extendsClass} <#if data.ranged>implements R
 	      if (this.animationprocedure.equals("empty")) {
 		<#if data.enable2>
 		if ((event.isMoving() || !(event.getLimbSwingAmount() > -0.15F && event.getLimbSwingAmount() < 0.15F))
-		<#if data.enable8>&& this.isOnGround()</#if> <#if data.enable9>&& !this.isVehicle()</#if>
+		<#if data.enable8>&& this.onGround()</#if> <#if data.enable9>&& !this.isVehicle()</#if>
 		<#if data.enable10>&& !this.isAggressive()</#if>) {
 			return event.setAndContinue(RawAnimation.begin().thenLoop("${data.animation2}"));
 		}
@@ -1000,7 +1000,7 @@ public class ${name}Entity extends ${extendsClass} <#if data.ranged>implements R
 		}
 		</#if>
 		<#if data.enable8>
-		if (!this.isOnGround()) {
+		if (!this.onGround()) {
 			return event.setAndContinue(RawAnimation.begin().thenLoop("${data.animation8}"));
 		}
 		</#if>
