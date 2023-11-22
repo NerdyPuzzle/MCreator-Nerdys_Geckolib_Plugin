@@ -1,5 +1,5 @@
 <#assign mineableblocks = []>
-<#list animatedblocks as block>
+<#list blocks as block>
     <#if block.destroyTool == var_type>
         <#assign mineableblocks += [block]>
     </#if>

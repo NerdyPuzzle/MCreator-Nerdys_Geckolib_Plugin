@@ -793,7 +793,7 @@ public class ${name}Entity extends ${extendsClass} <#if data.ranged>implements R
 				this.setRot(this.getYRot(), this.getXRot());
 				this.yBodyRot = entity.getYRot();
 				this.yHeadRot = entity.getYRot();
-				this.maxUpStep = 1.0F;
+				this.setMaxUpStep(1.0F);
 
 				if (entity instanceof LivingEntity passenger) {
 					this.setSpeed((float) this.getAttributeValue(Attributes.MOVEMENT_SPEED));
@@ -822,7 +822,7 @@ public class ${name}Entity extends ${extendsClass} <#if data.ranged>implements R
 				this.calculateEntityAnimation(true);
 				return;
 			}
-			this.maxUpStep = 0.5F;
+			this.setMaxUpStep(0.5F);
 			</#if>
 
 			super.travel(dir);

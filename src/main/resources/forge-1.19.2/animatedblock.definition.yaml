@@ -40,25 +40,5 @@ localizationkeys:
     mapto: name
 
 global_templates:
-  - template: ablock/mineable_tag.json.ftl
-    writer: json
-    variables: "type=pickaxe"
-    name: "@RESROOT/data/minecraft/tags/blocks/mineable/pickaxe.json"
-    condition: ${w.hasBlocksMineableWith('pickaxe')}
-  - template: ablock/mineable_tag.json.ftl
-    writer: json
-    variables: "type=axe"
-    name: "@RESROOT/data/minecraft/tags/blocks/mineable/axe.json"
-    condition: ${w.hasBlocksMineableWith('axe')}
-  - template: ablock/mineable_tag.json.ftl
-    writer: json
-    variables: "type=shovel"
-    name: "@RESROOT/data/minecraft/tags/blocks/mineable/shovel.json"
-    condition: ${w.hasBlocksMineableWith('shovel')}
-  - template: ablock/mineable_tag.json.ftl
-    writer: json
-    variables: "type=hoe"
-    name: "@RESROOT/data/minecraft/tags/blocks/mineable/hoe.json"
-    condition: ${w.hasBlocksMineableWith('hoe')}
   - template: animatedblockutil/listeners/blocklistener.java.ftl
     name: "@SRCROOT/@BASEPACKAGEPATH/block/listener/ClientListener.java"
