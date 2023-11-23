@@ -120,6 +120,39 @@ public class ${JavaModName}Items {
 		return REGISTRY.register(block.getId().getPath(), () -> new DoubleHighBlockItem(block.get(), new Item.Properties()));
 	}
 	</#if>
+
+	<#if hasItemsWithProperties>
+    <#compress>
+    @SubscribeEvent public static void clientLoad(FMLClientSetupEvent event) {
+    	event.enqueueWork(() -> {
+    	<#list items as item>
+    		<#if item.getModElement().getTypeString() == "item">
+    			<#list item.customProperties.entrySet() as property>
+    			ItemProperties.register(${item.getModElement().getRegistryNameUpper()}.get(),
+    				new ResourceLocation("${modid}:${item.getModElement().getRegistryName()}_${property.getKey()}"),
+    				(itemStackToRender, clientWorld, entity, itemEntityId) ->
+    					<#if hasProcedure(property.getValue())>
+    						(float) <@procedureCode property.getValue(), {
+    							"x": "entity != null ? entity.getX() : 0",
+    							"y": "entity != null ? entity.getY() : 0",
+    							"z": "entity != null ? entity.getZ() : 0",
+    							"world": "entity != null ? entity.level : clientWorld",
+    							"entity": "entity",
+    							"itemstack": "itemStackToRender"
+    						}, false/>
+    					<#else>0</#if>
+    			);
+    			</#list>
+    		<#elseif item.getModElement().getTypeString() == "tool" && item.toolType == "Shield">
+    			ItemProperties.register(${item.getModElement().getRegistryNameUpper()}.get(), new ResourceLocation("blocking"),
+    				ItemProperties.getProperty(Items.SHIELD, new ResourceLocation("blocking")));
+    		</#if>
+    	</#list>
+    	});
+    }
+    </#compress>
+    </#if>
+
 }
 
 <#-- @formatter:on -->

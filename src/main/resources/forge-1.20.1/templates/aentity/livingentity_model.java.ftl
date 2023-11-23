@@ -21,7 +21,7 @@ public class ${name}Model extends GeoModel<${name}Entity> {
     <#if data.headMovement>
     @Override
     public void setCustomAnimations(${name}Entity animatable, long instanceId, AnimationState animationState) {
-	    CoreGeoBone head = getAnimationProcessor().getBone("head");
+	    CoreGeoBone head = getAnimationProcessor().getBone("${data.groupName}");
 	    if (head != null) {
 		    int unpausedMultiplier = !Minecraft.getInstance().isPaused() ? 1 : 0;
 		    EntityModelData entityData = (EntityModelData) animationState.getData(DataTickets.ENTITY_MODEL_DATA);
