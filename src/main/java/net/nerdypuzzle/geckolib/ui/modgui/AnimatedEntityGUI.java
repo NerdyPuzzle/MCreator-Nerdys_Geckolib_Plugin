@@ -7,6 +7,7 @@ import net.mcreator.element.GeneratableElement;
 import net.mcreator.element.ModElementType;
 import net.mcreator.element.parts.TabEntry;
 import net.mcreator.element.types.GUI;
+import net.mcreator.element.types.Item;
 import net.mcreator.generator.blockly.BlocklyBlockCodeGenerator;
 import net.mcreator.generator.blockly.ProceduralBlockCodeGenerator;
 import net.mcreator.generator.template.TemplateGeneratorException;
@@ -29,6 +30,7 @@ import net.mcreator.ui.init.L10N;
 import net.mcreator.ui.init.UIRES;
 import net.mcreator.ui.laf.renderer.WTextureComboBoxRenderer;
 import net.mcreator.ui.minecraft.*;
+import net.mcreator.ui.modgui.IBlocklyPanelHolder;
 import net.mcreator.ui.modgui.ModElementGUI;
 import net.mcreator.ui.procedure.AbstractProcedureSelector;
 import net.mcreator.ui.procedure.NumberProcedureSelector;
@@ -57,7 +59,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class AnimatedEntityGUI extends ModElementGUI<AnimatedEntity> implements GeckolibElement {
+public class AnimatedEntityGUI extends ModElementGUI<AnimatedEntity> implements GeckolibElement, IBlocklyPanelHolder {
 
     private ProcedureSelector onStruckByLightning;
     private ProcedureSelector whenMobFalls;
@@ -1102,7 +1104,7 @@ public class AnimatedEntityGUI extends ModElementGUI<AnimatedEntity> implements 
 
         ComboBoxUtil.updateComboBoxContents(rangedItemType, ListUtils.merge(Collections.singleton("Default item"),
                 mcreator.getWorkspace().getModElements().stream()
-                        .filter(var -> var.getType() == ModElementType.RANGEDITEM).map(ModElement::getName)
+                        .filter(var -> var.getType() == ModElementType.ITEM && ((Item)var.getGeneratableElement()).enableRanged).map(ModElement::getName)
                         .collect(Collectors.toList())), "Default item");
 
         ComboBoxUtil.updateComboBoxContents(guiBoundTo, ListUtils.merge(Collections.singleton("<NONE>"),
@@ -1428,4 +1430,8 @@ public class AnimatedEntityGUI extends ModElementGUI<AnimatedEntity> implements 
         return livingEntity;
     }
 
+    @Override
+    public List<BlocklyPanel> getBlocklyPanels() {
+        return List.of(this.blocklyPanel);
+    }
 }

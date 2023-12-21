@@ -39,8 +39,10 @@ package ${package}.init;
 
 <#assign hasBlocks = false>
 <#assign hasDoubleBlocks = false>
+<#assign hasItemsWithProperties = w.getGElementsOfType("item")?filter(e -> e.customProperties?has_content)?size != 0
+	|| w.getGElementsOfType("tool")?filter(e -> e.toolType == "Shield")?size != 0>
 
-<#if w.hasItemsWithCustomProperties()>
+<#if hasItemsWithProperties>
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 </#if>
 public class ${JavaModName}Items {
@@ -97,7 +99,7 @@ public class ${JavaModName}Items {
 			public static final RegistryObject<Item> ${item.getModElement().getRegistryNameUpper()} =
 				REGISTRY.register(${JavaModName}Blocks.${item.getModElement().getRegistryNameUpper()}.getId().getPath(),
 					() -> new ${item.getModElement().getName()}DisplayItem(${JavaModName}Blocks.${item.getModElement().getRegistryNameUpper()}.get(), new Item.Properties()));
-		<#elseif item.getModElement().getType().getBaseType()?string == "BLOCK">
+		<#elseif item.getModElement().getTypeString() == "block" || item.getModElement().getTypeString() == "plant">
 			<#if (item.getModElement().getTypeString() == "block" && item.isDoubleBlock()) || (item.getModElement().getTypeString() == "plant" && item.isDoubleBlock())>
 				<#assign hasDoubleBlocks = true>
 				public static final RegistryObject<Item> ${item.getModElement().getRegistryNameUpper()} =
@@ -125,7 +127,7 @@ public class ${JavaModName}Items {
 	}
 	</#if>
 
-	<#if w.hasItemsWithCustomProperties()>
+	<#if hasItemsWithProperties>
 	<#compress>
 	@SubscribeEvent public static void clientLoad(FMLClientSetupEvent event) {
 		event.enqueueWork(() -> {

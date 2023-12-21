@@ -1,5 +1,6 @@
 package net.nerdypuzzle.geckolib;
 
+import net.mcreator.generator.mapping.NameMapper;
 import net.mcreator.plugin.events.ui.ModElementGUIEvent;
 import net.mcreator.plugin.events.workspace.MCreatorLoadedEvent;
 import net.nerdypuzzle.geckolib.registry.PluginActions;

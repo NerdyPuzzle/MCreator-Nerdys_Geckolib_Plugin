@@ -41,6 +41,7 @@ package ${package}.block;
 
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+import net.minecraft.world.level.material.Material;
 
 import javax.annotation.Nullable;
 
@@ -63,30 +64,19 @@ public class ${name}Block extends BaseEntityBlock <#if data.isWaterloggable>impl
 
 	<#macro blockProperties>
 		BlockBehaviour.Properties.of()
-		${data.material}
 		<#if generator.map(data.colorOnMap, "mapcolors") != "DEFAULT">
-			BlockBehaviour.Properties.of(Material.${data.material}, MaterialColor.${generator.map(data.colorOnMap, "mapcolors")})
+			.mapColor(MapColor.${generator.map(data.colorOnMap, "mapcolors")})
 		</#if>
 		<#if data.isCustomSoundType>
 			.sound(new ForgeSoundType(1.0f, 1.0f,
-				() -> ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(
-					"${(data.breakSound?has_content && data.breakSound.getMappedValue()?has_content)?then(data.breakSound, "intentionally_empty")}"
-				)),
-				() -> ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(
-					"${(data.stepSound?has_content && data.stepSound.getMappedValue()?has_content)?then(data.stepSound, "intentionally_empty")}"
-				)),
-				() -> ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(
-					"${(data.placeSound?has_content && data.placeSound.getMappedValue()?has_content)?then(data.placeSound, "intentionally_empty")}"
-				)),
-				() -> ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(
-					"${(data.hitSound?has_content && data.hitSound.getMappedValue()?has_content)?then(data.hitSound, "intentionally_empty")}"
-				)),
-				() -> ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(
-					"${(data.fallSound?has_content && data.fallSound.getMappedValue()?has_content)?then(data.fallSound, "intentionally_empty")}"
-				))
+				() -> ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("${data.breakSound.getUnmappedValue()}")),
+				() -> ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("${data.stepSound.getUnmappedValue()}")),
+				() -> ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("${data.placeSound.getUnmappedValue()}")),
+				() -> ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("${data.hitSound.getUnmappedValue()}")),
+				() -> ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("${data.fallSound.getUnmappedValue()}"))
 			))
 		<#else>
-			.sound(SoundType.${data.soundOnStep})
+			.sound(SoundType.${generator.map(data.soundOnStep, "stepsounds")})
 		</#if>
 		<#if data.unbreakable>
 			.strength(-1, 3600000)
@@ -140,36 +130,20 @@ public class ${name}Block extends BaseEntityBlock <#if data.isWaterloggable>impl
 		<#if data.offsetType != "NONE">
 			.offsetType(Block.OffsetType.${data.offsetType})
 		</#if>
+		<#if data.blockBase?has_content && (
+				data.blockBase == "FenceGate" ||
+				data.blockBase == "PressurePlate" ||
+				data.blockBase == "Fence" ||
+				data.blockBase == "Wall")>
+			.forceSolidOn()
+		</#if>
+		<#if data.blockBase?has_content && data.blockBase == "EndRod">
+			.forceSolidOff()
+		</#if>
 	</#macro>
 
 	public ${name}Block() {
-		<#if data.blockBase?has_content && data.blockBase == "Stairs">
-			super(() -> Blocks.AIR.defaultBlockState(), <@blockProperties/>);
-		<#elseif data.blockBase?has_content && data.blockBase == "PressurePlate">
-		    <#if data.material.getUnmappedValue() == "WOOD">
-		        super(Sensitivity.EVERYTHING, <@blockProperties/>, BlockSetType.OAK);
-		    <#else>
-		        super(Sensitivity.MOBS, <@blockProperties/>, BlockSetType.IRON);
-		    </#if>
-		<#elseif data.blockBase?has_content && data.blockBase == "Button">
-			<#if data.material.getUnmappedValue() == "WOOD">
-		        super(<@blockProperties/>, BlockSetType.OAK, 30, true);
-			<#else>
-		        super(<@blockProperties/>, BlockSetType.STONE, 20, false);
-			</#if>
-		<#elseif data.blockBase?has_content && (data.blockBase == "TrapDoor" || data.blockBase == "Door")>
-			<#if data.material.getUnmappedValue() == "IRON">
-				super(<@blockProperties/>, BlockSetType.IRON);
-			<#elseif data.material.getUnmappedValue() == "WOOD">
-				super(<@blockProperties/>, BlockSetType.OAK);
-			<#else>
-				super(<@blockProperties/>, BlockSetType.STONE);
-			</#if>
-		<#elseif data.blockBase?has_content && data.blockBase == "FenceGate">
-			super(<@blockProperties/>, WoodType.OAK);
-		<#else>
-			super(<@blockProperties/>);
-		</#if>
+		super(<@blockProperties/>);
 
 	    <#if data.rotationMode != 0 || data.isWaterloggable>
 	    this.registerDefaultState(this.stateDefinition.any()
@@ -211,14 +185,7 @@ public class ${name}Block extends BaseEntityBlock <#if data.isWaterloggable>impl
 		return ${JavaModName}BlockEntities.${(regname)?upper_case}.get().create(blockPos, blockState);
 	}
 
-	<#if data.specialInfo?has_content>
-	@Override public void appendHoverText(ItemStack itemstack, BlockGetter world, List<Component> list, TooltipFlag flag) {
-		super.appendHoverText(itemstack, world, list, flag);
-		<#list data.specialInfo as entry>
-		list.add(Component.literal("${JavaConventions.escapeStringForJava(entry)}"));
-	    </#list>
-	}
-	</#if>
+	<@addSpecialInformation data.specialInformation, true/>
 
 	<#if data.displayFluidOverlay>
 	@Override public boolean shouldDisplayFluidOverlay(BlockState state, BlockAndTintGetter world, BlockPos pos, FluidState fluidstate) {

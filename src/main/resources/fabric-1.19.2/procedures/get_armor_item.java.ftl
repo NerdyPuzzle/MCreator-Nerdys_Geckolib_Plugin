@@ -1,1 +1,0 @@
-${JavaModName}GeckoLibArmors.GeckoLibArmorItems.${(field$element)?upper_case}_${field$slot}

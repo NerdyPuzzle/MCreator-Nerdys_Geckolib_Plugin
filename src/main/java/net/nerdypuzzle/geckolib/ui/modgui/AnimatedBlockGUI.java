@@ -15,6 +15,7 @@ import net.mcreator.minecraft.ElementUtil;
 import net.mcreator.ui.MCreator;
 import net.mcreator.ui.component.JColor;
 import net.mcreator.ui.component.JEmptyBox;
+import net.mcreator.ui.component.JStringListField;
 import net.mcreator.ui.component.SearchableComboBox;
 import net.mcreator.ui.component.util.ComboBoxFullWidthPopup;
 import net.mcreator.ui.component.util.ComboBoxUtil;
@@ -32,6 +33,7 @@ import net.mcreator.ui.modgui.ModElementGUI;
 import net.mcreator.ui.procedure.AbstractProcedureSelector;
 import net.mcreator.ui.procedure.NumberProcedureSelector;
 import net.mcreator.ui.procedure.ProcedureSelector;
+import net.mcreator.ui.procedure.StringListProcedureSelector;
 import net.mcreator.ui.validation.AggregatedValidationResult;
 import net.mcreator.ui.validation.IValidable;
 import net.mcreator.ui.validation.ValidationGroup;
@@ -137,8 +139,9 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
     private final JSpinner frequencyOnChunk;
     private BiomeListField restrictionBiomes;
     private MCItemListField blocksToReplace;
-    private DimensionListField spawnWorldTypes;
     private final JCheckBox plantsGrowOn;
+
+    private final JCheckBox generateFeature = L10N.checkbox("elementgui.common.enable");
     private final JCheckBox isLadder;
     private final JComboBox<String> reactionToPushing;
     private final JComboBox<String> offsetType;
@@ -167,7 +170,7 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
     private final JCheckBox inventoryComparatorPower;
     private final VTextField outSlotIDs;
     private final VTextField inSlotIDs;
-    private final JTextField specialInfo;
+    private StringListProcedureSelector specialInformation;
     private final ValidationGroup page1group;
     private final ValidationGroup page3group;
     private final JComboBox<String> blockBase;
@@ -259,7 +262,6 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
         this.inventoryComparatorPower = L10N.checkbox("elementgui.common.enable", new Object[0]);
         this.outSlotIDs = new VTextField(18);
         this.inSlotIDs = new VTextField(18);
-        this.specialInfo = new JTextField(25);
         this.page1group = new ValidationGroup();
         this.page3group = new ValidationGroup();
         this.blockBase = new JComboBox(new String[]{"Default basic block"});
@@ -272,12 +274,13 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
 
     protected void initGUI() {
         this.destroyTool.setRenderer(new ItemTexturesComboBoxRenderer());
-        this.blocksToReplace = new MCItemListField(this.mcreator, ElementUtil::loadBlocks);
+        this.blocksToReplace = new MCItemListField(this.mcreator, ElementUtil::loadBlocksAndTags, false, true);
         this.restrictionBiomes = new BiomeListField(this.mcreator);
-        this.spawnWorldTypes = new DimensionListField(this.mcreator);
+        restrictionBiomes = new BiomeListField(mcreator, true);
+        restrictionBiomes.setValidator(new ItemListFieldSingleTagValidator(restrictionBiomes));
         this.fluidRestrictions = new FluidListField(this.mcreator);
         boundingBoxList = new JBoundingBoxList(mcreator, this, null);
-        this.blocksToReplace.setListElements(new ArrayList(Collections.singleton(new MItemBlock(this.mcreator.getWorkspace(), "Blocks.STONE"))));
+        this.blocksToReplace.setListElements(List.of(new MItemBlock(this.mcreator.getWorkspace(), "TAG:stone_ore_replaceables")));
         this.onBlockAdded = new ProcedureSelector(this.withEntry("block/when_added"), this.mcreator, L10N.t("elementgui.block.event_on_block_added", new Object[0]), Dependency.fromString("x:number/y:number/z:number/world:world/blockstate:blockstate/oldState:blockstate/moving:logic"));
         this.onNeighbourBlockChanges = new ProcedureSelector(this.withEntry("block/when_neighbour_changes"), this.mcreator, L10N.t("elementgui.common.event_on_neighbour_block_changes", new Object[0]), Dependency.fromString("x:number/y:number/z:number/world:world/blockstate:blockstate"));
         this.onTickUpdate = new ProcedureSelector(this.withEntry("block/update_tick"), this.mcreator, L10N.t("elementgui.common.event_on_update_tick", new Object[0]), Dependency.fromString("x:number/y:number/z:number/world:world/blockstate:blockstate"));
@@ -296,6 +299,7 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
         this.emittedRedstonePower = new NumberProcedureSelector((IHelpContext)null, this.mcreator, new JSpinner(new SpinnerNumberModel(15, 0, 15, 1)), Dependency.fromString("x:number/y:number/z:number/world:world/direction:direction/blockstate:blockstate"));
         this.placingCondition = (new ProcedureSelector(this.withEntry("block/placing_condition"), this.mcreator, L10N.t("elementgui.block.event_placing_condition", new Object[0]), VariableTypeLoader.BuiltInTypes.LOGIC, Dependency.fromString("x:number/y:number/z:number/world:world/blockstate:blockstate"))).setDefaultName(L10N.t("condition.common.no_additional", new Object[0])).makeInline();
         this.generateCondition = (new ProcedureSelector(this.withEntry("block/generation_condition"), this.mcreator, L10N.t("elementgui.block.event_generate_condition", new Object[0]), VariableTypeLoader.BuiltInTypes.LOGIC, Dependency.fromString("x:number/y:number/z:number/world:world"))).setDefaultName(L10N.t("condition.common.no_additional", new Object[0])).makeInline();
+        specialInformation = new StringListProcedureSelector(this.withEntry("block/special_information"), mcreator, L10N.t("elementgui.common.special_information"), AbstractProcedureSelector.Side.CLIENT, new JStringListField(mcreator, null), 0, Dependency.fromString("x:number/y:number/z:number/entity:entity/world:world/itemstack:itemstack"));
         this.blockBase.addActionListener((e) -> {
             this.disableOffset.setEnabled(true);
             this.boundingBoxList.setEnabled(true);
@@ -381,6 +385,7 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
         this.textureBack.setOpaque(false);
         this.isReplaceable.setOpaque(false);
         this.canProvidePower.setOpaque(false);
+        generateFeature.setOpaque(false);
         destal.add(new JLabel());
         destal.add(ComponentUtils.squareAndBorder(this.textureTop, L10N.t("elementgui.block.texture_place_top", new Object[0])));
         destal.add(new JLabel());
@@ -415,12 +420,8 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
         JPanel topnbot = new JPanel(new BorderLayout());
         topnbot.setOpaque(false);
         topnbot.add("Center", sbbp22);
-        JPanel txblock3 = new JPanel(new FlowLayout(0, 0, 0));
-        txblock3.setOpaque(false);
-        txblock3.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder((Color)UIManager.get("MCreatorLAF.BRIGHT_COLOR"), 1), L10N.t("elementgui.block.special_information_title", new Object[0]), 0, 0, this.getFont().deriveFont(12.0F), (Color)UIManager.get("MCreatorLAF.BRIGHT_COLOR")));
-        ComponentUtils.deriveFont(this.specialInfo, 16.0F);
-        txblock3.add(HelpUtils.wrapWithHelpButton(this.withEntry("item/special_information"), L10N.label("elementgui.block.special_information_tip", new Object[0])));
-        txblock3.add(this.specialInfo);
+        JComponent txblock3 = PanelUtils.gridElements(1, 1, specialInformation);
+        txblock3.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder((Color)UIManager.get("MCreatorLAF.BRIGHT_COLOR"), 1), L10N.t("elementgui.common.special_information", new Object[0]), 0, 0, this.getFont().deriveFont(12.0F), (Color)UIManager.get("MCreatorLAF.BRIGHT_COLOR")));
         sbbp2.add("Center", topnbot);
         JPanel render = new JPanel();
         render.setLayout(new BoxLayout(render, 3));
@@ -499,7 +500,7 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
         bbPane.setOpaque(false);
         bbPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         if (!this.isEditingMode()) {
-            this.boundingBoxList.setBoundingBoxes(Collections.singletonList(new IBlockWithBoundingBox.BoxEntry()));
+            this.boundingBoxList.setEntries(Collections.singletonList(new IBlockWithBoundingBox.BoxEntry()));
             this.animationCount.setValue(1);
         }
 
@@ -767,8 +768,8 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
         pane8.add("Center", PanelUtils.totalCenterInPanel(invblock));
         JPanel enderpanel2 = new JPanel(new BorderLayout(30, 15));
         JPanel genPanel = new JPanel(new GridLayout(8, 2, 20, 2));
-        genPanel.add(HelpUtils.wrapWithHelpButton(this.withEntry("common/spawn_world_types"), L10N.label("elementgui.block.spawn_world_types", new Object[0])));
-        genPanel.add(this.spawnWorldTypes);
+        genPanel.add(HelpUtils.wrapWithHelpButton(this.withEntry("common/generate_feature"), L10N.label("elementgui.block.generate_feature")));
+        genPanel.add(generateFeature);
         genPanel.add(HelpUtils.wrapWithHelpButton(this.withEntry("block/gen_replace_blocks"), L10N.label("elementgui.block.gen_replace_blocks", new Object[0])));
         genPanel.add(this.blocksToReplace);
         genPanel.add(HelpUtils.wrapWithHelpButton(this.withEntry("common/restrict_to_biomes"), L10N.label("elementgui.common.restrict_to_biomes", new Object[0])));
@@ -940,6 +941,7 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
         super.reloadDataLists();
         this.onBlockAdded.refreshListKeepSelected();
         this.onNeighbourBlockChanges.refreshListKeepSelected();
+        this.specialInformation.refreshListKeepSelected();
         this.onEntityCollides.refreshListKeepSelected();
         this.onTickUpdate.refreshListKeepSelected();
         this.onRandomUpdateEvent.refreshListKeepSelected();
@@ -1083,7 +1085,7 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
         this.inventorySize.setValue(block.inventorySize);
         this.inventoryStackSize.setValue(block.inventoryStackSize);
         this.tickRate.setValue(block.tickRate);
-        this.spawnWorldTypes.setListElements(block.spawnWorldTypes);
+        generateFeature.setSelected(block.generateFeature);
         this.blocksToReplace.setListElements(block.blocksToReplace);
         this.restrictionBiomes.setListElements(block.restrictionBiomes);
         this.fluidRestrictions.setListElements(block.fluidRestrictions);
@@ -1105,10 +1107,8 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
         this.geoModel.setSelectedItem(block.normal);
         this.displaySettings.setSelectedItem(block.displaySettings);
         this.disableOffset.setSelected(block.disableOffset);
-        this.boundingBoxList.setBoundingBoxes(block.boundingBoxes);
-        this.specialInfo.setText((String)block.specialInfo.stream().map((info) -> {
-            return info.replace(",", "\\,");
-        }).collect(Collectors.joining(",")));
+        this.boundingBoxList.setEntries(block.boundingBoxes);
+        this.specialInformation.setSelectedProcedure(block.specialInformation);
         this.refreshFieldsTileEntity();
         this.refreshRedstoneEmitted();
         this.tickRate.setEnabled(!this.tickRandomly.isSelected());
@@ -1229,12 +1229,12 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
         block.textureRight = this.textureRight.getID();
         block.textureBack = this.textureBack.getID();
         block.disableOffset = this.disableOffset.isSelected();
-        block.boundingBoxes = this.boundingBoxList.getBoundingBoxes();
+        block.boundingBoxes = this.boundingBoxList.getEntries();
         block.beaconColorModifier = this.beaconColorModifier.getColor();
-        block.spawnWorldTypes = this.spawnWorldTypes.getListElements();
+        block.generateFeature = generateFeature.isSelected();
         block.restrictionBiomes = this.restrictionBiomes.getListElements();
         block.fluidRestrictions = this.fluidRestrictions.getListElements();
-        block.blocksToReplace = this.blocksToReplace.getListElements();
+        //block.blocksToReplace = this.blocksToReplace.getListElements(); WHY DOES THIS LINE BREAK ANIMATED BLOCKS?!?!?!?
         block.isReplaceable = this.isReplaceable.isSelected();
         block.canProvidePower = this.canProvidePower.isSelected();
         block.colorOnMap = (String)this.colorOnMap.getSelectedItem();
@@ -1249,7 +1249,7 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
         block.slipperiness = (Double)this.slipperiness.getValue();
         block.speedFactor = (Double)this.speedFactor.getValue();
         block.jumpFactor = (Double)this.jumpFactor.getValue();
-        block.specialInfo = StringUtils.splitCommaSeparatedStringListWithEscapes(this.specialInfo.getText());
+        block.specialInformation = this.specialInformation.getSelectedProcedure();
         block.normal = (String)this.geoModel.getSelectedItem();
         block.displaySettings = (String)this.displaySettings.getSelectedItem();
         if (this.blockBase.getSelectedIndex() != 0) {

@@ -187,6 +187,7 @@ public class AnimatedEntity extends GeneratableElement
 
         this.modelShadowSize = 0.5;
         this.mobCreatureType = "UNDEFINED";
+        this.mobModelTexture = new String("");
         this.trackingRange = 64;
         this.rangedItemType = "Default item";
         this.rangedAttackInterval = 20;

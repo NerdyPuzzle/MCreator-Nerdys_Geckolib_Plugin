@@ -223,14 +223,7 @@ public class ${name}Item extends Item implements GeoItem {
 	}
 	</#if>
 
-	<#if data.specialInfo?has_content>
-	@Override public void appendHoverText(ItemStack itemstack, Level world, List<Component> list, TooltipFlag flag) {
-		super.appendHoverText(itemstack, world, list, flag);
-		<#list data.specialInfo as entry>
-		list.add(Component.literal("${JavaConventions.escapeStringForJava(entry)}"));
-		</#list>
-	}
-	</#if>
+	<@addSpecialInformation data.specialInformation/>
 
 	<#if hasProcedure(data.onRightClickedInAir) || data.hasInventory()>
 	@Override public InteractionResultHolder<ItemStack> use(Level world, Player entity, InteractionHand hand) {
@@ -304,11 +297,25 @@ public class ${name}Item extends Item implements GeoItem {
 
 	<@onCrafted data.onCrafted/>
 
-	<@onStoppedUsing data.onStoppedUsing/>
-
 	<@onItemTick data.onItemInUseTick, data.onItemInInventoryTick/>
 
 	<@onDroppedByPlayer data.onDroppedByPlayer/>
+
+	<#if hasProcedure(data.onStoppedUsing)>
+		@Override public void releaseUsing(ItemStack itemstack, Level world, LivingEntity entity, int time) {
+			<#if hasProcedure(data.onStoppedUsing)>
+				<@procedureCode data.onStoppedUsing, {
+					"x": "entity.getX()",
+					"y": "entity.getY()",
+					"z": "entity.getZ()",
+					"world": "world",
+					"entity": "entity",
+					"itemstack": "itemstack",
+					"time": "time"
+				}/>
+			</#if>
+		}
+	</#if>
 
 	<#if data.hasInventory()>
 	@Override public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag compound) {

@@ -22,19 +22,19 @@ public class PluginElementTypes {
     public static void load() {
 
         ANIMATEDBLOCK = register(
-                new ModElementType<>("animatedblock", (Character) 'D', BaseType.BLOCK, AnimatedBlockGUI::new, AnimatedBlock.class)
+                new ModElementType<>("animatedblock", (Character) 'D', AnimatedBlockGUI::new, AnimatedBlock.class)
         );
 
         ANIMATEDITEM = register(
-                new ModElementType<>("animateditem", (Character) 'I', BaseType.ITEM, AnimatedItemGUI::new, AnimatedItem.class)
+                new ModElementType<>("animateditem", (Character) 'I', AnimatedItemGUI::new, AnimatedItem.class)
         );
 
         ANIMATEDENTITY = register(
-                new ModElementType<>("animatedentity", (Character) 'E', BaseType.ENTITY, AnimatedEntityGUI::new, AnimatedEntity.class)
+                new ModElementType<>("animatedentity", (Character) 'E', AnimatedEntityGUI::new, AnimatedEntity.class)
         );
 
         ANIMATEDARMOR = register(
-                new ModElementType<>("animatedarmor", (Character) 'A', BaseType.ARMOR, AnimatedArmorGUI::new, AnimatedArmor.class)
+                new ModElementType<>("animatedarmor", (Character) 'A', AnimatedArmorGUI::new, AnimatedArmor.class)
         );
 
     }

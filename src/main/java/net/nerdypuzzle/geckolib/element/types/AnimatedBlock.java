@@ -5,14 +5,17 @@ import net.mcreator.element.GeneratableElement;
 import net.mcreator.element.parts.*;
 import net.mcreator.element.parts.procedure.NumberProcedure;
 import net.mcreator.element.parts.procedure.Procedure;
+import net.mcreator.element.parts.procedure.StringListProcedure;
 import net.mcreator.element.types.interfaces.IBlock;
 import net.mcreator.element.types.interfaces.IBlockWithBoundingBox;
 import net.mcreator.element.types.interfaces.ITabContainedElement;
+import net.mcreator.generator.GeneratorFlavor;
 import net.mcreator.minecraft.MCItem;
 import net.mcreator.minecraft.MinecraftImageGenerator;
 import net.mcreator.ui.workspace.resources.TextureType;
 import net.mcreator.util.image.ImageUtils;
 import net.mcreator.workspace.elements.ModElement;
+import net.mcreator.workspace.references.ModElementReference;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -45,7 +48,7 @@ public class AnimatedBlock extends GeneratableElement implements IBlock, ITabCon
     public boolean disableOffset;
     public List<BoxEntry> boundingBoxes;
     public String name;
-    public List<String> specialInfo;
+    public StringListProcedure specialInformation;
     public double hardness;
     public double resistance;
     public boolean hasGravity;
@@ -104,6 +107,7 @@ public class AnimatedBlock extends GeneratableElement implements IBlock, ITabCon
     public int inventoryStackSize;
     public boolean inventoryDropWhenDestroyed;
     public boolean inventoryComparatorPower;
+    public boolean generateFeature;
     public List<Integer> inventoryOutSlotIDs;
     public List<Integer> inventoryInSlotIDs;
     public boolean hasEnergyStorage;
@@ -128,8 +132,9 @@ public class AnimatedBlock extends GeneratableElement implements IBlock, ITabCon
     public Procedure onRedstoneOn;
     public Procedure onRedstoneOff;
     public Procedure onHitByProjectile;
-    public List<String> spawnWorldTypes;
+
     public List<BiomeEntry> restrictionBiomes;
+    @ModElementReference
     public List<MItemBlock> blocksToReplace;
     public String generationShape;
     public int frequencyPerChunks;
@@ -140,6 +145,7 @@ public class AnimatedBlock extends GeneratableElement implements IBlock, ITabCon
     public String normal;
     public String displaySettings;
 
+
     private AnimatedBlock() {
         this((ModElement)null);
     }
@@ -148,8 +154,8 @@ public class AnimatedBlock extends GeneratableElement implements IBlock, ITabCon
         super(element);
         this.tintType = "No tint";
         this.boundingBoxes = new ArrayList();
-        this.spawnWorldTypes = new ArrayList();
         this.restrictionBiomes = new ArrayList();
+        this.blocksToReplace = new ArrayList<>();
         this.reactionToPushing = "NORMAL";
         this.slipperiness = 0.6;
         this.speedFactor = 1.0;
@@ -175,10 +181,6 @@ public class AnimatedBlock extends GeneratableElement implements IBlock, ITabCon
         return !this.customDrop.isEmpty();
     }
 
-    public boolean isGeneratedInWorld() {
-        return !this.spawnWorldTypes.isEmpty();
-    }
-
     public boolean isBlockTinted() {
         return !"No tint".equals(this.tintType);
     }
@@ -189,10 +191,6 @@ public class AnimatedBlock extends GeneratableElement implements IBlock, ITabCon
 
     public boolean shouldOpenGUIOnRightClick() {
         return this.guiBoundTo != null && !this.guiBoundTo.equals("<NONE>") && this.openGUIOnRightClick;
-    }
-
-    public boolean doesGenerateInWorld() {
-        return this.spawnWorldTypes.size() > 0;
     }
 
     public boolean shouldScheduleTick() {
@@ -269,7 +267,8 @@ public class AnimatedBlock extends GeneratableElement implements IBlock, ITabCon
 
     public Collection<BaseType> getBaseTypesProvided() {
         List<BaseType> baseTypes = new ArrayList(List.of(BaseType.BLOCK, BaseType.ITEM, BaseType.BLOCKENTITY));
-        if (this.doesGenerateInWorld()) {
+        if (generateFeature && getModElement().getGenerator().getGeneratorConfiguration().getGeneratorFlavor()
+                == GeneratorFlavor.FABRIC) {
             baseTypes.add(BaseType.FEATURE);
         }
 

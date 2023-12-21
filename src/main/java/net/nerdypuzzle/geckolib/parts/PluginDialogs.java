@@ -56,7 +56,7 @@ public class PluginDialogs {
                         geckoElement.mobName = entity.mobName;
                         geckoElement.mobLabel = entity.mobLabel;
                         geckoElement.mobModelTexture = entity.mobModelTexture;
-                        geckoElement.mobModelGlowTexture = entity.mobModelGlowTexture;
+                        geckoElement.mobModelGlowTexture = "";
                         geckoElement.visualScale = new NumberProcedure("Procedure1", 1);
                         geckoElement.boundingBoxScale = new NumberProcedure("Procedure2", 1);
                         geckoElement.modelWidth = entity.modelWidth;
@@ -210,7 +210,6 @@ public class PluginDialogs {
                         geckoElement.mobName = entity.mobName;
                         geckoElement.mobLabel = entity.mobLabel;
                         geckoElement.mobModelTexture = entity.mobModelTexture;
-                        geckoElement.mobModelGlowTexture = entity.mobModelGlowTexture;
                         geckoElement.modelWidth = entity.modelWidth;
                         geckoElement.modelHeight = entity.modelHeight;
                         geckoElement.modelShadowSize = entity.modelShadowSize;

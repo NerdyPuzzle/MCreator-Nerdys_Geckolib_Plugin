@@ -9,6 +9,7 @@ import net.mcreator.minecraft.DataListEntry;
 import net.mcreator.minecraft.ElementUtil;
 import net.mcreator.ui.MCreator;
 import net.mcreator.ui.component.JEmptyBox;
+import net.mcreator.ui.component.JStringListField;
 import net.mcreator.ui.component.SearchableComboBox;
 import net.mcreator.ui.component.util.ComboBoxUtil;
 import net.mcreator.ui.component.util.ComponentUtils;
@@ -22,6 +23,7 @@ import net.mcreator.ui.minecraft.TextureHolder;
 import net.mcreator.ui.modgui.ModElementGUI;
 import net.mcreator.ui.procedure.AbstractProcedureSelector;
 import net.mcreator.ui.procedure.ProcedureSelector;
+import net.mcreator.ui.procedure.StringListProcedureSelector;
 import net.mcreator.ui.validation.AggregatedValidationResult;
 import net.mcreator.ui.validation.IValidable;
 import net.mcreator.ui.validation.ValidationGroup;
@@ -51,7 +53,7 @@ import java.util.stream.Collectors;
 
 public class AnimatedItemGUI extends ModElementGUI<AnimatedItem> implements GeckolibElement {
     private TextureHolder texture;
-    private final JTextField specialInfo = new JTextField(20);
+    private StringListProcedureSelector specialInformation;
     private final VTextField idle = new VTextField(20);
     private final JSpinner stackSize = new JSpinner(new SpinnerNumberModel(64, 0, 64, 1));
     private final VTextField name = new VTextField(20);
@@ -142,7 +144,8 @@ public class AnimatedItemGUI extends ModElementGUI<AnimatedItem> implements Geck
         this.onEntitySwing = new ProcedureSelector(this.withEntry("item/when_entity_swings"), this.mcreator, L10N.t("elementgui.item.event_entity_swings", new Object[0]), Dependency.fromString("x:number/y:number/z:number/world:world/entity:entity/itemstack:itemstack"));
         this.onDroppedByPlayer = new ProcedureSelector(this.withEntry("item/on_dropped"), this.mcreator, L10N.t("elementgui.item.event_on_dropped", new Object[0]), Dependency.fromString("x:number/y:number/z:number/world:world/entity:entity/itemstack:itemstack"));
         this.onFinishUsingItem = new ProcedureSelector(this.withEntry("item/when_stopped_using"), this.mcreator, L10N.t("elementgui.item.player_useitem_finish", new Object[0]), Dependency.fromString("x:number/y:number/z:number/world:world/entity:entity/itemstack:itemstack"));
-        this.glowCondition = (new ProcedureSelector(this.withEntry("item/condition_glow"), this.mcreator, L10N.t("elementgui.item.condition_glow", new Object[0]), AbstractProcedureSelector.Side.CLIENT, true, VariableTypeLoader.BuiltInTypes.LOGIC, Dependency.fromString("x:number/y:number/z:number/world:world/entity:entity/itemstack:itemstack"))).makeInline();
+        this.glowCondition = (new ProcedureSelector(this.withEntry("item/condition_glow"), this.mcreator, L10N.t("elementgui.item.glowcondition", new Object[0]), AbstractProcedureSelector.Side.CLIENT, true, VariableTypeLoader.BuiltInTypes.LOGIC, Dependency.fromString("x:number/y:number/z:number/world:world/entity:entity/itemstack:itemstack"))).makeInline();
+        specialInformation = new StringListProcedureSelector(this.withEntry("item/special_information"), mcreator, L10N.t("elementgui.common.special_information"), AbstractProcedureSelector.Side.CLIENT, new JStringListField(mcreator, null), 0, Dependency.fromString("x:number/y:number/z:number/entity:entity/world:world/itemstack:itemstack"));
         this.guiBoundTo.addActionListener((e) -> {
             if (!this.isEditingMode()) {
                 String selected = (String)this.guiBoundTo.getSelectedItem();
@@ -177,7 +180,7 @@ public class AnimatedItemGUI extends ModElementGUI<AnimatedItem> implements Geck
         destal.setOpaque(false);
         JComponent destal1 = PanelUtils.join(0, new Component[]{HelpUtils.wrapWithHelpButton(this.withEntry("item/glowing_effect"), L10N.label("elementgui.item.glowing_effect", new Object[0])), this.hasGlow, this.glowCondition});
         destal.add(HelpUtils.wrapWithHelpButton(this.withEntry("item/special_information"), L10N.label("elementgui.item.tooltip_tip", new Object[0])));
-        destal.add(this.specialInfo);
+        destal.add(this.specialInformation);
         destal.add(HelpUtils.wrapWithHelpButton(this.withEntry("geckolib/animation_name"), L10N.label("elementgui.animateditem.idle_animation", new Object[0])));
         destal.add(this.idle);
         destal.add(HelpUtils.wrapWithHelpButton(this.withEntry("geckolib/animation_perspective"), L10N.label("elementgui.animateditem.perspective", new Object[0])));
@@ -205,7 +208,6 @@ public class AnimatedItemGUI extends ModElementGUI<AnimatedItem> implements Geck
             this.updateGlowElements();
         });
         destal2.add("Center", PanelUtils.northAndCenterElement(destal, destal1, 10, 10));
-        ComponentUtils.deriveFont(this.specialInfo, 16.0F);
         ComponentUtils.deriveFont(this.idle, 16.0F);
         ComponentUtils.deriveFont(this.leftArm, 16.0F);
         ComponentUtils.deriveFont(this.rightArm, 16.0F);
@@ -389,6 +391,7 @@ public class AnimatedItemGUI extends ModElementGUI<AnimatedItem> implements Geck
         this.onCrafted.refreshListKeepSelected();
         this.onRightClickedOnBlock.refreshListKeepSelected();
         this.onEntityHitWith.refreshListKeepSelected();
+        this.specialInformation.refreshListKeepSelected();
         this.onItemInInventoryTick.refreshListKeepSelected();
         this.onItemInUseTick.refreshListKeepSelected();
         this.onStoppedUsing.refreshListKeepSelected();
@@ -427,9 +430,7 @@ public class AnimatedItemGUI extends ModElementGUI<AnimatedItem> implements Geck
         this.rarity.setSelectedItem(item.rarity);
         this.perspective.setSelectedItem(item.perspective);
         this.texture.setTextureFromTextureName(item.texture);
-        this.specialInfo.setText((String)item.specialInfo.stream().map((info) -> {
-            return info.replace(",", "\\,");
-        }).collect(Collectors.joining(",")));
+        this.specialInformation.setSelectedProcedure(item.specialInformation);
         this.onRightClickedInAir.setSelectedProcedure(item.onRightClickedInAir);
         this.onRightClickedOnBlock.setSelectedProcedure(item.onRightClickedOnBlock);
         this.onCrafted.setSelectedProcedure(item.onCrafted);
@@ -518,7 +519,7 @@ public class AnimatedItemGUI extends ModElementGUI<AnimatedItem> implements Geck
         item.animation = (String)this.animation.getSelectedItem();
         item.onFinishUsingItem = this.onFinishUsingItem.getSelectedProcedure();
         item.eatResultItem = this.eatResultItem.getBlock();
-        item.specialInfo = StringUtils.splitCommaSeparatedStringListWithEscapes(this.specialInfo.getText());
+        item.specialInformation = this.specialInformation.getSelectedProcedure();
         item.texture = this.texture.getID();
         item.renderType = 0;
         item.normal = (String)this.geoModel.getSelectedItem();

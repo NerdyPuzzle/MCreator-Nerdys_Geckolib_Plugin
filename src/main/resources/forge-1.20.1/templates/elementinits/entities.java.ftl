@@ -43,7 +43,7 @@ package ${package}.init;
 	<#assign hasLivingEntities = false>
 
 	<#list entities as entity>
-		<#if entity.getModElement().getTypeString() == "rangeditem">
+		<#if entity.getModElement().getTypeString() == "projectile">
 			public static final RegistryObject<EntityType<${entity.getModElement().getName()}Entity>> ${entity.getModElement().getRegistryNameUpper()} =
 				register("projectile_${entity.getModElement().getRegistryName()}", EntityType.Builder.<${entity.getModElement().getName()}Entity>
 						of(${entity.getModElement().getName()}Entity::new, MobCategory.MISC).setCustomClientFactory(${entity.getModElement().getName()}Entity::new)

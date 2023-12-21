@@ -40,6 +40,7 @@ import net.nerdypuzzle.geckolib.element.types.AnimatedArmor;
 import net.nerdypuzzle.geckolib.element.types.GeckolibElement;
 import net.nerdypuzzle.geckolib.parts.GeomodelRenderer;
 import net.nerdypuzzle.geckolib.parts.PluginModelActions;
+import net.nerdypuzzle.geckolib.parts.RefactoredSystemsICopyPastedBecauseIWasTooBloodyLazyToActuallyProperlyReplace;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -240,7 +241,7 @@ public class AnimatedArmorGUI extends ModElementGUI<AnimatedArmor> implements Ge
                 HelpUtils.wrapWithHelpButton(this.withEntry("item/model"), L10N.label("elementgui.common.item_model")));
         helmetSubPanel.add(helmetItemRenderType);
 
-        helmetSubPanel.add(PanelUtils.join(FlowLayout.LEFT, L10N.label("elementgui.armor.special_information")));
+        helmetSubPanel.add(PanelUtils.join(FlowLayout.LEFT, L10N.label("elementgui.item.tooltip_tip")));
         helmetSubPanel.add(helmetSpecialInfo);
 
         helmetSubPanel.add(HelpUtils.wrapWithHelpButton(this.withEntry("item/immune_to_fire"),
@@ -274,7 +275,7 @@ public class AnimatedArmorGUI extends ModElementGUI<AnimatedArmor> implements Ge
                 HelpUtils.wrapWithHelpButton(this.withEntry("item/model"), L10N.label("elementgui.common.item_model")));
         bodySubPanel.add(bodyItemRenderType);
 
-        bodySubPanel.add(PanelUtils.join(FlowLayout.LEFT, L10N.label("elementgui.armor.special_information")));
+        bodySubPanel.add(PanelUtils.join(FlowLayout.LEFT, L10N.label("elementgui.item.tooltip_tip")));
         bodySubPanel.add(bodySpecialInfo);
 
         bodySubPanel.add(HelpUtils.wrapWithHelpButton(this.withEntry("item/immune_to_fire"),
@@ -302,7 +303,7 @@ public class AnimatedArmorGUI extends ModElementGUI<AnimatedArmor> implements Ge
                 HelpUtils.wrapWithHelpButton(this.withEntry("item/model"), L10N.label("elementgui.common.item_model")));
         leggingsSubPanel.add(leggingsItemRenderType);
 
-        leggingsSubPanel.add(PanelUtils.join(FlowLayout.LEFT, L10N.label("elementgui.armor.special_information")));
+        leggingsSubPanel.add(PanelUtils.join(FlowLayout.LEFT, L10N.label("elementgui.item.tooltip_tip")));
         leggingsSubPanel.add(leggingsSpecialInfo);
 
         leggingsSubPanel.add(HelpUtils.wrapWithHelpButton(this.withEntry("item/immune_to_fire"),
@@ -330,7 +331,7 @@ public class AnimatedArmorGUI extends ModElementGUI<AnimatedArmor> implements Ge
                 HelpUtils.wrapWithHelpButton(this.withEntry("item/model"), L10N.label("elementgui.common.item_model")));
         bootsSubPanel.add(bootsItemRenderType);
 
-        bootsSubPanel.add(PanelUtils.join(FlowLayout.LEFT, L10N.label("elementgui.armor.special_information")));
+        bootsSubPanel.add(PanelUtils.join(FlowLayout.LEFT, L10N.label("elementgui.item.tooltip_tip")));
         bootsSubPanel.add(bootsSpecialInfo);
 
         bootsSubPanel.add(HelpUtils.wrapWithHelpButton(this.withEntry("item/immune_to_fire"),
@@ -775,10 +776,10 @@ public class AnimatedArmorGUI extends ModElementGUI<AnimatedArmor> implements Ge
         armor.bootsName = bootsName.getText();
         armor.equipSound = equipSound.getSound();
         armor.repairItems = repairItems.getListElements();
-        armor.helmetSpecialInfo = StringUtils.splitCommaSeparatedStringListWithEscapes(helmetSpecialInfo.getText());
-        armor.bodySpecialInfo = StringUtils.splitCommaSeparatedStringListWithEscapes(bodySpecialInfo.getText());
-        armor.leggingsSpecialInfo = StringUtils.splitCommaSeparatedStringListWithEscapes(leggingsSpecialInfo.getText());
-        armor.bootsSpecialInfo = StringUtils.splitCommaSeparatedStringListWithEscapes(bootsSpecialInfo.getText());
+        armor.helmetSpecialInfo = RefactoredSystemsICopyPastedBecauseIWasTooBloodyLazyToActuallyProperlyReplace.splitCommaSeparatedStringListWithEscapes(helmetSpecialInfo.getText());
+        armor.bodySpecialInfo = RefactoredSystemsICopyPastedBecauseIWasTooBloodyLazyToActuallyProperlyReplace.splitCommaSeparatedStringListWithEscapes(bodySpecialInfo.getText());
+        armor.leggingsSpecialInfo = RefactoredSystemsICopyPastedBecauseIWasTooBloodyLazyToActuallyProperlyReplace.splitCommaSeparatedStringListWithEscapes(leggingsSpecialInfo.getText());
+        armor.bootsSpecialInfo = RefactoredSystemsICopyPastedBecauseIWasTooBloodyLazyToActuallyProperlyReplace.splitCommaSeparatedStringListWithEscapes(bootsSpecialInfo.getText());
         armor.helmetImmuneToFire = helmetImmuneToFire.isSelected();
         armor.bodyImmuneToFire = bodyImmuneToFire.isSelected();
         armor.leggingsImmuneToFire = leggingsImmuneToFire.isSelected();
