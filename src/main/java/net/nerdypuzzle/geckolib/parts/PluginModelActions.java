@@ -102,12 +102,8 @@ public class PluginModelActions extends ModelImportActions {
         FileIO.copyFile(geoModel, new File(PluginModelActions.getGeometryDir(mcreator),
                 Transliteration.transliterateString(geoModel.getName()).toLowerCase(Locale.ENGLISH).trim()
                         .replace(":", "").replace(" ", "_")));
-        File[] animations = FileDialogs.getMultiOpenDialog(mcreator, new String[] { ".animation.json" });
-        for (File animation : animations) {
-            FileIO.copyFile(animation, new File(PluginModelActions.getAnimationsDir(mcreator),
-                    Transliteration.transliterateString(animation.getName()).toLowerCase(Locale.ENGLISH).trim()
-                            .replace(":", "").replace(" ", "_")));
-        }
+        File animation = FileDialogs.getOpenDialog(mcreator, new String[] { ".animation.json" });
+        FileIO.copyFile(animation, new File(PluginModelActions.getAnimationsDir(mcreator), geoModel.getName().replace(".geo.", ".animation.")));
     }
 
     public static void importDisplaySettings(MCreator mcreator, File displaySettings) {

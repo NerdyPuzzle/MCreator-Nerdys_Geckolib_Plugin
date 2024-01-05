@@ -63,7 +63,10 @@ public class PluginPanelGeckolib extends JPanel implements IReloadableFilterable
         imp1.setContentAreaFilled(false);
         imp1.setOpaque(false);
         imp1.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 8));
-        imp1.addActionListener(e -> Launcher.ACTION_REGISTRY.importGeckoLibModel.doAction());
+        imp1.addActionListener(e -> {
+            Launcher.ACTION_REGISTRY.importGeckoLibModel.doAction();
+            this.reloadElements();
+        });
         ComponentUtils.deriveFont(imp1, 12.0F);
         imp1.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 8));
         bar.add(imp1);
@@ -72,7 +75,10 @@ public class PluginPanelGeckolib extends JPanel implements IReloadableFilterable
         imp2.setContentAreaFilled(false);
         imp2.setOpaque(false);
         imp2.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 8));
-        imp2.addActionListener(e -> Launcher.ACTION_REGISTRY.importDisplaySettings.doAction());
+        imp2.addActionListener(e -> {
+            Launcher.ACTION_REGISTRY.importDisplaySettings.doAction();
+            this.reloadElements();
+        });
         ComponentUtils.deriveFont(imp2, 12.0F);
         imp1.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 8));
         bar.add(imp2);
@@ -98,10 +104,14 @@ public class PluginPanelGeckolib extends JPanel implements IReloadableFilterable
 
     private void deleteCurrentlySelected() {
         Object file = this.modelList.getSelectedValue();
+        String file2 = ((File)file).getAbsolutePath().replace("\\geo\\", "\\animations\\").replace(".geo.", ".animation.");
         if (file != null && file instanceof File model) {
             int n = JOptionPane.showConfirmDialog(this.workspacePanel.getMCreator(), L10N.t("workspace.3dmodels.delete_confirm_message", new Object[0]), L10N.t("common.confirmation", new Object[0]), 0, 3, (Icon)null);
             if (n == 0) {
                 ((File) file).delete();
+                File file3 = new File(file2);
+                if (file3.exists())
+                    file3.delete();
                 this.reloadElements();
             }
         }
