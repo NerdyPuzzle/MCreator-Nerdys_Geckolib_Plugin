@@ -1,5 +1,8 @@
 {
   "geckolib_plugin": {
-    "latest": "4.8.8"
+    "latest": "4.8.8",
+    "changes": [
+      "test"
+    ]
   }
 }
