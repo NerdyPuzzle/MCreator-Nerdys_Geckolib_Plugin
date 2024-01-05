@@ -13,14 +13,18 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Launcher extends JavaPlugin {
 
 	public static final Logger LOG = LogManager.getLogger("GeckoLib Plugin");
 	public static PluginActions ACTION_REGISTRY;
+	public static Set<Plugin> PLUGIN_INSTANCE = new HashSet<>();
 
 	public Launcher(Plugin plugin) {
 		super(plugin);
+		PLUGIN_INSTANCE.add(plugin);
 		addListener(PreGeneratorsLoadingEvent.class, event -> PluginElementTypes.load());
 		addListener(ModElementGUIEvent.BeforeLoading.class, event -> SwingUtilities.invokeLater(() -> PluginEventTriggers.dependencyWarning(event.getMCreator(), event.getModElementGUI())));
 		addListener(MCreatorLoadedEvent.class, event -> {
