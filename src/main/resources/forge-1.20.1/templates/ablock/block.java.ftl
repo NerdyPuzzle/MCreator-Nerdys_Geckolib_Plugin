@@ -69,11 +69,11 @@ public class ${name}Block extends BaseEntityBlock <#if data.isWaterloggable>impl
 		</#if>
 		<#if data.isCustomSoundType>
 			.sound(new ForgeSoundType(1.0f, 1.0f,
-				() -> ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("${data.breakSound.getUnmappedValue()}")),
-				() -> ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("${data.stepSound.getUnmappedValue()}")),
-				() -> ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("${data.placeSound.getUnmappedValue()}")),
-				() -> ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("${data.hitSound.getUnmappedValue()}")),
-				() -> ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("${data.fallSound.getUnmappedValue()}"))
+				() -> ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("${data.breakSound}")),
+				() -> ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("${data.stepSound}")),
+				() -> ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("${data.placeSound}")),
+				() -> ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("${data.hitSound}")),
+				() -> ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("${data.fallSound}"))
 			))
 		<#else>
 			.sound(SoundType.${generator.map(data.soundOnStep, "stepsounds")})

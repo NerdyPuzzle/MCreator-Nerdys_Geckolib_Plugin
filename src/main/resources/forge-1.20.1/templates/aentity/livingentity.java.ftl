@@ -348,29 +348,29 @@ public class ${name}Entity extends ${extendsClass} <#if data.ranged>implements R
    	}
 	</#if>
 
-   	<#if data.livingSound?has_content>
-	@Override public SoundEvent getAmbientSound() {
-		return ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("${data.livingSound.getUnmappedValue()}"));
-	}
-	</#if>
+    <#if data.livingSound?has_content && data.livingSound.getUnmappedValue()?has_content>
+ 	@Override public SoundEvent getAmbientSound() {
+ 		return ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("${data.livingSound}"));
+ 	}
+ 	</#if>
 
-   	<#if data.stepSound?has_content>
-	@Override public void playStepSound(BlockPos pos, BlockState blockIn) {
-		this.playSound(ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("${data.stepSound.getUnmappedValue()}")), 0.15f, 1);
-	}
-	</#if>
+    <#if data.stepSound?has_content && data.stepSound.getUnmappedValue()?has_content>
+ 	@Override public void playStepSound(BlockPos pos, BlockState blockIn) {
+ 		this.playSound(ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("${data.stepSound}")), 0.15f, 1);
+ 	}
+ 	</#if>
 
-	<#if data.hurtSound?has_content>
-	@Override public SoundEvent getHurtSound(DamageSource ds) {
-		return ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("${data.hurtSound.getUnmappedValue()}"));
-	}
-	</#if>
+ 	<#if data.hurtSound?has_content && data.hurtSound.getUnmappedValue()?has_content>
+ 	@Override public SoundEvent getHurtSound(DamageSource ds) {
+ 		return ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("${data.hurtSound}"));
+ 	}
+ 	</#if>
 
-	<#if data.deathSound?has_content>
-	@Override public SoundEvent getDeathSound() {
-		return ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("${data.deathSound.getUnmappedValue()}"));
-	}
-	</#if>
+ 	<#if data.deathSound?has_content && data.deathSound.getUnmappedValue()?has_content>
+ 	@Override public SoundEvent getDeathSound() {
+ 		return ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("${data.deathSound}"));
+ 	}
+ 	</#if>
 
 	<#if hasProcedure(data.onStruckByLightning)>
 	@Override public void thunderHit(ServerLevel serverWorld, LightningBolt lightningBolt) {

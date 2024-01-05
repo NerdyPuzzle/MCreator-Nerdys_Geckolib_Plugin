@@ -64,7 +64,7 @@ public class ${name}Item extends ArmorItem implements GeoItem {
 
 			@Override public SoundEvent getEquipSound() {
 				<#if data.equipSound?? && data.equipSound.getUnmappedValue()?has_content>
-				return ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("${data.equipSound.getUnmappedValue()}"));
+				return ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("${data.equipSound}"));
 				<#else>
 				return SoundEvents.EMPTY;
 				</#if>
