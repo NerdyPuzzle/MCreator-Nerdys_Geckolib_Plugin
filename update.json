@@ -1,8 +1,9 @@
 {
   "geckolib_plugin": {
-    "latest": "4.8.8",
+    "latest": "5.0.2",
     "changes": [
-      "test"
+      "Added back 1.19.2 support for now",
+      "Added a built-in update notification dialog"
     ]
   }
 }
