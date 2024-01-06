@@ -27,7 +27,7 @@ public class Launcher extends JavaPlugin {
 		addListener(PreGeneratorsLoadingEvent.class, event -> PluginElementTypes.load());
 		addListener(ModElementGUIEvent.BeforeLoading.class, event -> SwingUtilities.invokeLater(() -> {
 			PluginEventTriggers.dependencyWarning(event.getMCreator(), event.getModElementGUI());
-			PluginEventTriggers.interceptProcedurePanel(event.getMCreator(), event.getModElementGUI());
+			//PluginEventTriggers.interceptProcedurePanel(event.getMCreator(), event.getModElementGUI());
 		}));
 		addListener(MCreatorLoadedEvent.class, event -> {
 			ACTION_REGISTRY = new PluginActions(event.getMCreator());
