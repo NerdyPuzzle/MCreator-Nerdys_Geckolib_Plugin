@@ -7,11 +7,7 @@ package net.nerdypuzzle.geckolib.parts;
 
 import com.google.gson.Gson;
 import java.io.ByteArrayOutputStream;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -21,6 +17,8 @@ import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.SwingUtilities;
+
+import net.mcreator.blockly.data.BlocklyLoader;
 import net.mcreator.blockly.data.ExternalTrigger;
 import net.mcreator.blockly.java.BlocklyVariables;
 import net.mcreator.element.ModElementType;
@@ -55,7 +53,7 @@ public class JavabridgeReplacement {
     private final Supplier<Boolean> blocklyEvent;
     private final MCreator mcreator;
     private final Object NESTED_LOOP_KEY = new Object();
-    private final Map<String, String> ext_triggers = new LinkedHashMap<String, String>() {
+    public Map<String, String> ext_triggers = new LinkedHashMap<String, String>() {
         {
             this.put("no_ext_trigger", L10N.t("trigger.no_ext_trigger", new Object[0]));
         }
@@ -64,6 +62,8 @@ public class JavabridgeReplacement {
     public JavabridgeReplacement(@Nonnull MCreator mcreator, @Nonnull Supplier<Boolean> blocklyEvent) {
         this.blocklyEvent = blocklyEvent;
         this.mcreator = mcreator;
+        List<ExternalTrigger> ar10000 = BlocklyLoader.INSTANCE.getExternalTriggerLoader().getExternalTrigers();
+        ar10000.forEach(this::addExternalTrigger);
     }
 
     public void triggerEvent() {

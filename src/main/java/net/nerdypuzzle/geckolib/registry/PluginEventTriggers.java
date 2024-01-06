@@ -9,6 +9,9 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import net.mcreator.blockly.data.BlocklyLoader;
+import net.mcreator.blockly.data.ExternalTrigger;
+import net.mcreator.blockly.data.ToolboxType;
 import net.mcreator.io.FileIO;
 import net.mcreator.io.OS;
 import net.mcreator.io.net.WebIO;
@@ -18,6 +21,7 @@ import net.mcreator.plugin.PluginUpdateInfo;
 import net.mcreator.preferences.PreferencesManager;
 import net.mcreator.ui.MCreator;
 import net.mcreator.ui.MCreatorApplication;
+import net.mcreator.ui.blockly.BlocklyEditorType;
 import net.mcreator.ui.blockly.BlocklyJavascriptBridge;
 import net.mcreator.ui.blockly.BlocklyPanel;
 import net.mcreator.ui.component.util.PanelUtils;
@@ -34,6 +38,7 @@ import net.mcreator.ui.notifications.INotificationConsumer;
 import net.mcreator.ui.notifications.NotificationsRenderer;
 import net.mcreator.util.DesktopUtils;
 import net.mcreator.util.image.ImageUtils;
+import net.mcreator.workspace.elements.VariableElement;
 import net.mcreator.workspace.elements.VariableTypeLoader;
 import net.nerdypuzzle.geckolib.Launcher;
 import net.nerdypuzzle.geckolib.element.types.GeckolibElement;
@@ -178,7 +183,7 @@ public class PluginEventTriggers {
                             JSObject window = (JSObject)webEngine.executeScript("window");
                             window.setMember("javabridge", javabridge);
 
-                            window.setMember("editorType", blocklyPanel.getType().registryName());
+                            window.setMember("editorType", BlocklyEditorType.PROCEDURE.registryName());
                             WebEngine var10000 = webEngine;
                             Object var10001 = PreferencesManager.PREFERENCES.blockly.enableComments.get();
                             var10000.executeScript("var MCR_BLOCKLY_PREF = { 'comments' : " + var10001 + ",'renderer' : '" + ((String)PreferencesManager.PREFERENCES.blockly.blockRenderer.get()).toLowerCase(Locale.ENGLISH) + "','collapse' : " + PreferencesManager.PREFERENCES.blockly.enableCollapse.get() + ",'trashcan' : " + PreferencesManager.PREFERENCES.blockly.enableTrashcan.get() + ",'maxScale' : " + (double)(Integer)PreferencesManager.PREFERENCES.blockly.maxScale.get() / 100.0 + ",'minScale' : " + (double)(Integer)PreferencesManager.PREFERENCES.blockly.minScale.get() / 100.0 + ",'scaleSpeed' : " + (double)(Integer)PreferencesManager.PREFERENCES.blockly.scaleSpeed.get() / 100.0 + ",'saturation' :" + (double)(Integer)PreferencesManager.PREFERENCES.blockly.colorSaturation.get() / 100.0 + ",'value' :" + (double)(Integer)PreferencesManager.PREFERENCES.blockly.colorValue.get() / 100.0 + " };");
@@ -196,10 +201,29 @@ public class PluginEventTriggers {
                             webEngine.executeScript(VariableTypeLoader.INSTANCE.getVariableBlocklyJS());
 
                             try {
-                                Field field = BlocklyPanel.class.getDeclaredField("runAfterLoaded");
-                                field.setAccessible(true);
-                                List<Runnable> runAfterLoaded = (List<Runnable>) field.get(blocklyPanel);
-                                runAfterLoaded.forEach(ThreadUtil::runOnFxThread);
+                                engine.set(blocklyPanel, webEngine);
+                                loaded.set(blocklyPanel, true);
+                               Field field = BlocklyPanel.class.getDeclaredField("runAfterLoaded");
+                               field.setAccessible(true);
+                               List<Runnable> runAfterLoaded = (List<Runnable>) field.get(blocklyPanel);
+                               runAfterLoaded.forEach(ThreadUtil::runOnFxThread);
+
+                                javabridge.setJavaScriptEventListener(() -> {
+                                    (new Thread(() -> {
+                                        try {
+                                            Method method = ProcedureGUI.class.getDeclaredMethod("regenerateProcedure");
+                                            method.setAccessible(true);
+                                            method.invoke(procedure);
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                    }, "ProcedureRegenerate")).start();
+                                });
+                                if (!procedure.isEditingMode()) {
+                                    blocklyPanel.setXML("<xml xmlns=\"https://developers.google.com/blockly/xml\"><block type=\"event_trigger\" deletable=\"false\" x=\"40\" y=\"40\"><field name=\"trigger\">no_ext_trigger</field></block></xml>");
+                                }
+
+
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
