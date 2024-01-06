@@ -1,12 +1,8 @@
 {
   "geckolib_plugin": {
-    "latest": "5.1",
+    "latest": "5.1.1",
     "changes": [
-      "Added the entity data page to animated entities",
-      "Animated entity textures are now saved automatically when changed",
-      "Animation files are now automatically renamed to the name of the model when imported",
-      "Fixed the geckolib models and display settings tab not properly refreshing",
-      "Fixed animation files not being deleted when deleting the model file"
+      "Fixed entity data procedures not working with animated entities"
     ]
   }
 }
