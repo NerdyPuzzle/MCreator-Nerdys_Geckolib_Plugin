@@ -348,11 +348,25 @@ public class ${name}Item extends Item implements IAnimatable {
 
 	<@onCrafted data.onCrafted/>
 
-	<@onStoppedUsing data.onStoppedUsing/>
-
 	<@onItemTick data.onItemInUseTick, data.onItemInInventoryTick/>
 
 	<@onDroppedByPlayer data.onDroppedByPlayer/>
+
+	<#if hasProcedure(data.onStoppedUsing)>
+		@Override public void releaseUsing(ItemStack itemstack, Level world, LivingEntity entity, int time) {
+			<#if hasProcedure(data.onStoppedUsing)>
+				<@procedureCode data.onStoppedUsing, {
+					"x": "entity.getX()",
+					"y": "entity.getY()",
+					"z": "entity.getZ()",
+					"world": "world",
+					"entity": "entity",
+					"itemstack": "itemstack",
+					"time": "time"
+				}/>
+			</#if>
+		}
+	</#if>
 
 	<#if data.hasInventory()>
 	@Override public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag compound) {

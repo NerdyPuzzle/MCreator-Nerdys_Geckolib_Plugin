@@ -570,7 +570,7 @@ public class ${name}Entity extends ${extendsClass} <#if data.ranged>implements R
 		</#if>
 		if (compound.contains("Texture"))
 		    this.setTexture(compound.getString("Texture"));
-		<#if data.entityDataEntries?has_content
+		<#if data.entityDataEntries?has_content>
 		    <#list data.entityDataEntries as entry>
 			    if (compound.contains("Data${entry.property().getName()}"))
 			    <#if entry.value().getClass().getSimpleName() == "Integer">

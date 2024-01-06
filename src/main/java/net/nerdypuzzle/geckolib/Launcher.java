@@ -1,6 +1,6 @@
 package net.nerdypuzzle.geckolib;
 
-import net.mcreator.generator.mapping.NameMapper;
+import net.mcreator.minecraft.ElementUtil;
 import net.mcreator.plugin.events.ui.ModElementGUIEvent;
 import net.mcreator.plugin.events.workspace.MCreatorLoadedEvent;
 import net.nerdypuzzle.geckolib.registry.PluginActions;
@@ -22,11 +22,16 @@ public class Launcher extends JavaPlugin {
 	public static PluginActions ACTION_REGISTRY;
 	public static Set<Plugin> PLUGIN_INSTANCE = new HashSet<>();
 
+	private ElementUtil util = new ElementUtil();
+
 	public Launcher(Plugin plugin) {
 		super(plugin);
 		PLUGIN_INSTANCE.add(plugin);
 		addListener(PreGeneratorsLoadingEvent.class, event -> PluginElementTypes.load());
-		addListener(ModElementGUIEvent.BeforeLoading.class, event -> SwingUtilities.invokeLater(() -> PluginEventTriggers.dependencyWarning(event.getMCreator(), event.getModElementGUI())));
+		addListener(ModElementGUIEvent.BeforeLoading.class, event -> SwingUtilities.invokeLater(() -> {
+			PluginEventTriggers.dependencyWarning(event.getMCreator(), event.getModElementGUI());
+			PluginEventTriggers.interceptProcedurePanel(event.getMCreator(), event.getModElementGUI());
+		}));
 		addListener(MCreatorLoadedEvent.class, event -> {
 			ACTION_REGISTRY = new PluginActions(event.getMCreator());
 			SwingUtilities.invokeLater(() -> PluginEventTriggers.modifyMenus(event.getMCreator()));
@@ -34,5 +39,7 @@ public class Launcher extends JavaPlugin {
 
 		LOG.info("Plugin was loaded");
 	}
+
+
 
 }
