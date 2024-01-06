@@ -1,6 +1,5 @@
 package net.nerdypuzzle.geckolib;
 
-import net.mcreator.minecraft.ElementUtil;
 import net.mcreator.plugin.events.ui.ModElementGUIEvent;
 import net.mcreator.plugin.events.workspace.MCreatorLoadedEvent;
 import net.nerdypuzzle.geckolib.registry.PluginActions;
@@ -21,8 +20,6 @@ public class Launcher extends JavaPlugin {
 	public static final Logger LOG = LogManager.getLogger("GeckoLib Plugin");
 	public static PluginActions ACTION_REGISTRY;
 	public static Set<Plugin> PLUGIN_INSTANCE = new HashSet<>();
-
-	private ElementUtil util = new ElementUtil();
 
 	public Launcher(Plugin plugin) {
 		super(plugin);
