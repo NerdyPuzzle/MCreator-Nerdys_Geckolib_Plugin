@@ -1,11 +1,8 @@
 {
   "geckolib_plugin": {
-    "latest": "5.1.1",
+    "latest": "5.1.2",
     "changes": [
-      "Fixed entity data procedures not working for animated entities",
-      "The changes required to make that work are very experimental",
-      "If you experience any issues with the procedure editor after this update please report them immediately",
-      "Revert to 5.1 if you experience any issues with the procedure editor"
+      "Fixed procedure start blocks duplicating when creating the procedure"
     ]
   }
 }

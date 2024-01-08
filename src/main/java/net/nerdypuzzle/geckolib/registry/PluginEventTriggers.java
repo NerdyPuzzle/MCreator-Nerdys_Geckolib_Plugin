@@ -219,9 +219,6 @@ public class PluginEventTriggers {
                                         }
                                     }, "ProcedureRegenerate")).start();
                                 });
-                                if (!procedure.isEditingMode()) {
-                                    blocklyPanel.setXML("<xml xmlns=\"https://developers.google.com/blockly/xml\"><block type=\"event_trigger\" deletable=\"false\" x=\"40\" y=\"40\"><field name=\"trigger\">no_ext_trigger</field></block></xml>");
-                                }
 
 
                             } catch (Exception e) {
@@ -274,7 +271,7 @@ public class PluginEventTriggers {
             }
 
             MCreatorDialog dialog = new MCreatorDialog(mcreator, L10N.t("dialog.plugin_update_notify.update_title", new Object[0]));
-            dialog.setSize(700, 300);
+            dialog.setSize(700, 200);
             dialog.setLocationRelativeTo(mcreator);
             dialog.setModal(true);
             JButton close = L10N.button("dialog.plugin_update_notify.close", new Object[0]);
