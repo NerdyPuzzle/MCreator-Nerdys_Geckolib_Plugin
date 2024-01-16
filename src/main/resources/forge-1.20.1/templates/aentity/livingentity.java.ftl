@@ -1091,39 +1091,14 @@ public class ${name}Entity extends ${extendsClass} <#if data.ranged>implements R
 	</#if>
 
 	private PlayState procedurePredicate(AnimationState event) {
-		Entity entity = this;
-		Level world = entity.level();
-		boolean loop = false;
-		double x = entity.getX();
-		double y = entity.getY();
-		double z = entity.getZ();
-	<#if hasProcedure(data.conditionalAnimation)>
-		String condition = <@procedureOBJToConditionCode data.conditionalAnimation/>;
-		if (!condition.equals("empty"))
-			this.animationprocedure = condition;
-	</#if>
-	<#if hasProcedure(data.loop)>
-		loop = <@procedureOBJToConditionCode data.loop/>;
-	</#if>
-	if (!loop && this.lastloop) {
-		this.lastloop = false;
+		if (!animationprocedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
 			event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationprocedure));
-			event.getController().forceAnimationReset();
-
-		return PlayState.STOP;
-	}
-		if (!this.animationprocedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
-		if (!loop) {
-			event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationprocedure));
-	        if (event.getController().getAnimationState() == AnimationController.State.STOPPED) {
-			this.animationprocedure = "empty";
-			event.getController().forceAnimationReset();
-				}
+			if (event.getController().getAnimationState() == AnimationController.State.STOPPED) {
+				this.animationprocedure = "empty";
+				event.getController().forceAnimationReset();
 			}
-		else {
- 			event.getController().setAnimation(RawAnimation.begin().thenLoop(this.animationprocedure));
-			this.lastloop = true;
-			}
+		} else if (animationprocedure.equals("empty")) {
+			return PlayState.STOP;
 		}
 		return PlayState.CONTINUE;
 	}

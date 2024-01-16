@@ -230,8 +230,6 @@ public class AnimatedEntityGUI extends ModElementGUI<AnimatedEntity> implements 
     private final JCheckBox enable10 = L10N.checkbox("elementgui.common.enable", new Object[0]);
 
     private ProcedureSelector finishedDying;
-    private ProcedureSelector conditionalAnimation;
-    private ProcedureSelector loop;
 
     private final JCheckBox headMovement = L10N.checkbox("elementgui.common.enable", new Object[0]);
     private final JCheckBox eyeHeight = L10N.checkbox("elementgui.animatedentity.eye_height");
@@ -338,16 +336,6 @@ public class AnimatedEntityGUI extends ModElementGUI<AnimatedEntity> implements 
                 "x:number/y:number/z:number/world:world/entity:entity"));
         solidBoundingBox = new ProcedureSelector(this.withEntry("geckolib/condition_solid_bounding_box"), mcreator,
                 L10N.t("elementgui.living_entity.condition_solid_bounding_box"),
-                VariableTypeLoader.BuiltInTypes.LOGIC,
-                Dependency.fromString("x:number/y:number/z:number/world:world/entity:entity")).setDefaultName(
-                L10N.t("condition.common.false")).makeInline();
-        conditionalAnimation = new ProcedureSelector(this.withEntry("geckolib/conditional_animation"), mcreator,
-                L10N.t("elementgui.animatedentity.conditional_animation"),
-                VariableTypeLoader.BuiltInTypes.STRING,
-                Dependency.fromString("x:number/y:number/z:number/world:world/entity:entity")).setDefaultName(
-                L10N.t("condition.common.false")).makeInline();
-        loop = new ProcedureSelector(this.withEntry("geckolib/loop_animation"), mcreator,
-                L10N.t("elementgui.animatedentity.loop_animation"),
                 VariableTypeLoader.BuiltInTypes.LOGIC,
                 Dependency.fromString("x:number/y:number/z:number/world:world/entity:entity")).setDefaultName(
                 L10N.t("condition.common.false")).makeInline();
@@ -969,8 +957,8 @@ public class AnimatedEntityGUI extends ModElementGUI<AnimatedEntity> implements 
 
         JPanel extras_condition = new JPanel(new GridLayout(2, 1, 10, 2));
 
-        extras_condition.add(conditionalAnimation);
-        extras_condition.add(loop);
+        // empty panel where the procedure selectors were
+
         extras.add(PanelUtils.centerInPanel(extras_condition));
 
         //merge the right side panels
@@ -1102,8 +1090,6 @@ public class AnimatedEntityGUI extends ModElementGUI<AnimatedEntity> implements 
         visualScale.refreshListKeepSelected();
         boundingBoxScale.refreshListKeepSelected();
         solidBoundingBox.refreshListKeepSelected();
-        conditionalAnimation.refreshListKeepSelected();
-        loop.refreshListKeepSelected();
 
         ComboBoxUtil.updateComboBoxContents(mobModelTexture, ListUtils.merge(Collections.singleton(""),
                 mcreator.getFolderManager().getTexturesList(TextureType.ENTITY).stream().map(File::getName)
@@ -1177,9 +1163,7 @@ public class AnimatedEntityGUI extends ModElementGUI<AnimatedEntity> implements 
         finishedDying.setSelectedProcedure(livingEntity.finishedDying);
         headMovement.setSelected(livingEntity.headMovement);
         groupName.setText(livingEntity.groupName);
-        conditionalAnimation.setSelectedProcedure(livingEntity.conditionalAnimation);
         lerp.setValue(livingEntity.lerp);
-        loop.setSelectedProcedure(livingEntity.loop);
         eyeHeight.setSelected(livingEntity.eyeHeight);
         height.setValue(livingEntity.height);
         mobName.setText(livingEntity.mobName);
@@ -1346,9 +1330,7 @@ public class AnimatedEntityGUI extends ModElementGUI<AnimatedEntity> implements 
         livingEntity.finishedDying = finishedDying.getSelectedProcedure();
         livingEntity.headMovement = headMovement.isSelected();
         livingEntity.groupName = groupName.getText();
-        livingEntity.conditionalAnimation = conditionalAnimation.getSelectedProcedure();
         livingEntity.lerp = (int) lerp.getValue();
-        livingEntity.loop = loop.getSelectedProcedure();
         livingEntity.eyeHeight = eyeHeight.isSelected();
         livingEntity.height = (double) height.getValue();
         livingEntity.mobName = mobName.getText();

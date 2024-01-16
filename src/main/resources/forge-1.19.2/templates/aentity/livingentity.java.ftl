@@ -1095,38 +1095,11 @@ public class ${name}Entity extends ${extendsClass} <#if data.ranged>implements R
 	</#if>
 
 	private <E extends IAnimatable> PlayState procedurePredicate(AnimationEvent<E> event) {
-		Entity entity = this;
-		Level world = entity.level;
-		boolean loop = false;
-		double x = entity.getX();
-		double y = entity.getY();
-		double z = entity.getZ();
-	<#if hasProcedure(data.conditionalAnimation)>
-		String condition = <@procedureOBJToConditionCode data.conditionalAnimation/>;
-		if (!condition.equals("empty"))
-			this.animationprocedure = condition;
-	</#if>
-	<#if hasProcedure(data.loop)>
-		loop = <@procedureOBJToConditionCode data.loop/>;
-	</#if>
-	if (!loop && this.lastloop) {
-		this.lastloop = false;
-			event.getController().setAnimation(new AnimationBuilder().addAnimation(this.animationprocedure, 						EDefaultLoopTypes.PLAY_ONCE));
-			event.getController().clearAnimationCache();
-
-		return PlayState.STOP;
-	}
-		if (!this.animationprocedure.equals("empty") && event.getController().getAnimationState().equals						(software.bernie.geckolib3.core.AnimationState.Stopped)) {
-		if (!loop) {
-			event.getController().setAnimation(new AnimationBuilder().addAnimation(this.animationprocedure, 						EDefaultLoopTypes.PLAY_ONCE));
+		if (!this.animationprocedure.equals("empty") && event.getController().getAnimationState().equals(software.bernie.geckolib3.core.AnimationState.Stopped)) {
+			event.getController().setAnimation(new AnimationBuilder().addAnimation(this.animationprocedure, EDefaultLoopTypes.PLAY_ONCE));
 	        if (event.getController().getAnimationState().equals(software.bernie.geckolib3.core.AnimationState.Stopped)) {
 			this.animationprocedure = "empty";
 			event.getController().markNeedsReload();
-				}
-			}
-		else {
- 			event.getController().setAnimation(new AnimationBuilder().addAnimation(this.animationprocedure, 						EDefaultLoopTypes.LOOP));
-			this.lastloop = true;
 			}
 		}
 		return PlayState.CONTINUE;
