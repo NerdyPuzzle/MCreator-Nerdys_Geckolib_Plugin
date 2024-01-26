@@ -5,6 +5,7 @@
       "Fixed animated items bobbing when using animation procedures",
       "Fixed animated block stop animation procedure blocks not working",
       "Fixed animated item stop animation procedure blocks not working",
+      "Fixed plant elements causing build erros in 1.19.2",
       "Updated the chinese translations"
     ]
   }

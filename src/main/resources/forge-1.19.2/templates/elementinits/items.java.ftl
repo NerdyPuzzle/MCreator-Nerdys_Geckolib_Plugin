@@ -95,7 +95,7 @@ public class ${JavaModName}Items {
 			public static final RegistryObject<Item> ${item.getModElement().getRegistryNameUpper()} =
 				REGISTRY.register(${JavaModName}Blocks.${item.getModElement().getRegistryNameUpper()}.getId().getPath(),
 					() -> new ${item.getModElement().getName()}DisplayItem(${JavaModName}Blocks.${item.getModElement().getRegistryNameUpper()}.get(), new Item.Properties().tab(${item.creativeTab})));
-		<#elseif item.getModElement().getTypeString() == "block">
+		<#elseif item.getModElement().getTypeString() == "block" || item.getModElement().getTypeString() == "plant">
 			<#if (item.getModElement().getTypeString() == "block" && item.isDoubleBlock()) || (item.getModElement().getTypeString() == "plant" && item.isDoubleBlock())>
 				<#assign hasDoubleBlocks = true>
 				public static final RegistryObject<Item> ${item.getModElement().getRegistryNameUpper()} =
