@@ -1,12 +1,11 @@
 {
   "geckolib_plugin": {
-    "latest": "5.2",
+    "latest": "5.3",
     "changes": [
-      "Fixed looping animations not being stoppable",
-      "Fixed hold on last frame animations not being stoppable",
-      "Cleaned up outdated animation controller code",
-      "Removed the conditional animation option as it is obsolete",
-      "Removed the loop condition as it is obsolete"
+      "Fixed animated items bobbing when using animation procedures",
+      "Fixed animated block stop animation procedure blocks not working",
+      "Fixed animated item stop animation procedure blocks not working",
+      "Updated the chinese translations"
     ]
   }
 }

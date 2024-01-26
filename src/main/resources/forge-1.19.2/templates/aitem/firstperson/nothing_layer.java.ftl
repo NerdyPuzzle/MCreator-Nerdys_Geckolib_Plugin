@@ -1,7 +1,4 @@
-package ${package}.utils
-
-//public class NothingLayer<T extends Entity, M extends EntityModel<T>> extends RenderLayer<T, M> {
-//	private final RenderLayer<?, ?> replacedLayer;
+package ${package}.utils;
 
 public class NothingLayer<T extends Entity, M extends EntityModel<T>> extends RenderLayer<T, M> {
 	private final RenderLayer<?, ?> replacedLayer;

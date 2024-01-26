@@ -1,9 +1,4 @@
-package ${package}.utils
-
-//public class AnimUtils {
-//	public static void renderPartOverBone(ModelPart model, GeoBone bone, PoseStack stack, VertexConsumer buffer, int packedLightIn,
-//			int packedOverlayIn, float alpha) {
-//		renderPartOverBone(model, bone, stack, buffer, packedLightIn, packedOverlayIn, 1.0f, 1.0f, 1.0f, alpha);
+package ${package}.utils;
 
 public class AnimUtils {
 	public static void renderPartOverBone(ModelPart model, GeoBone bone, PoseStack stack, VertexConsumer buffer, int packedLightIn,

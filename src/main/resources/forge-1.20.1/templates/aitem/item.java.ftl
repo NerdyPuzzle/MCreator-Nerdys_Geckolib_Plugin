@@ -101,7 +101,7 @@ public class ${name}Item extends Item implements GeoItem {
 		: false) {
 		if (this.animationprocedure.equals("empty")) {
 			event.getController().setAnimation(RawAnimation.begin().thenLoop("${data.idle}"));
-		return PlayState.CONTINUE;
+		    return PlayState.CONTINUE;
 		}
 	}
         return PlayState.STOP;
@@ -117,13 +117,15 @@ public class ${name}Item extends Item implements GeoItem {
 		!this.transformType.firstPerson()
 		</#if>
 		: false) {
-		if (!(this.animationprocedure.equals("empty")) && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
+		if (!this.animationprocedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
 			event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationprocedure));
 	        if (event.getController().getAnimationState() == AnimationController.State.STOPPED) {
-			this.animationprocedure = "empty";
-			event.getController().forceAnimationReset();
-				}
-			}	
+			    this.animationprocedure = "empty";
+			    event.getController().forceAnimationReset();
+			}
+		} else if (this.animationprocedure.equals("empty")) {
+		    return PlayState.STOP;
+		}
 		}  
 		return PlayState.CONTINUE;
 	}

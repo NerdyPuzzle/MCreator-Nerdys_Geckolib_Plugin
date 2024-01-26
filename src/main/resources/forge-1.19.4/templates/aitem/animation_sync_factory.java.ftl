@@ -6,24 +6,15 @@ public class ItemAnimationFactory {
 
 	public static void disableUseAnim() {
 	   	try {
-		ItemInHandRenderer renderer = Minecraft.getInstance().gameRenderer.itemInHandRenderer;
-		float rot = 1F;
-		if (renderer != null) {
-		Field field = ItemInHandRenderer.class.getDeclaredField("mainHandHeight");
-		field.setAccessible(true);
-		field.setFloat(renderer, rot);
-		Field field1 = ItemInHandRenderer.class.getDeclaredField("oMainHandHeight");
-		field1.setAccessible(true);
-		field1.setFloat(renderer, rot);
-		Field field2 = ItemInHandRenderer.class.getDeclaredField("offHandHeight");
-		field2.setAccessible(true);
-		field2.setFloat(renderer, rot);
-		Field field3 = ItemInHandRenderer.class.getDeclaredField("oOffHandHeight");
-		field3.setAccessible(true);
-		field3.setFloat(renderer, rot);
-				}
+		    ItemInHandRenderer renderer = Minecraft.getInstance().gameRenderer.itemInHandRenderer;
+		    if (renderer != null) {
+		        renderer.mainHandHeight = 1F;
+		        renderer.oMainHandHeight = 1F;
+		        renderer.offHandHeight = 1F;
+		        renderer.oOffHandHeight = 1F;
+			}
 		} catch(Exception e) {
-		e.printStackTrace();
+		    e.printStackTrace();
 		}
 	}
 

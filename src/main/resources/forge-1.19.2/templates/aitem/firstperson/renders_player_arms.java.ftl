@@ -1,11 +1,4 @@
-package ${package}.interfaces
-
-//public interface RendersPlayerArms {
-//public interface RendersPlayerArms {
-//public interface RendersPlayerArms {
-//public interface RendersPlayerArms {
-
-	//void setRenderArms(boolean renderArms);
+package ${package}.interfaces;
 
 public interface RendersPlayerArms {
 

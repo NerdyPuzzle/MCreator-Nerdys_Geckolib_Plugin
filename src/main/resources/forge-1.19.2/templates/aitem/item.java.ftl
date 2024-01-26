@@ -142,7 +142,7 @@ public class ${name}Item extends Item implements IAnimatable {
 		: false) {
 		if (this.animationprocedure.equals("empty")) {
 			event.getController().setAnimation(new AnimationBuilder().addAnimation("${data.idle}", EDefaultLoopTypes.LOOP));
-		return PlayState.CONTINUE;
+		    return PlayState.CONTINUE;
 		}
 	}
         return PlayState.STOP;
@@ -158,13 +158,15 @@ public class ${name}Item extends Item implements IAnimatable {
 		!this.transformType.firstPerson()
 		</#if>
 		: false) {
-		if (!(this.animationprocedure.equals("empty")) && event.getController().getAnimationState().equals						(software.bernie.geckolib3.core.AnimationState.Stopped)) {
-			event.getController().setAnimation(new AnimationBuilder().addAnimation(this.animationprocedure, 						EDefaultLoopTypes.PLAY_ONCE));
+		if (!this.animationprocedure.equals("empty") && event.getController().getAnimationState().equals(software.bernie.geckolib3.core.AnimationState.Stopped)) {
+			event.getController().setAnimation(new AnimationBuilder().addAnimation(this.animationprocedure, EDefaultLoopTypes.PLAY_ONCE));
 	        if (event.getController().getAnimationState().equals(software.bernie.geckolib3.core.AnimationState.Stopped)) {
-			this.animationprocedure = "empty";
-			event.getController().markNeedsReload();
-				}
-			}	
+			    this.animationprocedure = "empty";
+			    event.getController().markNeedsReload();
+			}
+		} else if (this.animationprocedure.equals("empty")) {
+		    return PlayState.STOP;
+		}
 		}  
 		return PlayState.CONTINUE;
 	}
