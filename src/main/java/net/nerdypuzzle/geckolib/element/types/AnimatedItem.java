@@ -17,6 +17,7 @@ import net.mcreator.workspace.resources.Model;
 import net.mcreator.workspace.resources.TexturedModel;
 
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -42,6 +43,7 @@ public class AnimatedItem extends GeneratableElement implements IItem, IItemWith
     public boolean destroyAnyBlock;
     public boolean immuneToFire;
     public boolean stayInGridWhenCrafting;
+    public boolean enableArmPose;
     public boolean damageOnCrafting;
     public boolean enableMeleeDamage;
     public double damageVsEntity;
@@ -69,9 +71,19 @@ public class AnimatedItem extends GeneratableElement implements IItem, IItemWith
     public boolean isAlwaysEdible;
     public String animation;
     public String normal;
+    public List<ArmPoseEntry> armPoseList;
 
     private AnimatedItem() {
         this((ModElement)null);
+    }
+
+    public static class ArmPoseEntry {
+        public String armHeld;
+        public String arm;
+        public String angle;
+        public float rotation;
+        public boolean swings;
+        public boolean followsHead;
     }
 
     public AnimatedItem(ModElement element) {
@@ -81,6 +93,7 @@ public class AnimatedItem extends GeneratableElement implements IItem, IItemWith
         this.inventoryStackSize = 64;
         this.saturation = 0.30000001192092896;
         this.animation = "eat";
+        this.armPoseList = new ArrayList<>();
     }
 
     public BufferedImage generateModElementPicture() {

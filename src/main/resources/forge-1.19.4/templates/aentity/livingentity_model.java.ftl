@@ -23,10 +23,9 @@ public class ${name}Model extends GeoModel<${name}Entity> {
     public void setCustomAnimations(${name}Entity animatable, long instanceId, AnimationState animationState) {
 	    CoreGeoBone head = getAnimationProcessor().getBone("${data.groupName}");
 	    if (head != null) {
-		    int unpausedMultiplier = !Minecraft.getInstance().isPaused() ? 1 : 0;
 		    EntityModelData entityData = (EntityModelData) animationState.getData(DataTickets.ENTITY_MODEL_DATA);
-		    head.setRotX(entityData.headPitch() * ((float) Math.PI / 180F) * unpausedMultiplier);
-		    head.setRotY(entityData.netHeadYaw() * ((float) Math.PI / 180F) * unpausedMultiplier);
+			head.setRotX(entityData.headPitch() * Mth.DEG_TO_RAD);
+			head.setRotY(entityData.netHeadYaw() * Mth.DEG_TO_RAD);
 		}
 	
     }

@@ -22,7 +22,24 @@ forge-1.19.4:
     }
     
     dependencies {
-      implementation fg.deobf('software.bernie.geckolib:geckolib-forge-1.19.4:4.1.3')
+      implementation fg.deobf('software.bernie.geckolib:geckolib-forge-1.19.4:4.2')
+    }
+
+    minecraft {
+      runs {
+         client {
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+        }
+          server {
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+        }
+          data {
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+        }
+      }
     }
   update_files:
     - ~
@@ -36,7 +53,7 @@ forge-1.20.1:
     }
     
     dependencies {
-      implementation fg.deobf('software.bernie.geckolib:geckolib-forge-1.20.1:4.2.3')
+      implementation fg.deobf('software.bernie.geckolib:geckolib-forge-1.20.1:4.4.2')
     }
     
     minecraft {

@@ -41,6 +41,7 @@ import net.nerdypuzzle.geckolib.element.types.AnimatedItem;
 import net.nerdypuzzle.geckolib.element.types.GeckolibElement;
 import net.nerdypuzzle.geckolib.parts.GeomodelRenderer;
 import net.nerdypuzzle.geckolib.parts.PluginModelActions;
+import net.nerdypuzzle.geckolib.parts.arm_pose_list.JArmPoseList;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
@@ -64,11 +65,15 @@ public class AnimatedItemGUI extends ModElementGUI<AnimatedItem> implements Geck
     private final JSpinner useDuration;
     private final JSpinner toolType;
     private final JSpinner damageCount;
+    private final JSpinner armRotationX;
+    private final JSpinner armRotationY;
+    private final JSpinner armRotationZ;
     private final JCheckBox immuneToFire;
     private final JCheckBox destroyAnyBlock;
     private final JCheckBox stayInGridWhenCrafting;
     private final JCheckBox damageOnCrafting;
     private final JCheckBox hasGlow;
+    private final JCheckBox enableArmPose;
     private ProcedureSelector glowCondition;
     private final DataListComboBox creativeTab;
     private ProcedureSelector onRightClickedInAir;
@@ -92,6 +97,12 @@ public class AnimatedItemGUI extends ModElementGUI<AnimatedItem> implements Geck
     private final JSpinner saturation;
     private final JCheckBox isMeat;
     private final JCheckBox isAlwaysEdible;
+    private final JCheckBox enableX;
+    private final JCheckBox enableY;
+    private final JCheckBox enableZ;
+    private final JCheckBox followsHeadX;
+    private final JCheckBox followsHeadY;
+    private final JCheckBox followsHeadZ;
     private final JComboBox<String> animation;
     private final MCItemHolder eatResultItem;
     private final JCheckBox firstPersonArms = L10N.checkbox("elementgui.common.enable", new Object[0]);
@@ -100,6 +111,8 @@ public class AnimatedItemGUI extends ModElementGUI<AnimatedItem> implements Geck
 
     private final VComboBox<String> geoModel;
     private final VComboBox<String> displaySettings;
+
+    private JArmPoseList armPoseList;
 
     public AnimatedItemGUI(MCreator mcreator, ModElement modElement, boolean editingMode) {
         super(mcreator, modElement, editingMode);
@@ -110,11 +123,21 @@ public class AnimatedItemGUI extends ModElementGUI<AnimatedItem> implements Geck
         this.useDuration = new JSpinner(new SpinnerNumberModel(0, -100, 128000, 1));
         this.toolType = new JSpinner(new SpinnerNumberModel(1.0, -100.0, 128000.0, 0.1));
         this.damageCount = new JSpinner(new SpinnerNumberModel(0, 0, 128000, 1));
+        this.armRotationX = new JSpinner(new SpinnerNumberModel(1, 0.1, 10000, 0.1));
+        this.armRotationY = new JSpinner(new SpinnerNumberModel(1, 0.1, 10000, 0.1));
+        this.armRotationZ = new JSpinner(new SpinnerNumberModel(1, 0.1, 10000, 0.1));
         this.immuneToFire = L10N.checkbox("elementgui.common.enable", new Object[0]);
         this.destroyAnyBlock = L10N.checkbox("elementgui.common.enable", new Object[0]);
+        this.enableArmPose = L10N.checkbox("elementgui.animateditem.enable_arm_pose", new Object[0]);
         this.stayInGridWhenCrafting = L10N.checkbox("elementgui.common.enable", new Object[0]);
         this.damageOnCrafting = L10N.checkbox("elementgui.common.enable", new Object[0]);
         this.hasGlow = L10N.checkbox("elementgui.common.enable", new Object[0]);
+        this.enableX = L10N.checkbox("elementgui.animateditem.enable_x", new Object[0]);
+        this.enableY = L10N.checkbox("elementgui.animateditem.enable_y", new Object[0]);
+        this.enableZ = L10N.checkbox("elementgui.animateditem.enable_z", new Object[0]);
+        this.followsHeadX = L10N.checkbox("elementgui.animateditem.follows_head_x", new Object[0]);
+        this.followsHeadY = L10N.checkbox("elementgui.animateditem.follows_head_y", new Object[0]);
+        this.followsHeadZ = L10N.checkbox("elementgui.animateditem.follows_head_z", new Object[0]);
         this.creativeTab = new DataListComboBox(this.mcreator);
         this.page1group = new ValidationGroup();
         this.damageVsEntity = new JSpinner(new SpinnerNumberModel(0.0, 0.0, 128000.0, 0.1));
@@ -145,7 +168,8 @@ public class AnimatedItemGUI extends ModElementGUI<AnimatedItem> implements Geck
         this.onDroppedByPlayer = new ProcedureSelector(this.withEntry("item/on_dropped"), this.mcreator, L10N.t("elementgui.item.event_on_dropped", new Object[0]), Dependency.fromString("x:number/y:number/z:number/world:world/entity:entity/itemstack:itemstack"));
         this.onFinishUsingItem = new ProcedureSelector(this.withEntry("item/when_stopped_using"), this.mcreator, L10N.t("elementgui.item.player_useitem_finish", new Object[0]), Dependency.fromString("x:number/y:number/z:number/world:world/entity:entity/itemstack:itemstack"));
         this.glowCondition = (new ProcedureSelector(this.withEntry("item/condition_glow"), this.mcreator, L10N.t("elementgui.item.glowcondition", new Object[0]), AbstractProcedureSelector.Side.CLIENT, true, VariableTypeLoader.BuiltInTypes.LOGIC, Dependency.fromString("x:number/y:number/z:number/world:world/entity:entity/itemstack:itemstack"))).makeInline();
-        specialInformation = new StringListProcedureSelector(this.withEntry("item/special_information"), mcreator, L10N.t("elementgui.common.special_information"), AbstractProcedureSelector.Side.CLIENT, new JStringListField(mcreator, null), 0, Dependency.fromString("x:number/y:number/z:number/entity:entity/world:world/itemstack:itemstack"));
+        this.specialInformation = new StringListProcedureSelector(this.withEntry("item/special_information"), mcreator, L10N.t("elementgui.common.special_information"), AbstractProcedureSelector.Side.CLIENT, new JStringListField(mcreator, null), 0, Dependency.fromString("x:number/y:number/z:number/entity:entity/world:world/itemstack:itemstack"));
+        this.armPoseList = new JArmPoseList(this.mcreator, this);
         this.guiBoundTo.addActionListener((e) -> {
             if (!this.isEditingMode()) {
                 String selected = (String)this.guiBoundTo.getSelectedItem();
@@ -335,7 +359,19 @@ public class AnimatedItemGUI extends ModElementGUI<AnimatedItem> implements Geck
         this.page1group.addValidationElement(this.displaySettings);
         this.name.setValidator(new TextFieldValidator(this.name, L10N.t("elementgui.item.error_item_needs_name", new Object[0])));
         this.name.enableRealtimeValidation();
+
+        JPanel paneHands = new JPanel(new BorderLayout());
+        paneHands.setOpaque(false);
+        enableArmPose.setOpaque(false);
+        armPoseList.setEnabled(enableArmPose.isSelected());
+        enableArmPose.addActionListener((e) -> {
+            armPoseList.setEnabled(enableArmPose.isSelected());
+        });
+        JComponent poseEditor = PanelUtils.northAndCenterElement(enableArmPose, armPoseList);
+        paneHands.add(PanelUtils.northAndCenterElement(PanelUtils.join(0, new Component[]{new JEmptyBox()}), poseEditor));
+
         this.addPage(L10N.t("elementgui.common.page_visual", new Object[0]), pane2);
+        this.addPage(L10N.t("elementgui.animateditem.page_hands", new Object[0]), paneHands);
         this.addPage(L10N.t("elementgui.common.page_properties", new Object[0]), pane3);
         this.addPage(L10N.t("elementgui.item.food_properties", new Object[0]), foodProperties);
         this.addPage(L10N.t("elementgui.common.page_advanced_properties", new Object[0]), advancedProperties);
@@ -470,9 +506,12 @@ public class AnimatedItemGUI extends ModElementGUI<AnimatedItem> implements Geck
         this.updateFoodPanel();
         this.geoModel.setSelectedItem(item.normal);
         this.displaySettings.setSelectedItem(item.displaySettings);
+        this.enableArmPose.setSelected(item.enableArmPose);
+        this.armPoseList.setEntries(item.armPoseList);
 
         this.leftArm.setEnabled(firstPersonArms.isSelected());
         this.rightArm.setEnabled(firstPersonArms.isSelected());
+        this.armPoseList.setEnabled(enableArmPose.isSelected());
     }
 
     public AnimatedItem getElementFromGUI() {
@@ -493,6 +532,7 @@ public class AnimatedItemGUI extends ModElementGUI<AnimatedItem> implements Geck
         item.recipeRemainder = this.recipeRemainder.getBlock();
         item.immuneToFire = this.immuneToFire.isSelected();
         item.destroyAnyBlock = this.destroyAnyBlock.isSelected();
+        item.enableArmPose = this.enableArmPose.isSelected();
         item.stayInGridWhenCrafting = this.stayInGridWhenCrafting.isSelected();
         item.damageOnCrafting = this.damageOnCrafting.isSelected();
         item.hasGlow = this.hasGlow.isSelected();
@@ -524,6 +564,7 @@ public class AnimatedItemGUI extends ModElementGUI<AnimatedItem> implements Geck
         item.renderType = 0;
         item.normal = (String)this.geoModel.getSelectedItem();
         item.displaySettings = (String)this.displaySettings.getSelectedItem();
+        item.armPoseList = this.armPoseList.getEntries();
 
         return item;
     }

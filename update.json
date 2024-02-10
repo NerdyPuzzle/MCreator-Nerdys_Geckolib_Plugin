@@ -1,12 +1,11 @@
 {
   "geckolib_plugin": {
-    "latest": "5.3",
+    "latest": "5.4",
     "changes": [
-      "Fixed animated items bobbing when using animation procedures",
-      "Fixed animated block stop animation procedure blocks not working",
-      "Fixed animated item stop animation procedure blocks not working",
-      "Fixed plant elements causing build erros in 1.19.2",
-      "Updated the chinese translations"
+      "Updated geckolib API versions",
+      "Animated items can now have custom player model arm poses",
+      "Fixed imported animation names not automatically renaming properly",
+      "Fixed animated entity models' head movement calculations"
     ]
   }
 }
