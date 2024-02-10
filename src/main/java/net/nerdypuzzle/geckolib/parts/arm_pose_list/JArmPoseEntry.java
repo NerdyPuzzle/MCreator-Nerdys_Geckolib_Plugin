@@ -50,7 +50,7 @@ public class JArmPoseEntry extends JSimpleListEntry<AnimatedItem.ArmPoseEntry> {
         entry.armHeld = (String) armHeld.getSelectedItem();
         entry.arm = (String) arm.getSelectedItem();
         entry.angle = (String) angle.getSelectedItem();
-        entry.rotation = (float) rotation.getValue();
+        entry.rotation = (Number) rotation.getValue();
         entry.swings = swings.isSelected();
         entry.followsHead = followsHead.isSelected();
         return entry;

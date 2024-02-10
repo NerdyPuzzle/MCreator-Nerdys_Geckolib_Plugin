@@ -81,7 +81,7 @@ public class AnimatedItem extends GeneratableElement implements IItem, IItemWith
         public String armHeld;
         public String arm;
         public String angle;
-        public float rotation;
+        public Number rotation;
         public boolean swings;
         public boolean followsHead;
     }
