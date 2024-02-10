@@ -6,7 +6,7 @@
   "javaplugin": "net.nerdypuzzle.geckolib.Launcher",
   "info": {
     "name": "GeckoLib Plugin",
-    "version": "5.4",
+    "version": "5.4.1",
     "description": "Adds GeckoLib support for 1.19.2, 1.19.4 and 1.20.1",
     "author": "NerdyPuzzle",
     "pluginPageID": 91484,
