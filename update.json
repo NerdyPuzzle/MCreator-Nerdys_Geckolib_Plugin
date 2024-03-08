@@ -9,7 +9,7 @@
       "(5.4.1) Fixed animated items not saving",
       "(5.4.2) Fixed the shield blocking property not registering in 1.20.1",
       "(5.4.3) Fixed mineable tags not generating when plant elements existed",
-      "(5.4.3) Fixed itemstates still not working below versions 1.20.1",
+      "(5.4.3) Fixed itemstates still not working below version 1.20.1",
       "(5.4.3) Fixed itemstates causing build errors below version 1.20.1"
     ]
   }
