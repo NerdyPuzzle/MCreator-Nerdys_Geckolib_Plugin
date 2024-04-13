@@ -1,39 +1,53 @@
-apply plugin: 'java'
+import groovy.json.JsonSlurper
 
-if (project.hasProperty("mcreator_path")) {
-    project.ext.MCREATOR_PATH = project.getProperty("mcreator_path")
-} else {
-    throw new GradleException('Missing mcreator_path property in gradle.properties')
+plugins {
+    id "java"
 }
 
-// workaround for IDEA-265203
-System.setProperty("user.dir", projectDir.toString())
+repositories {
+    mavenCentral()
+    maven { url "https://repo.gradle.org/gradle/libs-releases" } // for gradle-tooling-api
+    flatDir { dirs mcreator_path + '/lib' }
+}
 
 group = 'net.nerdypuzzle.geckolib'
-version = '1.0'
+version = new JsonSlurper().parse(file('src/main/resources/plugin.json'))['info']['version']
 
-sourceCompatibility = 17
-targetCompatibility = 17
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 dependencies {
-    implementation fileTree(dir: MCREATOR_PATH + '/lib', include: ['*.jar'])
+    implementation project(':MCreator')
+    implementation fileTree(dir: 'C:/Users/TheMLGgamer/Desktop/MCreator20241/lib', include: ['*.jar'])
 }
 
 tasks.jar {
     archiveFileName.set("Nerdys_Geckolib_Plugin.zip")
 }
 
-task runMCreatorWithPlugin(type: JavaExec) {
+tasks.register('runMCreatorWithPlugin', JavaExec) {
     dependsOn jar
 
     environment("MCREATOR_PLUGINS_FOLDER", file("./build/libs"))
+    environment("MCREATOR_PLUGINS_DEV", "")
 
     jvmArgs '--add-opens', 'java.base/java.lang=ALL-UNNAMED'
 
-    classpath = sourceSets.main.runtimeClasspath.filter(e -> {
-        return !e.getAbsolutePath().startsWith(file("./").getAbsolutePath())
-    })
+    classpath = project(':MCreator').sourceSets.main.runtimeClasspath
+
     main = 'net.mcreator.Launcher'
 
-    workingDir = MCREATOR_PATH
+    workingDir = mcreator_path
+}
+
+subprojects { subproject ->
+    subproject.plugins.withType(JavaPlugin) {
+        test {
+            dependsOn rootProject.jar
+
+            environment("MCREATOR_PLUGINS_FOLDER", new File(rootProject.projectDir, "/build/libs"))
+            environment("MCREATOR_PLUGINS_DEV", "")
+
+            workingDir = mcreator_path
+        }
+    }
 }

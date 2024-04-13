@@ -86,6 +86,7 @@ public class PluginDialogs {
                         geckoElement.trackingRange = entity.trackingRange;
                         geckoElement.followRange = entity.followRange;
                         geckoElement.health = entity.health;
+                        geckoElement.stepHeight = entity.stepHeight;
                         geckoElement.xpAmount = entity.xpAmount;
                         geckoElement.waterMob = entity.waterMob;
                         geckoElement.flyingMob = entity.flyingMob;
@@ -149,7 +150,7 @@ public class PluginDialogs {
                         geckoElement.finalizeModElementGeneration();
                         mcreator.getWorkspace().removeModElement(entity.getModElement());
                         dialog.setVisible(false);
-                        geckoElement.getModElement().setParentFolder(FolderElement.dummyFromPath(entity.getModElement().getFolderPath()));
+                        geckoElement.getModElement().setParentFolder(FolderElement.findFolderByPath(entity.getModElement().getWorkspace(), entity.getModElement().getFolderPath()));
                         mcreator.getWorkspace().getModElementManager().storeModElementPicture(geckoElement);
                         mcreator.getWorkspace().addModElement(geckoElement.getModElement());
                         mcreator.getWorkspace().getGenerator().generateElement(geckoElement);
@@ -230,6 +231,7 @@ public class PluginDialogs {
                         geckoElement.mobBehaviourType = entity.mobBehaviourType;
                         geckoElement.mobCreatureType = entity.mobCreatureType;
                         geckoElement.attackStrength = entity.attackStrength;
+                        geckoElement.stepHeight = entity.stepHeight;
                         geckoElement.attackKnockback = entity.attackKnockback;
                         geckoElement.knockbackResistance = entity.knockbackResistance;
                         geckoElement.movementSpeed = entity.movementSpeed;
@@ -298,7 +300,7 @@ public class PluginDialogs {
                         geckoElement.finalizeModElementGeneration();
                         mcreator.getWorkspace().removeModElement(entity.getModElement());
                         dialog.setVisible(false);
-                        geckoElement.getModElement().setParentFolder(FolderElement.dummyFromPath(entity.getModElement().getFolderPath()));
+                        geckoElement.getModElement().setParentFolder(FolderElement.findFolderByPath(entity.getModElement().getWorkspace(), entity.getModElement().getFolderPath()));
                         mcreator.getWorkspace().getModElementManager().storeModElementPicture(geckoElement);
                         mcreator.getWorkspace().addModElement(geckoElement.getModElement());
                         mcreator.getWorkspace().getGenerator().generateElement(geckoElement);

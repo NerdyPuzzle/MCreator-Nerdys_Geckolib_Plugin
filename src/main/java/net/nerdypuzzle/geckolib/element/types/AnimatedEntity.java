@@ -46,6 +46,7 @@ public class AnimatedEntity extends GeneratableElement
 
     public double modelWidth, modelHeight, modelShadowSize;
     public double mountedYOffset;
+    public double stepHeight;
 
     public boolean hasSpawnEgg;
     public Color spawnEggBaseColor;
@@ -197,6 +198,8 @@ public class AnimatedEntity extends GeneratableElement
 
         this.inventorySize = 9;
         this.inventoryStackSize = 64;
+
+        this.stepHeight = 0.6;
 
         this.entityDataEntries = new ArrayList<>();
     }

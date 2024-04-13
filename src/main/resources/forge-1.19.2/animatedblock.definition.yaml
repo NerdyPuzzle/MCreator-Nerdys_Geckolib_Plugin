@@ -47,10 +47,22 @@ templates:
   - template: ajson/block_particle.json.ftl
     name: "@MODASSETSROOT/models/custom/@registryname_particle.json"
 
-localizationkeys:
-  - key: block.@modid.@registryname
-    mapto: name
-
 global_templates:
   - template: animatedblockutil/listeners/blocklistener.java.ftl
     name: "@SRCROOT/@BASEPACKAGEPATH/block/listener/ClientListener.java"
+
+tags:
+  - tag: BLOCKS:minecraft:mineable/pickaxe
+    condition: "${data.destroyTool == 'pickaxe'}"
+  - tag: BLOCKS:minecraft:mineable/axe
+    condition: "${data.destroyTool == 'axe'}"
+  - tag: BLOCKS:minecraft:mineable/shovel
+    condition: "${data.destroyTool == 'shovel'}"
+  - tag: BLOCKS:minecraft:mineable/hoe
+    condition: "${data.destroyTool == 'hoe'}"
+  - tag: BLOCKS:minecraft:replaceable
+    condition: isReplaceable
+
+localizationkeys:
+  - key: block.@modid.@registryname
+    mapto: name

@@ -14,10 +14,7 @@ import net.mcreator.generator.template.TemplateGeneratorException;
 import net.mcreator.minecraft.DataListEntry;
 import net.mcreator.minecraft.ElementUtil;
 import net.mcreator.ui.MCreator;
-import net.mcreator.ui.blockly.BlocklyEditorToolbar;
-import net.mcreator.ui.blockly.BlocklyEditorType;
-import net.mcreator.ui.blockly.BlocklyPanel;
-import net.mcreator.ui.blockly.CompileNotesPanel;
+import net.mcreator.ui.blockly.*;
 import net.mcreator.ui.component.JColor;
 import net.mcreator.ui.component.JEmptyBox;
 import net.mcreator.ui.component.SearchableComboBox;
@@ -90,6 +87,7 @@ public class AnimatedEntityGUI extends ModElementGUI<AnimatedEntity> implements 
     private final JSpinner health = new JSpinner(new SpinnerNumberModel(10, 0, 1024, 1));
     private final JSpinner knockbackResistance = new JSpinner(new SpinnerNumberModel(0, 0, 1000, 0.1));
     private final JSpinner attackKnockback = new JSpinner(new SpinnerNumberModel(0, 0, 1000, 0.1));
+    private final JSpinner stepHeight = new JSpinner(new SpinnerNumberModel(0.6, 0, 255, 0.1));
 
     private final JSpinner trackingRange = new JSpinner(new SpinnerNumberModel(64, 0, 10000, 1));
     private final JSpinner followRange = new JSpinner(new SpinnerNumberModel(16, 0, 2048, 1));
@@ -200,6 +198,8 @@ public class AnimatedEntityGUI extends ModElementGUI<AnimatedEntity> implements 
     private boolean hasErrors = false;
     private Map<String, ToolboxBlock> externalBlocks;
 
+    private final List<BlocklyChangedListener> blocklyChangedListeners = new ArrayList<>();
+
     private boolean disableMobModelCheckBoxListener = false;
 
     //animations page start
@@ -243,6 +243,10 @@ public class AnimatedEntityGUI extends ModElementGUI<AnimatedEntity> implements 
         this.geoModel = new SearchableComboBox();
         this.initGUI();
         super.finalizeGUI();
+    }
+
+    @Override public void addBlocklyChangedListener(BlocklyChangedListener listener) {
+        blocklyChangedListeners.add(listener);
     }
 
     private void setDefaultAISet() {
@@ -386,7 +390,7 @@ public class AnimatedEntityGUI extends ModElementGUI<AnimatedEntity> implements 
         JPanel pane7 = new JPanel(new BorderLayout(0, 0));
         JPanel pane8 = new JPanel(new BorderLayout(0, 0));
 
-        JPanel subpane1 = new JPanel(new GridLayout(12, 2, 0, 2));
+        JPanel subpane1 = new JPanel(new GridLayout(10, 2, 0, 2));
 
         immuneToFire.setOpaque(false);
         immuneToArrows.setOpaque(false);
@@ -408,22 +412,21 @@ public class AnimatedEntityGUI extends ModElementGUI<AnimatedEntity> implements 
                 L10N.label("elementgui.living_entity.behaviour")));
         subpane1.add(mobBehaviourType);
 
-        subpane1.add(HelpUtils.wrapWithHelpButton(this.withEntry("entity/drop"),
-                L10N.label("elementgui.living_entity.mob_drop")));
-        subpane1.add(PanelUtils.totalCenterInPanel(mobDrop));
-
         subpane1.add(HelpUtils.wrapWithHelpButton(this.withEntry("entity/creature_type"),
                 L10N.label("elementgui.living_entity.creature_type")));
         subpane1.add(mobCreatureType);
 
-        subpane1.add(HelpUtils.wrapWithHelpButton(this.withEntry("entity/movement_speed"),
-                L10N.label("elementgui.living_entity.movement_speed")));
-        subpane1.add(movementSpeed);
-
-        subpane1.add(PanelUtils.join(FlowLayout.LEFT, L10N.label("elementgui.living_entity.health_xp_amount"),
+        subpane1.add(PanelUtils.join(FlowLayout.LEFT, L10N.label("elementgui.living_entity.drop_health_xp_amount"),
+                HelpUtils.helpButton(this.withEntry("entity/drop")),
                 HelpUtils.helpButton(this.withEntry("entity/health")),
                 HelpUtils.helpButton(this.withEntry("entity/xp_amount"))));
-        subpane1.add(PanelUtils.gridElements(1, 2, 2, 0, health, xpAmount));
+        subpane1.add(PanelUtils.westAndCenterElement(PanelUtils.totalCenterInPanel(mobDrop),
+                PanelUtils.gridElements(1, 2, 2, 0, health, xpAmount), 8, 8));
+
+        subpane1.add(PanelUtils.join(FlowLayout.LEFT, L10N.label("elementgui.living_entity.movement_speed_step_height"),
+                HelpUtils.helpButton(this.withEntry("entity/movement_speed")),
+                HelpUtils.helpButton(this.withEntry("entity/step_height"))));
+        subpane1.add(PanelUtils.gridElements(1, 2, 2, 0, movementSpeed, stepHeight));
 
         subpane1.add(
                 PanelUtils.join(FlowLayout.LEFT, L10N.label("elementgui.living_entity.follow_range_tracking_range"),
@@ -431,16 +434,14 @@ public class AnimatedEntityGUI extends ModElementGUI<AnimatedEntity> implements 
                         HelpUtils.helpButton(this.withEntry("entity/tracking_range"))));
         subpane1.add(PanelUtils.gridElements(1, 2, 2, 0, followRange, trackingRange));
 
-        subpane1.add(
-                PanelUtils.join(FlowLayout.LEFT, L10N.label("elementgui.living_entity.attack_strenght_armor_value"),
-                        HelpUtils.helpButton(this.withEntry("entity/attack_strength")),
-                        HelpUtils.helpButton(this.withEntry("entity/armor_base_value"))));
-        subpane1.add(PanelUtils.gridElements(1, 2, 2, 0, attackStrength, armorBaseValue));
-
-        subpane1.add(PanelUtils.join(FlowLayout.LEFT, L10N.label("elementgui.living_entity.knockback"),
+        subpane1.add(PanelUtils.join(FlowLayout.LEFT,
+                L10N.label("elementgui.living_entity.attack_strenght_armor_value_knockback"),
+                HelpUtils.helpButton(this.withEntry("entity/attack_strength")),
+                HelpUtils.helpButton(this.withEntry("entity/armor_base_value")),
                 HelpUtils.helpButton(this.withEntry("entity/attack_knockback")),
                 HelpUtils.helpButton(this.withEntry("entity/knockback_resistance"))));
-        subpane1.add(PanelUtils.gridElements(1, 2, 2, 0, attackKnockback, knockbackResistance));
+        subpane1.add(PanelUtils.gridElements(1, 4, 2, 0, attackStrength, armorBaseValue, attackKnockback,
+                knockbackResistance));
 
         subpane1.add(HelpUtils.wrapWithHelpButton(this.withEntry("entity/equipment"),
                 L10N.label("elementgui.living_entity.equipment")));
@@ -552,12 +553,13 @@ public class AnimatedEntityGUI extends ModElementGUI<AnimatedEntity> implements 
         modelHeight.setPreferredSize(new Dimension(85, 32));
         modelShadowSize.setPreferredSize(new Dimension(85, 32));
 
-        armorBaseValue.setPreferredSize(new Dimension(250, 32));
+        armorBaseValue.setPreferredSize(new Dimension(0, 32));
         movementSpeed.setPreferredSize(new Dimension(250, 32));
         trackingRange.setPreferredSize(new Dimension(250, 32));
-        attackStrength.setPreferredSize(new Dimension(250, 32));
-        attackKnockback.setPreferredSize(new Dimension(250, 32));
-        knockbackResistance.setPreferredSize(new Dimension(250, 32));
+        attackStrength.setPreferredSize(new Dimension(0, 32));
+        stepHeight.setPreferredSize(new Dimension(250, 32));
+        attackKnockback.setPreferredSize(new Dimension(0, 32));
+        knockbackResistance.setPreferredSize(new Dimension(0, 32));
         followRange.setPreferredSize(new Dimension(250, 32));
         health.setPreferredSize(new Dimension(250, 32));
         xpAmount.setPreferredSize(new Dimension(250, 32));
@@ -696,7 +698,7 @@ public class AnimatedEntityGUI extends ModElementGUI<AnimatedEntity> implements 
 
         blocklyPanel.setPreferredSize(new Dimension(150, 150));
 
-        pane3.add("Center", PanelUtils.maxMargin(aipan, 10, true, true, true, true));
+        pane3.add("Center", ComponentUtils.applyPadding(aipan, 10, true, true, true, true));
 
         breedable.setOpaque(false);
         tameable.setOpaque(false);
@@ -1123,9 +1125,8 @@ public class AnimatedEntityGUI extends ModElementGUI<AnimatedEntity> implements 
             return new AggregatedValidationResult(mobModelTexture, mobName, geoModel, animation1);
         } else if (page == 5) {
             if (hasErrors)
-                return new AggregatedValidationResult.MULTIFAIL(compileNotesPanel.getCompileNotes().stream()
-                        .map(compileNote -> "Living entity AI builder: " + compileNote.message())
-                        .collect(Collectors.toList()));
+                return new BlocklyAggregatedValidationResult(compileNotesPanel.getCompileNotes(),
+                        compileNote -> "Living entity AI builder: " + compileNote);
         } else if (page == 6) {
             if ((int) minNumberOfMobsPerGroup.getValue() > (int) maxNumberOfMobsPerGroup.getValue()) {
                 return new AggregatedValidationResult.FAIL("Minimal mob group size can't be bigger than maximal size");
@@ -1190,6 +1191,7 @@ public class AnimatedEntityGUI extends ModElementGUI<AnimatedEntity> implements 
         mobCreatureType.setSelectedItem(livingEntity.mobCreatureType);
         attackStrength.setValue(livingEntity.attackStrength);
         attackKnockback.setValue(livingEntity.attackKnockback);
+        stepHeight.setValue(livingEntity.stepHeight);
         knockbackResistance.setValue(livingEntity.knockbackResistance);
         movementSpeed.setValue(livingEntity.movementSpeed);
         mobDrop.setBlock(livingEntity.mobDrop);
@@ -1333,6 +1335,7 @@ public class AnimatedEntityGUI extends ModElementGUI<AnimatedEntity> implements 
         livingEntity.lerp = (int) lerp.getValue();
         livingEntity.eyeHeight = eyeHeight.isSelected();
         livingEntity.height = (double) height.getValue();
+        livingEntity.stepHeight = (double) stepHeight.getValue();
         livingEntity.mobName = mobName.getText();
         livingEntity.mobLabel = mobLabel.getText();
         livingEntity.mobModelTexture = mobModelTexture.getSelectedItem();
@@ -1428,8 +1431,8 @@ public class AnimatedEntityGUI extends ModElementGUI<AnimatedEntity> implements 
         return livingEntity;
     }
 
-    @Override
-    public List<BlocklyPanel> getBlocklyPanels() {
-        return List.of(this.blocklyPanel);
+    @Override public Set<BlocklyPanel> getBlocklyPanels() {
+        return Set.of(blocklyPanel);
     }
+
 }

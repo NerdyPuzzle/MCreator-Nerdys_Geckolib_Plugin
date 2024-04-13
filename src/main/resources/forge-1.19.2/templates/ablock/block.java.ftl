@@ -513,7 +513,7 @@ public class ${name}Block extends BaseEntityBlock <#if data.isWaterloggable>impl
 	}
 	</#if>
 
-	<#if hasProcedure(data.onRandomUpdateEvent) || data.spawnParticles>
+	<#if hasProcedure(data.onRandomUpdateEvent)>
 	@OnlyIn(Dist.CLIENT) @Override
 	public void animateTick(BlockState blockstate, Level world, BlockPos pos, RandomSource random) {
 		super.animateTick(blockstate, world, pos, random);
@@ -521,12 +521,6 @@ public class ${name}Block extends BaseEntityBlock <#if data.isWaterloggable>impl
 		int x = pos.getX();
 		int y = pos.getY();
 		int z = pos.getZ();
-		<#if data.spawnParticles>
-			<#if hasProcedure(data.particleCondition)>
-			if(<@procedureOBJToConditionCode data.particleCondition/>)
-			</#if>
-	        <@particles data.particleSpawningShape data.particleToSpawn data.particleSpawningRadious data.particleAmount/>
-	    </#if>
 		<@procedureOBJToCode data.onRandomUpdateEvent/>
 	}
 	</#if>

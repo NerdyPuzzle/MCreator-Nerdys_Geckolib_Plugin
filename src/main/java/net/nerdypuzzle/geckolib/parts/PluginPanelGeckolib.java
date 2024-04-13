@@ -4,7 +4,6 @@ import net.mcreator.ui.component.TransparentToolBar;
 import net.mcreator.ui.component.util.ComponentUtils;
 import net.mcreator.ui.init.L10N;
 import net.mcreator.ui.init.UIRES;
-import net.mcreator.ui.laf.SlickDarkScrollBarUI;
 import net.mcreator.ui.workspace.IReloadableFilterable;
 import net.mcreator.ui.workspace.WorkspacePanel;
 import net.mcreator.util.StringUtils;
@@ -53,7 +52,6 @@ public class PluginPanelGeckolib extends JPanel implements IReloadableFilterable
         sp.setHorizontalScrollBarPolicy(31);
         sp.getViewport().setOpaque(false);
         sp.getVerticalScrollBar().setUnitIncrement(11);
-        sp.getVerticalScrollBar().setUI(new SlickDarkScrollBarUI((Color)UIManager.get("MCreatorLAF.DARK_ACCENT"), (Color)UIManager.get("MCreatorLAF.LIGHT_ACCENT"), sp.getVerticalScrollBar()));
         sp.getVerticalScrollBar().setPreferredSize(new Dimension(8, 0));
         this.add("Center", sp);
         TransparentToolBar bar = new TransparentToolBar();
@@ -83,7 +81,7 @@ public class PluginPanelGeckolib extends JPanel implements IReloadableFilterable
         imp1.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 8));
         bar.add(imp2);
         JButton del = L10N.button("workspace.3dmodels.delete_selected", new Object[0]);
-        del.setIcon(UIRES.get("16px.delete.gif"));
+        del.setIcon(UIRES.get("16px.delete"));
         del.setOpaque(false);
         del.setContentAreaFilled(false);
         del.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 8));

@@ -1,1 +1,4 @@
 rootProject.name = 'GeckoLib'
+
+include ":MCreator"
+project(":MCreator").projectDir = file(mcreator_path)

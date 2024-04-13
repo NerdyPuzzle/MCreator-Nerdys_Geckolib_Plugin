@@ -322,7 +322,7 @@ public class AnimatedItemGUI extends ModElementGUI<AnimatedItem> implements Geck
         events.add(this.onEntitySwing);
         events.add(this.onDroppedByPlayer);
         events.add(this.onFinishUsingItem);
-        pane4.add("Center", PanelUtils.totalCenterInPanel(PanelUtils.maxMargin(events, 20, true, true, true, true)));
+        pane4.add("Center", PanelUtils.totalCenterInPanel(events));
         pane4.setOpaque(false);
         JPanel inventoryProperties = new JPanel(new GridLayout(3, 2, 35, 2));
         inventoryProperties.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder((Color)UIManager.get("MCreatorLAF.BRIGHT_COLOR"), 1), L10N.t("elementgui.common.page_inventory", new Object[0]), 4, 0, this.getFont(), (Color)UIManager.get("MCreatorLAF.BRIGHT_COLOR")));

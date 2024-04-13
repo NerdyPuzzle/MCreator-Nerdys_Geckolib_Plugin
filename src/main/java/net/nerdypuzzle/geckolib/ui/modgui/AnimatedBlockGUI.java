@@ -85,7 +85,6 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
     private ProcedureSelector onRedstoneOn;
     private ProcedureSelector onRedstoneOff;
     private ProcedureSelector onHitByProjectile;
-    private ProcedureSelector particleCondition;
     private NumberProcedureSelector emittedRedstonePower;
     private ProcedureSelector placingCondition;
     private ProcedureSelector generateCondition;
@@ -147,10 +146,6 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
     private final JComboBox<String> offsetType;
     private final JComboBox<String> aiPathNodeType;
     private final DataListComboBox creativeTab;
-    private final DataListComboBox particleToSpawn;
-    private final JComboBox<String> particleSpawningShape;
-    private final JSpinner particleSpawningRadious;
-    private final JSpinner particleAmount;
     private final JSpinner slipperiness;
     private final JSpinner speedFactor;
     private final JSpinner jumpFactor;
@@ -159,7 +154,6 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
     private final JComboBox<String> destroyTool;
     private final JSpinner breakHarvestLevel;
     private final JCheckBox requiresCorrectTool;
-    private final JCheckBox spawnParticles;
     private final JComboBox<String> transparencyType;
     private final JCheckBox hasInventory;
     private final JCheckBox openGUIOnRightClick;
@@ -238,10 +232,6 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
         this.offsetType = new JComboBox(new String[]{"NONE", "XZ", "XYZ"});
         this.aiPathNodeType = new JComboBox();
         this.creativeTab = new DataListComboBox(this.mcreator);
-        this.particleToSpawn = new DataListComboBox(this.mcreator);
-        this.particleSpawningShape = new JComboBox(new String[]{"Spread", "Top", "Tube", "Plane"});
-        this.particleSpawningRadious = new JSpinner(new SpinnerNumberModel(0.5, 0.0, 100.0, 0.1));
-        this.particleAmount = new JSpinner(new SpinnerNumberModel(4, 0, 1000, 1));
         this.slipperiness = new JSpinner(new SpinnerNumberModel(0.6, 0.01, 5.0, 0.1));
         this.speedFactor = new JSpinner(new SpinnerNumberModel(1.0, -1000.0, 1000.0, 0.1));
         this.jumpFactor = new JSpinner(new SpinnerNumberModel(1.0, -1000.0, 1000.0, 0.1));
@@ -251,7 +241,6 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
         this.destroyTool = new JComboBox(new String[]{"Not specified", "pickaxe", "axe", "shovel", "hoe"});
         this.breakHarvestLevel = new JSpinner(new SpinnerNumberModel(1, -1, 100, 1));
         this.requiresCorrectTool = L10N.checkbox("elementgui.common.enable", new Object[0]);
-        this.spawnParticles = L10N.checkbox("elementgui.block.spawn_particles", new Object[0]);
         this.transparencyType = new JComboBox(new String[]{"SOLID", "CUTOUT", "CUTOUT_MIPPED", "TRANSLUCENT"});
         this.hasInventory = L10N.checkbox("elementgui.block.has_inventory", new Object[0]);
         this.openGUIOnRightClick = L10N.checkbox("elementgui.common.enable", new Object[0]);
@@ -295,7 +284,6 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
         this.onRedstoneOn = new ProcedureSelector(this.withEntry("block/on_redstone_on"), this.mcreator, L10N.t("elementgui.block.event_on_redstone_on", new Object[0]), Dependency.fromString("x:number/y:number/z:number/world:world/blockstate:blockstate"));
         this.onRedstoneOff = new ProcedureSelector(this.withEntry("block/on_redstone_off"), this.mcreator, L10N.t("elementgui.block.event_on_redstone_off", new Object[0]), Dependency.fromString("x:number/y:number/z:number/world:world/blockstate:blockstate"));
         this.onHitByProjectile = new ProcedureSelector(this.withEntry("block/on_hit_by_projectile"), this.mcreator, L10N.t("elementgui.common.event_on_block_hit_by_projectile", new Object[0]), Dependency.fromString("x:number/y:number/z:number/world:world/entity:entity/direction:direction/blockstate:blockstate/hitX:number/hitY:number/hitZ:number"));
-        this.particleCondition = (new ProcedureSelector(this.withEntry("block/particle_condition"), this.mcreator, L10N.t("elementgui.block.event_particle_condition", new Object[0]), AbstractProcedureSelector.Side.CLIENT, true, VariableTypeLoader.BuiltInTypes.LOGIC, Dependency.fromString("x:number/y:number/z:number/world:world/blockstate:blockstate"))).makeInline();
         this.emittedRedstonePower = new NumberProcedureSelector((IHelpContext)null, this.mcreator, new JSpinner(new SpinnerNumberModel(15, 0, 15, 1)), Dependency.fromString("x:number/y:number/z:number/world:world/direction:direction/blockstate:blockstate"));
         this.placingCondition = (new ProcedureSelector(this.withEntry("block/placing_condition"), this.mcreator, L10N.t("elementgui.block.event_placing_condition", new Object[0]), VariableTypeLoader.BuiltInTypes.LOGIC, Dependency.fromString("x:number/y:number/z:number/world:world/blockstate:blockstate"))).setDefaultName(L10N.t("condition.common.no_additional", new Object[0])).makeInline();
         this.generateCondition = (new ProcedureSelector(this.withEntry("block/generation_condition"), this.mcreator, L10N.t("elementgui.block.event_generate_condition", new Object[0]), VariableTypeLoader.BuiltInTypes.LOGIC, Dependency.fromString("x:number/y:number/z:number/world:world"))).setDefaultName(L10N.t("condition.common.no_additional", new Object[0])).makeInline();
@@ -788,38 +776,20 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
         enderpanel2.add("West", PanelUtils.totalCenterInPanel(new JLabel(UIRES.get("chunk"))));
         enderpanel2.add("Center", PanelUtils.pullElementUp(PanelUtils.northAndCenterElement(genPanel, PanelUtils.westAndCenterElement(new JEmptyBox(5, 5), this.generateCondition), 5, 5)));
         enderpanel2.setOpaque(false);
-        JPanel particleParameters = new JPanel(new GridLayout(5, 2, 0, 2));
-        particleParameters.add(HelpUtils.wrapWithHelpButton(this.withEntry("particle/gen_particles"), this.spawnParticles));
-        particleParameters.add(new JLabel());
-        particleParameters.add(HelpUtils.wrapWithHelpButton(this.withEntry("particle/gen_type"), L10N.label("elementgui.block.particle_gen_type", new Object[0])));
-        particleParameters.add(this.particleToSpawn);
-        particleParameters.add(HelpUtils.wrapWithHelpButton(this.withEntry("particle/gen_shape"), L10N.label("elementgui.block.particle_gen_shape", new Object[0])));
-        particleParameters.add(this.particleSpawningShape);
-        particleParameters.add(HelpUtils.wrapWithHelpButton(this.withEntry("particle/gen_spawn_radius"), L10N.label("elementgui.block.particle_gen_spawn_radius", new Object[0])));
-        particleParameters.add(this.particleSpawningRadious);
-        particleParameters.add(HelpUtils.wrapWithHelpButton(this.withEntry("particle/gen_average_amount"), L10N.label("elementgui.block.particle_gen_average_amount", new Object[0])));
-        particleParameters.add(this.particleAmount);
-        JComponent parpar = PanelUtils.northAndCenterElement(particleParameters, this.particleCondition, 5, 5);
-        parpar.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder((Color)UIManager.get("MCreatorLAF.BRIGHT_COLOR"), 1), L10N.t("elementgui.block.properties_particle", new Object[0]), 0, 0, this.getFont().deriveFont(12.0F), (Color)UIManager.get("MCreatorLAF.BRIGHT_COLOR")));
-        particleParameters.setOpaque(false);
-        JPanel redstoneParameters = new JPanel(new GridLayout(3, 2, 0, 2));
+        JPanel redstoneParameters = new JPanel(new GridLayout(2, 2, 0, 2));
         redstoneParameters.setOpaque(false);
         redstoneParameters.add(HelpUtils.wrapWithHelpButton(this.withEntry("block/redstone_connect"), L10N.label("elementgui.block.redstone_connect", new Object[0])));
         redstoneParameters.add(this.canRedstoneConnect);
         redstoneParameters.add(HelpUtils.wrapWithHelpButton(this.withEntry("block/emits_redstone"), L10N.label("elementgui.block.emits_redstone", new Object[0])));
         redstoneParameters.add(this.canProvidePower);
-        redstoneParameters.add(HelpUtils.wrapWithHelpButton(this.withEntry("block/redstone_power"), L10N.label("elementgui.block.redstone_power", new Object[0])));
-        redstoneParameters.add(this.emittedRedstonePower);
-        redstoneParameters.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder((Color)UIManager.get("MCreatorLAF.BRIGHT_COLOR"), 1), L10N.t("elementgui.block.properties_redstone", new Object[0]), 0, 0, this.getFont().deriveFont(12.0F), (Color)UIManager.get("MCreatorLAF.BRIGHT_COLOR")));
-        JComponent parred = PanelUtils.centerAndSouthElement(parpar, PanelUtils.pullElementUp(redstoneParameters));
+        JComponent redstoneMerger = PanelUtils.northAndCenterElement(redstoneParameters, emittedRedstonePower, 2, 2);
+        redstoneMerger.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder((Color)UIManager.get("MCreatorLAF.BRIGHT_COLOR"), 1), L10N.t("elementgui.block.properties_redstone", new Object[0]), 0, 0, this.getFont().deriveFont(12.0F), (Color)UIManager.get("MCreatorLAF.BRIGHT_COLOR")));
         this.canProvidePower.addActionListener((e) -> {
             this.refreshRedstoneEmitted();
         });
         this.refreshRedstoneEmitted();
-        this.particleSpawningRadious.setOpaque(false);
-        this.spawnParticles.setOpaque(false);
 
-        pane7.add(PanelUtils.totalCenterInPanel(PanelUtils.westAndEastElement(advancedWithCondition, PanelUtils.pullElementUp(parred))));
+        pane7.add(PanelUtils.totalCenterInPanel(PanelUtils.westAndEastElement(advancedWithCondition, PanelUtils.pullElementUp(redstoneMerger))));
         pane7.setOpaque(false);
         pane9.setOpaque(false);
         pane9.add("Center", PanelUtils.totalCenterInPanel(PanelUtils.centerInPanel(enderpanel2)));
@@ -954,7 +924,6 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
         this.onRedstoneOn.refreshListKeepSelected();
         this.onRedstoneOff.refreshListKeepSelected();
         this.onHitByProjectile.refreshListKeepSelected();
-        this.particleCondition.refreshListKeepSelected();
         this.emittedRedstonePower.refreshListKeepSelected();
         this.placingCondition.refreshListKeepSelected();
         this.generateCondition.refreshListKeepSelected();
@@ -964,7 +933,6 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
         ComboBoxUtil.updateComboBoxContents(this.creativeTab, ElementUtil.loadAllTabs(this.mcreator.getWorkspace()));
         ComboBoxUtil.updateComboBoxContents(this.colorOnMap, Arrays.asList(ElementUtil.getDataListAsStringArray("mapcolors")), "DEFAULT");
         ComboBoxUtil.updateComboBoxContents(this.aiPathNodeType, Arrays.asList(ElementUtil.getDataListAsStringArray("pathnodetypes")), "DEFAULT");
-        ComboBoxUtil.updateComboBoxContents(this.particleToSpawn, ElementUtil.loadAllParticles(this.mcreator.getWorkspace()));
 
         ComboBoxUtil.updateComboBoxContents(this.geoModel, ListUtils.merge(Collections.singleton(""), (Collection) PluginModelActions.getGeomodels(this.mcreator).stream().map(File::getName).filter((s) -> {
             return s.endsWith(".geo.json");
@@ -1032,14 +1000,8 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
         this.minGenerateHeight.setValue(block.minGenerateHeight);
         this.frequencyPerChunks.setValue(block.frequencyPerChunks);
         this.frequencyOnChunk.setValue(block.frequencyOnChunk);
-        this.spawnParticles.setSelected(block.spawnParticles);
-        this.particleToSpawn.setSelectedItem(block.particleToSpawn);
-        this.particleSpawningShape.setSelectedItem(block.particleSpawningShape);
-        this.particleCondition.setSelectedProcedure(block.particleCondition);
         this.emittedRedstonePower.setSelectedProcedure(block.emittedRedstonePower);
         this.generateCondition.setSelectedProcedure(block.generateCondition);
-        this.particleSpawningRadious.setValue(block.particleSpawningRadious);
-        this.particleAmount.setValue(block.particleAmount);
         this.hardness.setValue(block.hardness);
         this.resistance.setValue(block.resistance);
         this.hasGravity.setSelected(block.hasGravity);
@@ -1170,12 +1132,6 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
         block.luminance = (Integer)this.luminance.getValue();
         block.unbreakable = this.unbreakable.isSelected();
         block.breakHarvestLevel = (Integer)this.breakHarvestLevel.getValue();
-        block.spawnParticles = this.spawnParticles.isSelected();
-        block.particleToSpawn = new Particle(this.mcreator.getWorkspace(), this.particleToSpawn.getSelectedItem());
-        block.particleSpawningShape = (String)this.particleSpawningShape.getSelectedItem();
-        block.particleSpawningRadious = (Double)this.particleSpawningRadious.getValue();
-        block.particleAmount = (Integer)this.particleAmount.getValue();
-        block.particleCondition = this.particleCondition.getSelectedProcedure();
         block.emittedRedstonePower = this.emittedRedstonePower.getSelectedProcedure();
         block.generateCondition = this.generateCondition.getSelectedProcedure();
         block.hasInventory = this.hasInventory.isSelected();
@@ -1234,7 +1190,7 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
         block.generateFeature = generateFeature.isSelected();
         block.restrictionBiomes = this.restrictionBiomes.getListElements();
         block.fluidRestrictions = this.fluidRestrictions.getListElements();
-        //block.blocksToReplace = this.blocksToReplace.getListElements(); WHY DOES THIS LINE BREAK ANIMATED BLOCKS?!?!?!?
+        block.blocksToReplace = this.blocksToReplace.getListElements();
         block.isReplaceable = this.isReplaceable.isSelected();
         block.canProvidePower = this.canProvidePower.isSelected();
         block.colorOnMap = (String)this.colorOnMap.getSelectedItem();
