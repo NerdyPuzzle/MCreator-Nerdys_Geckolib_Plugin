@@ -1,16 +1,13 @@
 {
   "geckolib_plugin": {
-    "latest": "5.4.3",
+    "latest": "5.5",
     "changes": [
-      "Updated geckolib API versions",
-      "Animated items can now have custom player model arm poses",
-      "Fixed imported animation names not automatically renaming properly",
-      "Fixed animated entity models' head movement calculations",
-      "(5.4.1) Fixed animated items not saving",
-      "(5.4.2) Fixed the shield blocking property not registering in 1.20.1",
-      "(5.4.3) Fixed mineable tags not generating when plant elements existed",
-      "(5.4.3) Fixed itemstates still not working below version 1.20.1",
-      "(5.4.3) Fixed itemstates causing build errors below version 1.20.1"
+      "Support for MCreator 2024.1",
+      "Support for neoforge 1.20.4",
+      "Added the step height parameter to animated entities",
+      "Removed particle parameters from animated blocks",
+      "Cleaned up some messy code",
+      "Updated the behaviour page of animated entities"
     ]
   }
 }
