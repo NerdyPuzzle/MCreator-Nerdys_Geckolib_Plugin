@@ -1,13 +1,14 @@
 {
   "geckolib_plugin": {
-    "latest": "5.5",
+    "latest": "5.5.1",
     "changes": [
       "Support for MCreator 2024.1",
       "Support for neoforge 1.20.4",
       "Added the step height parameter to animated entities",
       "Removed particle parameters from animated blocks",
       "Cleaned up some messy code",
-      "Updated the behaviour page of animated entities"
+      "Updated the behaviour page of animated entities",
+      "(5.5.1) Fix import formatter not working in some cases"
     ]
   }
 }
