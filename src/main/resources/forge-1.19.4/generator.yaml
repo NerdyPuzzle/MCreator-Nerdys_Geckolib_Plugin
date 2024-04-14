@@ -17,6 +17,15 @@ gradle:
   run_server: runServer
   export_file: "build/libs/modid-1.0.jar"
 
+import_formatter:
+  duplicates_whitelist:
+    - java.util
+    - net.minecraft
+  priority_imports:
+    Nullable: javax.annotation
+    Codec: com.mojang.serialization
+    SoundEvent: net.minecraft.sounds
+
 # base generator roots
 source_root: "@WORKSPACEROOT/src/main/java"
 res_root: "@WORKSPACEROOT/src/main/resources"
@@ -38,11 +47,11 @@ other_textures_dir: "@MODASSETSROOT/textures"
 base_templates:
   - template: modbase/mod.java.ftl
     name: "@SRCROOT/@BASEPACKAGEPATH/@JavaModName.java"
-    canLock: true
   - template: modbase/mods.toml.ftl
     writer: file
     name: "@RESROOT/META-INF/mods.toml"
   - template: modbase/pack.mcmeta.ftl
+    usercodeComment: "#"
     writer: json
     name: "@RESROOT/pack.mcmeta"
   - template: modbase/sounds.json.ftl
