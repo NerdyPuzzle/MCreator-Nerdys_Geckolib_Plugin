@@ -1,6 +1,6 @@
 <#assign mineableblocks = []>
 <#list blocks as block>
-    <#if block.getModElement().getTypeString() != "plant">
+    <#if block.getModElement().getTypeString() != "plant" && block.getModElement().getTypeString() != "fluid">
         <#if block.destroyTool == var_type>
             <#assign mineableblocks += [block]>
         </#if>
