@@ -75,10 +75,10 @@ public class JBlockstateListEntry extends JSimpleListEntry<AnimatedBlock.Blockst
         bottomPanel.add(this.particleTexture);
         bottomPanel.add(HelpUtils.wrapWithHelpButton(gui.withEntry("block/luminance"), L10N.label("elementgui.common.luminance", new Object[0])));
         bottomPanel.add(this.luminance);
-        bottomPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Theme.current().getForegroundColor(), 1), L10N.t("elementgui.blockstates.model", new Object[0]), 0, 0, this.getFont().deriveFont(12.0F), Theme.current().getForegroundColor()));
+        bottomPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Theme.current().getForegroundColor(), 1), L10N.t("elementgui.animatedblock.blockstate_properties", new Object[0]), 0, 0, this.getFont().deriveFont(12.0F), Theme.current().getForegroundColor()));
         this.boundingBoxList.setPreferredSize(new Dimension(600, 170));
         topnbot.add("East", PanelUtils.pullElementUp(PanelUtils.centerAndEastElement(bottomPanel, boundingBoxList)));
-        topnbot.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Theme.current().getForegroundColor(), 1), L10N.t("elementgui.blockstates.blockstate", new Object[0]) + " " + index, 0, 0, this.getFont().deriveFont(12.0F), Theme.current().getForegroundColor()));
+        topnbot.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Theme.current().getForegroundColor(), 1), L10N.t("elementgui.animatedblock.blockstate", new Object[0]) + " " + index, 0, 0, this.getFont().deriveFont(12.0F), Theme.current().getForegroundColor()));
         this.line.add(PanelUtils.totalCenterInPanel(topnbot));
 
         geoModel.setValidator(() -> {

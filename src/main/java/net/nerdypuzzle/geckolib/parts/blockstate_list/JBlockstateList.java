@@ -13,7 +13,7 @@ import java.util.List;
 public class JBlockstateList extends JSimpleEntriesList<JBlockstateListEntry, AnimatedBlock.BlockstateListEntry> {
     public JBlockstateList(MCreator mcreator, IHelpContext gui) {
         super(mcreator, gui);
-        this.add.setText(L10N.t("elementgui.blockstates.add_entry", new Object[0]));
+        this.add.setText(L10N.t("elementgui.animatedblock.add_blockstate", new Object[0]));
     }
 
     public AggregatedValidationResult getValidationResult() {
