@@ -40,20 +40,23 @@ import software.bernie.geckolib.core.animation.AnimationState;
 
 public class ${name}TileEntity extends RandomizableContainerBlockEntity implements GeoBlockEntity, WorldlyContainer {
 	private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-
 	private NonNullList<ItemStack> stacks = NonNullList.<ItemStack>withSize(${data.inventorySize}, ItemStack.EMPTY);
-
 	private final SidedInvWrapper handler = new SidedInvWrapper(this, null);
+	public int blockstateNew = this.getBlockState().getValue(${name}Block.BLOCKSTATE);
+	private int blockstateOld = this.getBlockState().getValue(${name}Block.BLOCKSTATE);
 
 	public ${name}TileEntity(BlockPos pos, BlockState state) {
 		super(${JavaModName}BlockEntities.${(regname)?upper_case}.get(), pos, state);
 	}
 
 	private PlayState predicate(AnimationState event) {
-	String animationprocedure = (""
-    		+ ((this.getBlockState()).getBlock().getStateDefinition().getProperty("animation") instanceof IntegerProperty _getip1
-    				? (this.getBlockState()).getValue(_getip1)
-    				: 0));
+	    blockstateNew = this.getBlockState().getValue(${name}Block.BLOCKSTATE);
+	    if (blockstateOld != blockstateNew) {
+	        event.getController().forceAnimationReset();
+	        blockstateOld = blockstateNew;
+	        return PlayState.STOP;
+	    }
+	    String animationprocedure = ("" + this.getBlockState().getValue(${name}Block.ANIMATION));
 		if (animationprocedure.equals("0")) {
 		    return event.setAndContinue(RawAnimation.begin().thenLoop(animationprocedure));
 		}
@@ -61,10 +64,7 @@ public class ${name}TileEntity extends RandomizableContainerBlockEntity implemen
 	}
 
 	private PlayState procedurePredicate(AnimationState event) {
-	String animationprocedure = (""
-    		+ ((this.getBlockState()).getBlock().getStateDefinition().getProperty("animation") instanceof IntegerProperty _getip1
-    				? (this.getBlockState()).getValue(_getip1)
-    				: 0));
+	    String animationprocedure = ("" + this.getBlockState().getValue(${name}Block.ANIMATION));
 		if (!animationprocedure.equals("0") && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
 			event.getController().setAnimation(RawAnimation.begin().thenPlay(animationprocedure));
 	        if (event.getController().getAnimationState() == AnimationController.State.STOPPED) {

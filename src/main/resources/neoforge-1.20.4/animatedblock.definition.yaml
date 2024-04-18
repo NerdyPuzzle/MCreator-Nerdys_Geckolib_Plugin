@@ -37,7 +37,6 @@ templates:
   # Normal block templates
   - template: ajson/block_states.json.ftl
     writer: json
-    variables: "variant= "
     name: "@MODASSETSROOT/blockstates/@registryname.json"
 
   # Block item templates
@@ -66,3 +65,11 @@ tags:
 localizationkeys:
   - key: block.@modid.@registryname
     mapto: name
+
+list_templates:
+  - name: "Blockstates"
+    listData: data.getBlockstates()
+    forEach:
+      - template: ajson/blockstate.json.ftl
+        writer: json
+        name: "@MODASSETSROOT/models/block/@registryname_blockstate_@itemindex.json"

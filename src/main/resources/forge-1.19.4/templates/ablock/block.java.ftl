@@ -46,6 +46,9 @@ import javax.annotation.Nullable;
 
 public class ${name}Block extends BaseEntityBlock <#if data.isWaterloggable>implements SimpleWaterloggedBlock,EntityBlock<#else> implements EntityBlock</#if>
 {
+    <#if data.hasBlockstates()>
+        public static final IntegerProperty BLOCKSTATE = IntegerProperty.create("blockstate", 0, ${data.blockstateList?size});
+    </#if>
     public static final IntegerProperty ANIMATION = IntegerProperty.create("animation", 0, (int)${data.animationCount});
 	<#if data.rotationMode == 1 || data.rotationMode == 3>
 		public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
@@ -87,8 +90,18 @@ public class ${name}Block extends BaseEntityBlock <#if data.isWaterloggable>impl
 		<#else>
 			.strength(${data.hardness}f, ${data.resistance}f)
 		</#if>
-		<#if data.luminance != 0>
+		<#if data.luminance != 0 && !data.hasBlockstates()>
 			.lightLevel(s -> ${data.luminance})
+		<#elseif data.hasBlockstates()>
+		    .lightLevel(s -> (new Object() {
+		        public int getLightLevel() {
+		            <#list data.blockstateList as state>
+		                if (s.getValue(BLOCKSTATE) == ${state?index + 1})
+		                    return ${state.luminance};
+		            </#list>
+		            return ${data.luminance};
+		        }
+		    }.getLightLevel()))
 		</#if>
 		<#if data.requiresCorrectTool>
 			.requiresCorrectToolForDrops()
@@ -117,7 +130,7 @@ public class ${name}Block extends BaseEntityBlock <#if data.isWaterloggable>impl
 		<#if data.hasTransparency>
 			.isRedstoneConductor((bs, br, bp) -> false)
 		</#if>
-		<#if (data.boundingBoxes?? && !data.blockBase?? && !data.isFullCube() && data.offsetType != "NONE")
+		<#if ((data.boundingBoxes?? && !data.blockBase?? && !data.isFullCube() && data.offsetType != "NONE") || (data.offsetType != "NONE" && data.hasBlockstates()))
 				|| (data.blockBase?has_content && !data.isFullCube())>
 			.dynamicShape()
 		</#if>
@@ -204,8 +217,22 @@ public class ${name}Block extends BaseEntityBlock <#if data.isWaterloggable>impl
 	}
 	</#if>
 
-	<#if data.boundingBoxes?? && !data.blockBase?? && !data.isFullCube()>
+	<#if (data.boundingBoxes?? && !data.blockBase?? && !data.isFullCube()) || data.hasBlockstates()>
 	@Override public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+	    <#if data.hasBlockstates()>
+	        <#list data.blockstateList as state>
+	            <#if state.boundingBoxes?has_content>
+	                if (state.getValue(BLOCKSTATE) == ${state?index + 1}) {
+	            		<#if state.isBoundingBoxEmpty()>
+                			return Shapes.empty();
+                		<#else>
+                			<#if !data.shouldDisableOffset()>Vec3 offset = state.getOffset(world, pos);</#if>
+                			<@boundingBoxWithRotation state.positiveBoundingBoxes() state.negativeBoundingBoxes() data.shouldDisableOffset() data.rotationMode data.enablePitch/>
+                		</#if>
+	                }
+	            </#if>
+	        </#list>
+	    </#if>
 		<#if data.isBoundingBoxEmpty()>
 			return Shapes.empty();
 		<#else>
@@ -216,7 +243,7 @@ public class ${name}Block extends BaseEntityBlock <#if data.isWaterloggable>impl
 	</#if>
 
 	@Override protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-		<#assign props = []>
+		<#assign props = ["ANIMATION"]>
 		<#if data.rotationMode == 5>
 			<#assign props += ["AXIS"]>
 		<#elseif data.rotationMode != 0>
@@ -228,7 +255,10 @@ public class ${name}Block extends BaseEntityBlock <#if data.isWaterloggable>impl
 		<#if data.isWaterloggable>
 			<#assign props += ["WATERLOGGED"]>
 		</#if>
-		builder.add(ANIMATION<#if data.rotationMode != 0 || data.isWaterloggable>,</#if> ${props?join(", ")});
+		<#if data.hasBlockstates()>
+		    <#assign props += ["BLOCKSTATE"]>
+		</#if>
+		builder.add(${props?join(", ")});
 	}
 
 	@Override

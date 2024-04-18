@@ -50,6 +50,7 @@ import net.nerdypuzzle.geckolib.element.types.AnimatedBlock;
 import net.nerdypuzzle.geckolib.element.types.GeckolibElement;
 import net.nerdypuzzle.geckolib.parts.GeomodelRenderer;
 import net.nerdypuzzle.geckolib.parts.PluginModelActions;
+import net.nerdypuzzle.geckolib.parts.blockstate_list.JBlockstateList;
 
 import javax.swing.*;
 import java.awt.*;
@@ -173,6 +174,7 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
     private final JCheckBox useLootTableForDrops;
     private final VComboBox<String> geoModel;
     private final VComboBox<String> displaySettings;
+    private JBlockstateList blockstateList;
 
     public AnimatedBlockGUI(MCreator mcreator, ModElement modElement, boolean editingMode) {
         super(mcreator, modElement, editingMode);
@@ -269,6 +271,7 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
         restrictionBiomes.setValidator(new ItemListFieldSingleTagValidator(restrictionBiomes));
         this.fluidRestrictions = new FluidListField(this.mcreator);
         boundingBoxList = new JBoundingBoxList(mcreator, this, null);
+        blockstateList = new JBlockstateList(this.mcreator, this);
         this.blocksToReplace.setListElements(List.of(new MItemBlock(this.mcreator.getWorkspace(), "TAG:stone_ore_replaceables")));
         this.onBlockAdded = new ProcedureSelector(this.withEntry("block/when_added"), this.mcreator, L10N.t("elementgui.block.event_on_block_added", new Object[0]), Dependency.fromString("x:number/y:number/z:number/world:world/blockstate:blockstate/oldState:blockstate/moving:logic"));
         this.onNeighbourBlockChanges = new ProcedureSelector(this.withEntry("block/when_neighbour_changes"), this.mcreator, L10N.t("elementgui.common.event_on_neighbour_block_changes", new Object[0]), Dependency.fromString("x:number/y:number/z:number/world:world/blockstate:blockstate"));
@@ -810,8 +813,16 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
         this.page3group.addValidationElement(this.hitSound.getVTextField());
         this.page3group.addValidationElement(this.placeSound.getVTextField());
         this.page3group.addValidationElement(this.stepSound.getVTextField());
+
+        JPanel blockstates = new JPanel(new BorderLayout());
+        blockstates.setOpaque(false);
+        JComponent mainEditor = PanelUtils.northAndCenterElement(new JEmptyBox(), this.blockstateList);
+        mainEditor.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        blockstates.add(PanelUtils.northAndCenterElement(PanelUtils.join(0, new JEmptyBox()), mainEditor));
+
         this.addPage(L10N.t("elementgui.common.page_visual", new Object[0]), pane2);
         this.addPage(L10N.t("elementgui.common.page_bounding_boxes", new Object[0]), bbPane);
+        this.addPage(L10N.t("elementgui.animatedblock.page_blockstates", new Object[0]), blockstates);
         this.addPage(L10N.t("elementgui.common.page_properties", new Object[0]), pane3);
         this.addPage(L10N.t("elementgui.common.page_advanced_properties", new Object[0]), pane7);
         this.addPage(L10N.t("elementgui.block.page_tile_entity", new Object[0]), pane8);
@@ -948,7 +959,9 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
             return new AggregatedValidationResult(new ValidationGroup[]{this.page1group});
         } else if (page == 2) {
             return new AggregatedValidationResult(new ValidationGroup[]{this.page3group});
-        } else if (page == 4) {
+        } else if (page == 3) {
+            return blockstateList.getValidationResult();
+        } else if (page == 5) {
             return new AggregatedValidationResult(new IValidable[]{this.outSlotIDs, this.inSlotIDs});
         } else {
             return (AggregatedValidationResult)(page == 7 && (Integer)this.minGenerateHeight.getValue() >= (Integer)this.maxGenerateHeight.getValue() ? new AggregatedValidationResult.FAIL(L10N.t("elementgui.block.error_minimal_generation_height", new Object[0])) : new AggregatedValidationResult.PASS());
@@ -975,6 +988,7 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
         this.isFluidTank.setSelected(block.isFluidTank);
         this.energyInitial.setValue(block.energyInitial);
         this.energyCapacity.setValue(block.energyCapacity);
+        this.blockstateList.setEntries(block.blockstateList);
         this.energyMaxReceive.setValue(block.energyMaxReceive);
         this.energyMaxExtract.setValue(block.energyMaxExtract);
         this.fluidCapacity.setValue(block.fluidCapacity);
@@ -1118,6 +1132,7 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
         block.energyMaxExtract = (Integer)this.energyMaxExtract.getValue();
         block.fluidCapacity = (Integer)this.fluidCapacity.getValue();
         block.isNotColidable = this.isNotColidable.isSelected();
+        block.blockstateList = this.blockstateList.getEntries();
         block.canRedstoneConnect = this.canRedstoneConnect.isSelected();
         block.lightOpacity = (Integer)this.lightOpacity.getValue();
         block.material = new Material(this.mcreator.getWorkspace(), this.material.getSelectedItem());
