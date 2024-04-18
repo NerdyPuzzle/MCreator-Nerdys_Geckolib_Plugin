@@ -319,6 +319,10 @@ public class AnimatedBlock extends GeneratableElement implements IBlock, ITabCon
         return this.hasTransparency && this.transparencyType.equals("solid") ? "cutout" : this.transparencyType.toLowerCase(Locale.ENGLISH);
     }
 
+    public boolean hasBlockstates() {
+        return !blockstateList.isEmpty();
+    }
+
     public Collection<BaseType> getBaseTypesProvided() {
         List<BaseType> baseTypes = new ArrayList(List.of(BaseType.BLOCK, BaseType.ITEM, BaseType.BLOCKENTITY));
         if (generateFeature && getModElement().getGenerator().getGeneratorConfiguration().getGeneratorFlavor()
