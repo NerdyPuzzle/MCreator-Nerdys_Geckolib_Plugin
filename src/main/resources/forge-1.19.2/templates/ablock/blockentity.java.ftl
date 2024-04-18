@@ -41,16 +41,21 @@ public class ${name}TileEntity extends RandomizableContainerBlockEntity implemen
 	public AnimationFactory factory = GeckoLibUtil.createFactory(this);
 	private NonNullList<ItemStack> stacks = NonNullList.<ItemStack>withSize(${data.inventorySize}, ItemStack.EMPTY);
 	private final LazyOptional<? extends IItemHandler>[] handlers = SidedInvWrapper.create(this, Direction.values());
+	public int blockstateNew = this.getBlockState().getValue(${name}Block.BLOCKSTATE);
+	private int blockstateOld = this.getBlockState().getValue(${name}Block.BLOCKSTATE);
 
 	public ${name}TileEntity(BlockPos pos, BlockState state) {
 		super(${JavaModName}BlockEntities.${(regname)?upper_case}.get(), pos, state);
 	}
 
 	private <E extends BlockEntity & IAnimatable> PlayState predicate(AnimationEvent<E> event) {
-	String animationprocedure = (""
-    		+ ((this.getBlockState()).getBlock().getStateDefinition().getProperty("animation") instanceof IntegerProperty _getip1
-    				? (this.getBlockState()).getValue(_getip1)
-    				: 0));
+	    blockstateNew = this.getBlockState().getValue(${name}Block.BLOCKSTATE);
+	    if (blockstateOld != blockstateNew) {
+	        event.getController().markNeedsReload();
+	        blockstateOld = blockstateNew;
+	        return PlayState.STOP;
+	    }
+	    String animationprocedure = ("" + this.getBlockState().getValue(${name}Block.ANIMATION));
 		if (animationprocedure.equals("0")) {
 		    event.getController().setAnimation(new AnimationBuilder().addAnimation(animationprocedure, EDefaultLoopTypes.LOOP));
 		    return PlayState.CONTINUE;
@@ -59,10 +64,7 @@ public class ${name}TileEntity extends RandomizableContainerBlockEntity implemen
 	}
 
 	private <E extends BlockEntity & IAnimatable> PlayState procedurePredicate(AnimationEvent<E> event) {
-	String animationprocedure = (""
-    		+ ((this.getBlockState()).getBlock().getStateDefinition().getProperty("animation") instanceof IntegerProperty _getip1
-    				? (this.getBlockState()).getValue(_getip1)
-    				: 0));
+	    String animationprocedure = ("" + this.getBlockState().getValue(${name}Block.ANIMATION));
 		if (!animationprocedure.equals("0") && event.getController().getAnimationState().equals(software.bernie.geckolib3.core.AnimationState.Stopped)) {
 			event.getController().setAnimation(new AnimationBuilder().addAnimation(animationprocedure, EDefaultLoopTypes.PLAY_ONCE));
 	        if (event.getController().getAnimationState().equals(software.bernie.geckolib3.core.AnimationState.Stopped)) {

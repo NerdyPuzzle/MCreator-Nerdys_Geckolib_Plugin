@@ -69,7 +69,7 @@ public class JBlockstateListEntry extends JSimpleListEntry<AnimatedBlock.Blockst
         topnbot.add("Center", sbbp22);
         JPanel bottomPanel = new JPanel(new GridLayout(3, 2, 0, 2));
         bottomPanel.setOpaque(false);
-        bottomPanel.add(HelpUtils.wrapWithHelpButton(gui.withEntry("block/model"), L10N.label("elementgui.block.model", new Object[0])));
+        bottomPanel.add(HelpUtils.wrapWithHelpButton(gui.withEntry("geckolib/name"), L10N.label("elementgui.animatedblock.model", new Object[0])));
         bottomPanel.add(this.geoModel);
         bottomPanel.add(HelpUtils.wrapWithHelpButton(gui.withEntry("block/particle_texture"), L10N.label("elementgui.block.particle_texture", new Object[0])));
         bottomPanel.add(this.particleTexture);

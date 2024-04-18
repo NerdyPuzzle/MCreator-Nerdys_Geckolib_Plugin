@@ -175,7 +175,6 @@ public class AnimatedBlock extends GeneratableElement implements IBlock, ITabCon
         public String texture;
         public String particleTexture;
         public String customModelName;
-        public int renderType;
 
         @Nullable
         transient Workspace workspace;
@@ -191,10 +190,6 @@ public class AnimatedBlock extends GeneratableElement implements IBlock, ITabCon
             return this.workspace;
         }
 
-        public int renderType() {
-            return renderType;
-        }
-
     }
 
     public List<BlockstateEntry> getBlockstates() {
@@ -205,7 +200,6 @@ public class AnimatedBlock extends GeneratableElement implements IBlock, ITabCon
             entry.particleTexture = state.particleTexture;
             entry.texture = state.texture;
             entry.customModelName = state.customModelName;
-            entry.renderType = state.renderType;
             entries.add(entry);
         }
         return entries;
@@ -329,6 +323,10 @@ public class AnimatedBlock extends GeneratableElement implements IBlock, ITabCon
 
     public String getRenderType() {
         return this.hasTransparency && this.transparencyType.equals("solid") ? "cutout" : this.transparencyType.toLowerCase(Locale.ENGLISH);
+    }
+
+    public boolean hasBlockstates() {
+        return !blockstateList.isEmpty();
     }
 
     public Collection<BaseType> getBaseTypesProvided() {

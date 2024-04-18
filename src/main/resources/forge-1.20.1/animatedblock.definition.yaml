@@ -37,7 +37,6 @@ templates:
   # Normal block templates
   - template: ajson/block_states.json.ftl
     writer: json
-    variables: "variant= "
     name: "@MODASSETSROOT/blockstates/@registryname.json"
 
   # Block item templates
@@ -54,3 +53,11 @@ localizationkeys:
 global_templates:
   - template: animatedblockutil/listeners/blocklistener.java.ftl
     name: "@SRCROOT/@BASEPACKAGEPATH/block/listener/ClientListener.java"
+
+list_templates:
+  - name: "Blockstates"
+    listData: data.getBlockstates()
+    forEach:
+      - template: ajson/blockstate.json.ftl
+        writer: json
+        name: "@MODASSETSROOT/models/block/@registryname_blockstate_@itemindex.json"
