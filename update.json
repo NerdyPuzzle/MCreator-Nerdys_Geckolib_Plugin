@@ -1,9 +1,10 @@
 {
   "geckolib_plugin": {
-    "latest": "5.6",
+    "latest": "5.6.1",
     "changes": [
       "Added blockstates to animated blocks",
-      "Added the option to disable the swing animation of animated items"
+      "Added the option to disable the swing animation of animated items",
+      "Fixed animated blocks without blockstates causing build errors"
     ]
   }
 }
