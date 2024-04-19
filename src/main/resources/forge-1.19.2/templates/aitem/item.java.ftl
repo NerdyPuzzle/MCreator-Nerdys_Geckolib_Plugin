@@ -110,6 +110,16 @@ public class ${name}Item extends Item implements IAnimatable {
 	            return HumanoidModel.ArmPose.EMPTY;
 	        }
         	</#if>
+
+        	<#if data.disableSwing>
+            public boolean applyForgeHandTransform(PoseStack poseStack, LocalPlayer player, HumanoidArm arm, ItemStack itemInHand, float partialTick, float equipProcess, float swingProcess) {
+				int i = arm == HumanoidArm.RIGHT ? 1 : -1;
+				poseStack.translate(i * 0.56F, -0.52F, -0.72F);
+				if (player.getUseItem() == itemInHand) {
+					poseStack.translate(0.05, 0.05, 0.05);
+				}
+                return true;
+            }
 		});
 	}
 

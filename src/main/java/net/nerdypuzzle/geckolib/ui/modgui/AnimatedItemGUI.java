@@ -71,6 +71,7 @@ public class AnimatedItemGUI extends ModElementGUI<AnimatedItem> implements Geck
     private final JCheckBox damageOnCrafting;
     private final JCheckBox hasGlow;
     private final JCheckBox enableArmPose;
+    private final JCheckBox disableSwing;
     private ProcedureSelector glowCondition;
     private final DataListComboBox creativeTab;
     private ProcedureSelector onRightClickedInAir;
@@ -118,6 +119,7 @@ public class AnimatedItemGUI extends ModElementGUI<AnimatedItem> implements Geck
         this.destroyAnyBlock = L10N.checkbox("elementgui.common.enable", new Object[0]);
         this.enableArmPose = L10N.checkbox("elementgui.animateditem.enable_arm_pose", new Object[0]);
         this.stayInGridWhenCrafting = L10N.checkbox("elementgui.common.enable", new Object[0]);
+        this.disableSwing = L10N.checkbox("elementgui.common.enable", new Object[0]);
         this.damageOnCrafting = L10N.checkbox("elementgui.common.enable", new Object[0]);
         this.hasGlow = L10N.checkbox("elementgui.common.enable", new Object[0]);
         this.creativeTab = new DataListComboBox(this.mcreator);
@@ -182,7 +184,7 @@ public class AnimatedItemGUI extends ModElementGUI<AnimatedItem> implements Geck
         destal2.add("North", destal3);
 
 
-        JPanel destal = new JPanel(new GridLayout(8, 2, 15, 5));
+        JPanel destal = new JPanel(new GridLayout(9, 2, 15, 5));
         destal.setOpaque(false);
         JComponent destal1 = PanelUtils.join(0, new Component[]{HelpUtils.wrapWithHelpButton(this.withEntry("item/glowing_effect"), L10N.label("elementgui.item.glowing_effect", new Object[0])), this.hasGlow, this.glowCondition});
         destal.add(HelpUtils.wrapWithHelpButton(this.withEntry("item/special_information"), L10N.label("elementgui.item.tooltip_tip", new Object[0])));
@@ -191,6 +193,8 @@ public class AnimatedItemGUI extends ModElementGUI<AnimatedItem> implements Geck
         destal.add(this.idle);
         destal.add(HelpUtils.wrapWithHelpButton(this.withEntry("geckolib/animation_perspective"), L10N.label("elementgui.animateditem.perspective", new Object[0])));
         destal.add(this.perspective);
+        destal.add(HelpUtils.wrapWithHelpButton(this.withEntry("geckolib/disable_swing"), L10N.label("elementgui.animateditem.disable_swing", new Object[0])));
+        destal.add(this.disableSwing);
         destal.add(new JEmptyBox()); destal.add(new JEmptyBox());
         destal.add(HelpUtils.wrapWithHelpButton(this.withEntry("geckolib/first_person"), L10N.label("elementgui.animateditem.first_person", new Object[0])));
         destal.add(this.firstPersonArms);
@@ -470,6 +474,7 @@ public class AnimatedItemGUI extends ModElementGUI<AnimatedItem> implements Geck
         this.stayInGridWhenCrafting.setSelected(item.stayInGridWhenCrafting);
         this.damageOnCrafting.setSelected(item.damageOnCrafting);
         this.hasGlow.setSelected(item.hasGlow);
+        this.disableSwing.setSelected(item.disableSwing);
         this.glowCondition.setSelectedProcedure(item.glowCondition);
         this.damageVsEntity.setValue(item.damageVsEntity);
         this.enableMeleeDamage.setSelected(item.enableMeleeDamage);
@@ -515,6 +520,7 @@ public class AnimatedItemGUI extends ModElementGUI<AnimatedItem> implements Geck
         item.immuneToFire = this.immuneToFire.isSelected();
         item.destroyAnyBlock = this.destroyAnyBlock.isSelected();
         item.enableArmPose = this.enableArmPose.isSelected();
+        item.disableSwing = this.disableSwing.isSelected();
         item.stayInGridWhenCrafting = this.stayInGridWhenCrafting.isSelected();
         item.damageOnCrafting = this.damageOnCrafting.isSelected();
         item.hasGlow = this.hasGlow.isSelected();
