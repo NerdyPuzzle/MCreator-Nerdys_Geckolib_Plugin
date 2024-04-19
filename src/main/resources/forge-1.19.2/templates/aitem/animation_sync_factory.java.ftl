@@ -1,50 +1,57 @@
 package ${package}.init;
 
-
 @Mod.EventBusSubscriber
 public class ItemAnimationFactory {
 
-	public static void disableUseAnim() {
-	   	try {
-		    ItemInHandRenderer renderer = Minecraft.getInstance().gameRenderer.itemInHandRenderer;
-		    if (renderer != null) {
+	public static void disableUseAnim(String hand) {
+		ItemInHandRenderer renderer = Minecraft.getInstance().gameRenderer.itemInHandRenderer;
+		if (renderer != null) {
+		    if (hand.equals("right")) {
 		        renderer.mainHandHeight = 1F;
 		        renderer.oMainHandHeight = 1F;
+		    }
+		    if (hand.equals("left")) {
 		        renderer.offHandHeight = 1F;
 		        renderer.oOffHandHeight = 1F;
-			}
-		} catch(Exception e) {
-		    e.printStackTrace();
-		}
+		    }
+	    }
 	}
 
 	@SubscribeEvent
 	public static void animatedItems(TickEvent.PlayerTickEvent event) {
 		String animation = "";
-		if (event.phase == TickEvent.Phase.START && (event.player.getMainHandItem().getItem() instanceof IAnimatable || event.player.getOffhandItem().getItem() instanceof IAnimatable)) {
-			if (!event.player.getMainHandItem().getOrCreateTag().getString("geckoAnim").equals("") && !(event.player.getMainHandItem().getItem() instanceof GeoArmorItem)) {
-				animation = event.player.getMainHandItem().getOrCreateTag().getString("geckoAnim");
-				event.player.getMainHandItem().getOrCreateTag().putString("geckoAnim", "");
-				<#list animateditems as aitem>
-				if (event.player.getMainHandItem().getItem() instanceof ${aitem.getModElement().getName()}Item animatable)
-				if (event.player.level.isClientSide()) {
-					animatable.animationprocedure = animation;
-					disableUseAnim();
-				}
-				</#list>
+		ItemStack mainhandItem = event.player.getMainHandItem().copy();
+		ItemStack offhandItem = event.player.getOffhandItem().copy();
+		if (event.phase == TickEvent.Phase.START && (mainhandItem.getItem() instanceof GeoItem || offhandItem.getItem() instanceof GeoItem)) {
+		<#list animateditems as item>
+			if (mainhandItem.getItem() instanceof ${item.getModElement().getName()}Item animatable) {
+				animation = mainhandItem.getOrCreateTag().getString("geckoAnim");
+				if (!animation.isEmpty()) {
+				    event.player.getMainHandItem().getOrCreateTag().putString("geckoAnim", "");
+				    if (event.player.level.isClientSide()) {
+					    ((${item.getModElement().getName()}Item)event.player.getMainHandItem().getItem()).animationprocedure = animation;
+					    <#if item.disableSwing == false>
+					        disableUseAnim("right");
+					    </#if>
+				    }
+                }
 			}
-			if (!event.player.getOffhandItem().getOrCreateTag().getString("geckoAnim").equals("") && !(event.player.getOffhandItem().getItem() instanceof GeoArmorItem)) {
-				animation = event.player.getOffhandItem().getOrCreateTag().getString("geckoAnim");
-				event.player.getOffhandItem().getOrCreateTag().putString("geckoAnim", "");
-				<#list animateditems as aitem>
-				if (event.player.getOffhandItem().getItem() instanceof ${aitem.getModElement().getName()}Item animatable)
-				if (event.player.level.isClientSide()) {
-					animatable.animationprocedure = animation;
-					disableUseAnim();
-				}
-				</#list>
+			if (offhandItem.getItem() instanceof ${item.getModElement().getName()}Item animatable) {
+				animation = offhandItem.getOrCreateTag().getString("geckoAnim");
+				if (!animation.isEmpty()) {
+				    event.player.getOffhandItem().getOrCreateTag().putString("geckoAnim", "");
+				    if (event.player.level.isClientSide()) {
+					    ((${item.getModElement().getName()}Item)event.player.getOffhandItem().getItem()).animationprocedure = animation;
+					    <#if item.disableSwing == false>
+					        disableUseAnim("left");
+					    </#if>
+				    }
+                }
 			}
 		}
+		</#list>
 	}
+
+}
 
 }

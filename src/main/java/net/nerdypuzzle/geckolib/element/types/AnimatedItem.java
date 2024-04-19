@@ -72,6 +72,7 @@ public class AnimatedItem extends GeneratableElement implements IItem, IItemWith
     public String animation;
     public String normal;
     public List<ArmPoseEntry> armPoseList;
+    public boolean disableSwing;
 
     private AnimatedItem() {
         this((ModElement)null);
@@ -94,6 +95,7 @@ public class AnimatedItem extends GeneratableElement implements IItem, IItemWith
         this.saturation = 0.30000001192092896;
         this.animation = "eat";
         this.armPoseList = new ArrayList<>();
+        this.disableSwing = false;
     }
 
     public BufferedImage generateModElementPicture() {

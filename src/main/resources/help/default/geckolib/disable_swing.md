@@ -1,0 +1,1 @@
+Enabling this option will prevent your arm from swinging when attacking with this item held.
