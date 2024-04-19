@@ -991,7 +991,9 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
             return new AggregatedValidationResult(new ValidationGroup[]{this.page1group});
         } else if (page == 2) {
             return new AggregatedValidationResult(new ValidationGroup[]{this.page3group});
-        } else if (page == 4) {
+        } else if (page == 3) {
+            return blockstateList.getValidationResult();
+        } else if (page == 5) {
             return new AggregatedValidationResult(new IValidable[]{this.outSlotIDs, this.inSlotIDs});
         } else {
             return (AggregatedValidationResult)(page == 7 && (Integer)this.minGenerateHeight.getValue() >= (Integer)this.maxGenerateHeight.getValue() ? new AggregatedValidationResult.FAIL(L10N.t("elementgui.block.error_minimal_generation_height", new Object[0])) : new AggregatedValidationResult.PASS());
