@@ -1,8 +1,8 @@
 {
   "geckolib_plugin": {
-    "latest": "5.6.2",
+    "latest": "5.6.3",
     "changes": [
-        ""
+        "Fixed animated items causing a build error if more than 1 existed"
     ]
   }
 }
