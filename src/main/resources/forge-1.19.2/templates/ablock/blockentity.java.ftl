@@ -41,20 +41,24 @@ public class ${name}TileEntity extends RandomizableContainerBlockEntity implemen
 	public AnimationFactory factory = GeckoLibUtil.createFactory(this);
 	private NonNullList<ItemStack> stacks = NonNullList.<ItemStack>withSize(${data.inventorySize}, ItemStack.EMPTY);
 	private final LazyOptional<? extends IItemHandler>[] handlers = SidedInvWrapper.create(this, Direction.values());
+	<#if data.hasBlockstates()>
 	public int blockstateNew = this.getBlockState().getValue(${name}Block.BLOCKSTATE);
 	private int blockstateOld = this.getBlockState().getValue(${name}Block.BLOCKSTATE);
+	</#if>
 
 	public ${name}TileEntity(BlockPos pos, BlockState state) {
 		super(${JavaModName}BlockEntities.${(regname)?upper_case}.get(), pos, state);
 	}
 
 	private <E extends BlockEntity & IAnimatable> PlayState predicate(AnimationEvent<E> event) {
+	    <#if data.hasBlockstates()>
 	    blockstateNew = this.getBlockState().getValue(${name}Block.BLOCKSTATE);
 	    if (blockstateOld != blockstateNew) {
 	        event.getController().markNeedsReload();
 	        blockstateOld = blockstateNew;
 	        return PlayState.STOP;
 	    }
+	    </#if>
 	    String animationprocedure = ("" + this.getBlockState().getValue(${name}Block.ANIMATION));
 		if (animationprocedure.equals("0")) {
 		    event.getController().setAnimation(new AnimationBuilder().addAnimation(animationprocedure, EDefaultLoopTypes.LOOP));

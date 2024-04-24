@@ -120,6 +120,7 @@ public class ${name}Item extends Item implements GeoItem {
 				}
                 return true;
             }
+            </#if>
 		});
 	}
 
