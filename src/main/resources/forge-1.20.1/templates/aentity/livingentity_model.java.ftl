@@ -24,8 +24,8 @@ public class ${name}Model extends GeoModel<${name}Entity> {
 	    CoreGeoBone head = getAnimationProcessor().getBone("${data.groupName}");
 	    if (head != null) {
 		    EntityModelData entityData = (EntityModelData) animationState.getData(DataTickets.ENTITY_MODEL_DATA);
-			head.setRotX(head.getRotX() + entityData.headPitch() * Mth.DEG_TO_RAD);
-			head.setRotY(head.getRotY() + entityData.netHeadYaw() * Mth.DEG_TO_RAD);
+			head.setRotX(entityData.headPitch() * Mth.DEG_TO_RAD);
+			head.setRotY(entityData.netHeadYaw() * Mth.DEG_TO_RAD);
 		}
 	
     }
