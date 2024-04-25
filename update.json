@@ -1,8 +1,9 @@
 {
   "geckolib_plugin": {
-    "latest": "5.6.5",
+    "latest": "5.6.6",
     "changes": [
-        "Fixed animated entity head rotation being weird"
+      "Fixed animated entity head rotation being weird",
+      "(5.6.6) Reverted head animation changes due to issues"
     ]
   }
 }
