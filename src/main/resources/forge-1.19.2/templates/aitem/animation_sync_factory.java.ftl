@@ -48,8 +48,8 @@ public class ItemAnimationFactory {
 				    }
                 }
 			}
-		}
 		</#list>
+		}
 	}
 
 }

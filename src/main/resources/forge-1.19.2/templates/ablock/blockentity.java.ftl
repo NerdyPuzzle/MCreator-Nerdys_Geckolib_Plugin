@@ -49,12 +49,14 @@ public class ${name}TileEntity extends RandomizableContainerBlockEntity implemen
 	}
 
 	private <E extends BlockEntity & IAnimatable> PlayState predicate(AnimationEvent<E> event) {
+	    <#if data.hasBlockstates()>
 	    blockstateNew = this.getBlockState().getValue(${name}Block.BLOCKSTATE);
 	    if (blockstateOld != blockstateNew) {
 	        event.getController().markNeedsReload();
 	        blockstateOld = blockstateNew;
 	        return PlayState.STOP;
 	    }
+	    </#if>
 	    String animationprocedure = ("" + this.getBlockState().getValue(${name}Block.ANIMATION));
 		if (animationprocedure.equals("0")) {
 		    event.getController().setAnimation(new AnimationBuilder().addAnimation(animationprocedure, EDefaultLoopTypes.LOOP));

@@ -76,10 +76,10 @@ public class ${JavaModName}Entities {
 
 	<#if entitiesWithInventory?size != 0 || animatedEntitiesWithInventory?size != 0>
 	<#compress>
-	@SubscribeEvent public static void registerCapabilities(RegisterCapabilitiesEvent event) {
+	@SubscribeEvent(priority = EventPriority.HIGHEST) public static void registerCapabilities(RegisterCapabilitiesEvent event) {
 	    <#if entitiesWithInventory?size != 0>
 		<#list entitiesWithInventory as entity>
-			event.registerEntity(Capabilities.ItemHandler.ENTITY, ${entity.getModElement().getRegistryNameUpper()}.get(), (living, context) -> living.getInventory());
+			event.registerEntity(Capabilities.ItemHandler.ENTITY, ${entity.getModElement().getRegistryNameUpper()}.get(), (living, context) -> living.getCombinedInventory());
 		</#list>
 		</#if>
 		<#if animatedEntitiesWithInventory?size != 0>
