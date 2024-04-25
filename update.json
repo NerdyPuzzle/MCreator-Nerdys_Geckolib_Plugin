@@ -1,12 +1,9 @@
 {
   "geckolib_plugin": {
-    "latest": "5.6.4",
+    "latest": "5.7",
     "changes": [
-      "Added blockstates to animated blocks",
-      "Added the option to disable the swing animation of animated items",
-      "(5.6.1) Fixed animated blocks without blockstates causing build errors",
-      "(5.6.3) Fixed animated items causing a build error if more than 1 existed",
-      "(5.6.4) Fixed animated items causing a build error in 1.19.4"
+      "Updated to work with 2024.1.17319 ONLY, reinstall MCreator",
+      "Fixed animated entity head rotation being weird"
     ]
   }
 }
