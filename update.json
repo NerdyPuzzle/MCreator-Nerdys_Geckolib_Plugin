@@ -1,9 +1,10 @@
 {
   "geckolib_plugin": {
-    "latest": "5.7",
+    "latest": "5.7.1",
     "changes": [
       "Updated to work with 2024.1.17319 ONLY, reinstall MCreator",
-      "Fixed animated entity head rotation being weird"
+      "Fixed animated entity head rotation being weird",
+      "(5.7.1) Reverted head animation changes due to issues"
     ]
   }
 }
