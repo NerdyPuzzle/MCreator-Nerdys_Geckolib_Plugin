@@ -1,8 +1,8 @@
 {
   "geckolib_plugin": {
-    "latest": "5.6.4",
+    "latest": "5.6.5",
     "changes": [
-        "Fixed animated items causing a build error in 1.19.4" 
+        "Fixed animated entity head rotation being weird"
     ]
   }
 }
