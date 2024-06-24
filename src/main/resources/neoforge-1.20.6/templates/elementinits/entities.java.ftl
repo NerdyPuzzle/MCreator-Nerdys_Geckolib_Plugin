@@ -41,7 +41,7 @@ package ${package}.init;
 <#assign animatedEntitiesWithInventory = w.getGElementsOfType("animatedentity")?filter(e -> e.guiBoundTo?has_content && e.guiBoundTo != "<NONE>")>
 
 <#if hasLivingEntities || entitiesWithInventory?size != 0 || animatedEntitiesWithInventory?size != 0>
-EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 </#if>
 public class ${JavaModName}Entities {
 

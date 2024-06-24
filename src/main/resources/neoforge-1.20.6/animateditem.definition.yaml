@@ -22,3 +22,7 @@ templates:
 localizationkeys:
   - key: item.@modid.@registryname
     mapto: name
+
+tags:
+  - tag: ITEMS:minecraft:wolf_food
+    condition: "${data.isFood && data.isMeat}"

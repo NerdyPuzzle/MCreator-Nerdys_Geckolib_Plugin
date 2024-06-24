@@ -64,9 +64,16 @@ public class ${name}Item extends Item implements GeoItem {
 				<#if data.isFood>
 				.food((new FoodProperties.Builder())
 					.nutrition(${data.nutritionalValue})
-					.saturationMod(${data.saturation}f)
-					<#if data.isAlwaysEdible>.alwaysEat()</#if>
-					<#if data.isMeat>.meat()</#if>
+					.saturationModifier(${data.saturation}f)
+					<#if data.isAlwaysEdible>.alwaysEdible()</#if>
+					.build())
+				</#if>
+				<#if data.enableMeleeDamage>
+				.attributes(ItemAttributeModifiers.builder()
+					.add(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Item modifier", ${data.damageVsEntity - 1},
+							AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND)
+					.add(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Item modifier", -2.4,
+							AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND)
 					.build())
 				</#if>
 		);
@@ -236,46 +243,31 @@ public class ${name}Item extends Item implements GeoItem {
 	</#if>
 
 	<#if data.toolType != 1>
-	@Override public float getDestroySpeed(ItemStack par1ItemStack, BlockState par2Block) {
-		return ${data.toolType}F;
+	@Override public float getDestroySpeed(ItemStack itemstack, BlockState state) {
+		return ${data.toolType}f;
 	}
 	</#if>
 
-	<#if data.enableMeleeDamage>
-		@Override public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot equipmentSlot) {
-			if (equipmentSlot == EquipmentSlot.MAINHAND) {
-				ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-				builder.putAll(super.getDefaultAttributeModifiers(equipmentSlot));
-				builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Item modifier", ${data.damageVsEntity - 2}d, AttributeModifier.Operation.ADDITION));
-				builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Item modifier", -2.4, AttributeModifier.Operation.ADDITION));
-			return builder.build();
-			}
-			return super.getDefaultAttributeModifiers(equipmentSlot);
-		}
-	</#if>
-
-	<#if data.hasGlow>
 	<@hasGlow data.glowCondition/>
-	</#if>
 
 	<#if data.destroyAnyBlock>
-	@Override public boolean isCorrectToolForDrops(BlockState state) {
+	@Override public boolean isCorrectToolForDrops(ItemStack itemstack, BlockState state) {
 		return true;
 	}
 	</#if>
 
 	<@addSpecialInformation data.specialInformation/>
 
-	<#if hasProcedure(data.onRightClickedInAir) || data.hasInventory()>
+	<#if hasProcedure(data.onRightClickedInAir) || data.hasInventory() || (hasProcedure(data.onStoppedUsing) && (data.useDuration > 0))>
 	@Override public InteractionResultHolder<ItemStack> use(Level world, Player entity, InteractionHand hand) {
 		InteractionResultHolder<ItemStack> ar = super.use(world, entity, hand);
-		ItemStack itemstack = ar.getObject();
-		double x = entity.getX();
-		double y = entity.getY();
-		double z = entity.getZ();
+
+		<#if (hasProcedure(data.onStoppedUsing) && (data.useDuration > 0))>
+				entity.startUsingItem(hand);
+		</#if>
 
 		<#if data.hasInventory()>
-		if(entity instanceof ServerPlayer serverPlayer) {
+		if (entity instanceof ServerPlayer serverPlayer) {
 			serverPlayer.openMenu(new MenuProvider() {
 				@Override public Component getDisplayName() {
 					return Component.literal("${data.name}");
@@ -294,7 +286,16 @@ public class ${name}Item extends Item implements GeoItem {
 		}
 		</#if>
 
-		<@procedureOBJToCode data.onRightClickedInAir/>
+		<#if hasProcedure(data.onRightClickedInAir)>
+			<@procedureCode data.onRightClickedInAir, {
+				"x": "entity.getX()",
+				"y": "entity.getY()",
+				"z": "entity.getZ()",
+				"world": "world",
+				"entity": "entity",
+				"itemstack": "ar.getObject()"
+			}/>
+		</#if>
 		return ar;
 	}
 	</#if>
@@ -328,11 +329,11 @@ public class ${name}Item extends Item implements GeoItem {
 				return retval;
 			</#if>
 		}
-	   </#if>
+	</#if>
 
 	<@onItemUsedOnBlock data.onRightClickedOnBlock/>
 
-	<@onEntityHitWith data.onEntityHitWith/>
+	<@onEntityHitWith data.onEntityHitWith, (data.damageCount != 0 && data.enableMeleeDamage), 1/>
 
 	<@onEntitySwing data.onEntitySwing/>
 
