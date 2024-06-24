@@ -8,7 +8,7 @@
   "info": {
     "name": "GeckoLib Plugin",
     "version": "5.8",
-    "description": "Adds GeckoLib support for 1.20.1 and 1.20.4",
+    "description": "Adds GeckoLib support for 1.20.1, 1.20.4 and 1.20.6",
     "author": "NerdyPuzzle",
     "pluginPageID": 91484,
     "updateJSONURL": "https://raw.githubusercontent.com/NerdyPuzzle/MCreator-Nerdys_Geckolib_Plugin/main/update.json"

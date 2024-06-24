@@ -1,6 +1,6 @@
 package ${package}.init;
 
-@Mod.EventBusSubscriber
+@EventBusSubscriber
 public class ItemAnimationFactory {
 
 	public static void disableUseAnim(String hand) {
