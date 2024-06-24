@@ -41,8 +41,8 @@ import net.minecraft.sounds.SoundEvent;
 import java.util.function.Consumer;
 import net.minecraft.client.model.Model;
 
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationState;
 
 @EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD) public abstract class ${name}Item extends ArmorItem implements GeoItem {
 	private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);

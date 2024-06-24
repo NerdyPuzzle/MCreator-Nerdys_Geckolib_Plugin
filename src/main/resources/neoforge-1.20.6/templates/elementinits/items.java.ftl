@@ -45,7 +45,7 @@ package ${package}.init;
 <#assign animatedItemsWithInventory = w.getGElementsOfType("animateditem")?filter(e -> e.hasInventory())>
 
 <#if itemsWithInventory?size != 0 || animatedItemsWithInventory?size != 0>
-@EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
 </#if>
 public class ${JavaModName}Items {
 
@@ -137,6 +137,7 @@ public class ${JavaModName}Items {
 		</#list>
 	}
 	</#compress>
+	</#if>
 
 	<#if hasBlocks>
 	private static DeferredHolder<Item, Item> block(DeferredHolder<Block, Block> block) {
@@ -151,7 +152,7 @@ public class ${JavaModName}Items {
 	</#if>
 
 	<#if hasItemsWithProperties>
-	@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT) public static class ClientSideHandler {
+	@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT) public static class ClientSideHandler {
 		@SubscribeEvent @OnlyIn(Dist.CLIENT) public static void clientLoad(FMLClientSetupEvent event) {
 			event.enqueueWork(() -> {
 			<#compress>

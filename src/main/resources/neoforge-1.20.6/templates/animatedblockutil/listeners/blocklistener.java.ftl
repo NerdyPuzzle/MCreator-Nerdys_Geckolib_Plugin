@@ -1,6 +1,6 @@
 package ${package}.block.listener;
 
-@Mod.EventBusSubscriber(modid = ${JavaModName}.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = ${JavaModName}.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class ClientListener {
 
 	@OnlyIn(Dist.CLIENT)

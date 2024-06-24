@@ -40,8 +40,8 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 
 import javax.annotation.Nullable;
 
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationState;
 
 public class ${name}Item extends Item implements GeoItem {
 	private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);

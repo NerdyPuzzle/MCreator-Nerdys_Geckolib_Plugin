@@ -44,8 +44,8 @@ import net.minecraft.network.syncher.SynchedEntityData;
 
 import javax.annotation.Nullable;
 
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationState;
 
 <#assign extendsClass = "PathfinderMob">
 
@@ -191,8 +191,8 @@ public class ${name}Entity extends ${extendsClass} <#if data.ranged>implements R
 
 	<#if data.eyeHeight>
 	@Override
-	protected float getStandingEyeHeight(Pose poseIn, EntityDimensions sizeIn) {
-	        	return ${data.height}F;
+    public final float getEyeHeight() {
+        return ${data.height}F;
 	}
 	</#if>
 
