@@ -1,1 +1,0 @@
-${JavaModName}GeckoLibArmors.GeckoLibArmorItems.${((field$element)?replace("CUSTOM:", ""))?upper_case}_${field$slot}.get()
