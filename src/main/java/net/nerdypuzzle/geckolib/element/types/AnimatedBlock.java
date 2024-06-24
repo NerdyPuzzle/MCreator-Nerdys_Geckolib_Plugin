@@ -18,6 +18,7 @@ import net.mcreator.workspace.Workspace;
 import net.mcreator.workspace.elements.ModElement;
 import net.mcreator.workspace.references.ModElementReference;
 import net.mcreator.workspace.references.TextureReference;
+import net.mcreator.workspace.resources.Texture;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -259,8 +260,8 @@ public class AnimatedBlock extends GeneratableElement implements IBlock, ITabCon
         return !"Stairs".equals(this.blockBase) && !"Slab".equals(this.blockBase) && !"Fence".equals(this.blockBase) && !"Wall".equals(this.blockBase) && !"TrapDoor".equals(this.blockBase) && !"Door".equals(this.blockBase) && !"FenceGate".equals(this.blockBase) && !"EndRod".equals(this.blockBase) && !"PressurePlate".equals(this.blockBase) && !"Button".equals(this.blockBase) ? IBlockWithBoundingBox.super.isFullCube() : false;
     }
 
-    public TabEntry getCreativeTab() {
-        return this.creativeTab;
+    public List<TabEntry> getCreativeTabs() {
+        return List.of(creativeTab);
     }
 
     @Nonnull
@@ -308,11 +309,13 @@ public class AnimatedBlock extends GeneratableElement implements IBlock, ITabCon
     }
 
     private Image getMainTexture() {
-        return this.getModElement().getFolderManager().getTextureImageIcon(this.texture, TextureType.BLOCK).getImage();
+        return Texture.getImage(getModElement().getWorkspace(), TextureType.BLOCK, texture);
     }
 
     private Image getTextureWithFallback(String textureName) {
-        return textureName.equals("") ? this.getMainTexture() : this.getModElement().getFolderManager().getTextureImageIcon(textureName, TextureType.BLOCK).getImage();
+        if (textureName.isEmpty())
+            return getMainTexture();
+        return Texture.getImage(getModElement().getWorkspace(), TextureType.BLOCK, textureName);
     }
 
     public String getRenderType() {

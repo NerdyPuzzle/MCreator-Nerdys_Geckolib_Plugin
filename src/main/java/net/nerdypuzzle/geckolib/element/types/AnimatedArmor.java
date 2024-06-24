@@ -12,11 +12,14 @@ import net.mcreator.minecraft.MinecraftImageGenerator;
 import net.mcreator.ui.workspace.resources.TextureType;
 import net.mcreator.workspace.elements.ModElement;
 import net.mcreator.workspace.resources.Model;
+import net.mcreator.workspace.resources.Texture;
 import net.mcreator.workspace.resources.TexturedModel;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.*;
+import java.util.List;
 
 @SuppressWarnings("unused")
 public class AnimatedArmor extends GeneratableElement implements IItem, ITabContainedElement {
@@ -114,15 +117,15 @@ public class AnimatedArmor extends GeneratableElement implements IItem, ITabCont
     }
 
     @Override public BufferedImage generateModElementPicture() {
-        ArrayList<File> armorPieces = new ArrayList<>();
+        List<Image> armorPieces = new ArrayList<>();
         if (enableHelmet)
-            armorPieces.add(getModElement().getFolderManager().getTextureFile(textureHelmet, TextureType.ITEM));
+            armorPieces.add(Texture.getImage(getModElement().getWorkspace(), TextureType.ITEM, textureHelmet));
         if (enableBody)
-            armorPieces.add(getModElement().getFolderManager().getTextureFile(textureBody, TextureType.ITEM));
+            armorPieces.add(Texture.getImage(getModElement().getWorkspace(), TextureType.ITEM, textureBody));
         if (enableLeggings)
-            armorPieces.add(getModElement().getFolderManager().getTextureFile(textureLeggings, TextureType.ITEM));
+            armorPieces.add(Texture.getImage(getModElement().getWorkspace(), TextureType.ITEM, textureLeggings));
         if (enableBoots)
-            armorPieces.add(getModElement().getFolderManager().getTextureFile(textureBoots, TextureType.ITEM));
+            armorPieces.add(Texture.getImage(getModElement().getWorkspace(), TextureType.ITEM, textureBoots));
 
         return MinecraftImageGenerator.Preview.generateArmorPreviewPicture(armorPieces);
     }
@@ -236,8 +239,8 @@ public class AnimatedArmor extends GeneratableElement implements IItem, ITabCont
                 .equals("Tool");
     }
 
-    @Override public TabEntry getCreativeTab() {
-        return creativeTab;
+    @Override public List<TabEntry> getCreativeTabs() {
+        return List.of(creativeTab);
     }
 
     @Override

@@ -4,27 +4,27 @@ import com.google.gson.Gson;
 import java.io.ByteArrayOutputStream;
 import java.util.*;
 import java.util.function.Function;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
-import javafx.application.Platform;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.SwingUtilities;
 
+import javafx.application.Platform;
 import net.mcreator.blockly.data.BlocklyLoader;
+import net.mcreator.blockly.data.Dependency;
 import net.mcreator.blockly.data.ExternalTrigger;
 import net.mcreator.blockly.java.BlocklyVariables;
 import net.mcreator.element.ModElementType;
 import net.mcreator.element.types.LivingEntity;
+import net.mcreator.element.types.Procedure;
 import net.mcreator.minecraft.DataListEntry;
 import net.mcreator.minecraft.DataListLoader;
 import net.mcreator.minecraft.ElementUtil;
 import net.mcreator.minecraft.MCItem;
 import net.mcreator.minecraft.MinecraftImageGenerator;
 import net.mcreator.ui.MCreator;
-import net.mcreator.ui.blockly.JavaScriptEventListener;
 import net.mcreator.ui.dialogs.AIConditionEditor;
 import net.mcreator.ui.dialogs.DataListSelectorDialog;
 import net.mcreator.ui.dialogs.MCItemSelectorDialog;
@@ -42,17 +42,15 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class JavabridgeReplacement {
+public final class JavabridgeReplacement {
 
     private static final Logger LOG = LogManager.getLogger("Blockly JS Bridge");
 
-    private JavaScriptEventListener listener;
-    private final Supplier<Boolean> blocklyEvent;
+    private final Runnable blocklyEvent;
     private final MCreator mcreator;
-
     private final Object NESTED_LOOP_KEY = new Object();
 
-    public JavabridgeReplacement(@Nonnull MCreator mcreator, @Nonnull Supplier<Boolean> blocklyEvent) {
+    public JavabridgeReplacement(@Nonnull MCreator mcreator, @Nonnull Runnable blocklyEvent) {
         this.blocklyEvent = blocklyEvent;
         this.mcreator = mcreator;
         List<ExternalTrigger> ar10000 = BlocklyLoader.INSTANCE.getExternalTriggerLoader().getExternalTrigers();
@@ -61,9 +59,7 @@ public class JavabridgeReplacement {
 
     // these methods are called from JavaScript so we suppress warnings
     @SuppressWarnings("unused") public void triggerEvent() {
-        boolean success = blocklyEvent.get();
-        if (success && listener != null)
-            listener.event();
+        blocklyEvent.run();
     }
 
     @SuppressWarnings("unused") public String getMCItemURI(String name) {
@@ -230,6 +226,9 @@ public class JavabridgeReplacement {
             case "arrowProjectile" -> openDataListEntrySelector(
                     w -> ElementUtil.loadArrowProjectiles(w).stream().filter(e -> e.isSupportedInWorkspace(w)).toList(),
                     "projectiles");
+            case "configuredfeature" -> openDataListEntrySelector(
+                    w -> ElementUtil.loadAllConfiguredFeatures(w).stream().filter(e -> e.isSupportedInWorkspace(w))
+                            .toList(), "configured_features");
             default -> {
                 if (type.startsWith("procedure_retval_")) {
                     var variableType = VariableTypeLoader.INSTANCE.fromName(
@@ -253,8 +252,15 @@ public class JavabridgeReplacement {
         put("no_ext_trigger", L10N.t("trigger.no_ext_trigger"));
     }};
 
-    public void addExternalTrigger(ExternalTrigger external_trigger) {
+    void addExternalTrigger(ExternalTrigger external_trigger) {
         ext_triggers.put(external_trigger.getID(), external_trigger.getName());
+    }
+
+    @SuppressWarnings("unused") public Dependency[] getDependencies(String procedureName) {
+        ModElement me = mcreator.getWorkspace().getModElementByName(procedureName);
+        return me != null && me.getGeneratableElement() instanceof Procedure procedure ?
+                procedure.getDependencies().toArray(Dependency[]::new) :
+                new Dependency[0];
     }
 
     @SuppressWarnings("unused") public String t(String key) {
@@ -380,10 +386,6 @@ public class JavabridgeReplacement {
         return DataListLoader.loadDataMap(datalist).containsKey(value) ?
                 DataListLoader.loadDataMap(datalist).get(value).getReadableName() :
                 "";
-    }
-
-    public void setJavaScriptEventListener(JavaScriptEventListener listener) {
-        this.listener = listener;
     }
 
 }

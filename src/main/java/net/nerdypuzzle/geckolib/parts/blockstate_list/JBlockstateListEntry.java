@@ -9,9 +9,9 @@ import net.mcreator.ui.component.util.PanelUtils;
 import net.mcreator.ui.dialogs.TypedTextureSelectorDialog;
 import net.mcreator.ui.help.HelpUtils;
 import net.mcreator.ui.help.IHelpContext;
-import net.mcreator.ui.init.L10N;;
+import net.mcreator.ui.init.L10N;
 import net.mcreator.ui.laf.themes.Theme;
-import net.mcreator.ui.minecraft.TextureHolder;
+import net.mcreator.ui.minecraft.TextureSelectionButton;
 import net.mcreator.ui.minecraft.boundingboxes.JBoundingBoxList;
 import net.mcreator.ui.validation.IValidable;
 import net.mcreator.ui.validation.ValidationGroup;
@@ -34,8 +34,8 @@ import java.util.stream.Collectors;
 public class JBlockstateListEntry extends JSimpleListEntry<AnimatedBlock.BlockstateListEntry> implements IValidable {
     private final Workspace workspace;
     private final ValidationGroup page1group = new ValidationGroup();
-    private TextureHolder texture;
-    private TextureHolder particleTexture;
+    private TextureSelectionButton texture;
+    private TextureSelectionButton particleTexture;
     private final SearchableComboBox<String> geoModel;
     private Validator validator;
     private final JSpinner luminance;
@@ -57,8 +57,8 @@ public class JBlockstateListEntry extends JSimpleListEntry<AnimatedBlock.Blockst
 
         JPanel destal = new JPanel(new BorderLayout());
         destal.setOpaque(false);
-        this.texture = (new TextureHolder(new TypedTextureSelectorDialog(mcreator, TextureType.BLOCK)));
-        this.particleTexture = new TextureHolder(new TypedTextureSelectorDialog(mcreator, TextureType.BLOCK), 32);
+        this.texture = (new TextureSelectionButton(new TypedTextureSelectorDialog(mcreator, TextureType.BLOCK)));
+        this.particleTexture = new TextureSelectionButton(new TypedTextureSelectorDialog(mcreator, TextureType.BLOCK), 32);
         this.particleTexture.setOpaque(false);
         this.texture.setOpaque(false);
         destal.add(PanelUtils.totalCenterInPanel(ComponentUtils.squareAndBorder(this.texture, new Color(125, 255, 174), L10N.t("elementgui.block.texture_place_bottom_main", new Object[0]))));
@@ -123,8 +123,8 @@ public class JBlockstateListEntry extends JSimpleListEntry<AnimatedBlock.Blockst
     public AnimatedBlock.BlockstateListEntry getEntry() {
         AnimatedBlock.BlockstateListEntry entry = new AnimatedBlock.BlockstateListEntry();
         entry.customModelName = this.geoModel.getSelectedItem();
-        entry.particleTexture = this.particleTexture.getID();
-        entry.texture = this.texture.getID();
+        entry.particleTexture = this.particleTexture.getTextureName();
+        entry.texture = this.texture.getTextureName();
         entry.luminance = (Integer)this.luminance.getValue();
         entry.boundingBoxes = this.boundingBoxList.getEntries();
         return entry;

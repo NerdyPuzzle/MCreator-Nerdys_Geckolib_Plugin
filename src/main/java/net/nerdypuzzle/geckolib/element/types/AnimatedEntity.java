@@ -19,8 +19,11 @@ import net.mcreator.minecraft.MCItem;
 import net.mcreator.minecraft.MinecraftImageGenerator;
 import net.mcreator.ui.blockly.BlocklyEditorType;
 import net.mcreator.ui.minecraft.states.PropertyDataWithValue;
+import net.mcreator.ui.workspace.resources.TextureType;
+import net.mcreator.util.FilenameUtilsPatched;
 import net.mcreator.workspace.elements.ModElement;
 import net.mcreator.workspace.resources.Model;
+import net.mcreator.workspace.resources.Texture;
 import net.nerdypuzzle.geckolib.registry.PluginElementTypes;
 
 import javax.annotation.Nullable;
@@ -217,13 +220,15 @@ public class AnimatedEntity extends GeneratableElement
         return !mobModelGlowTexture.isEmpty();
     }
 
-    @Override public TabEntry getCreativeTab() {
-        return creativeTab;
+    @Override public List<TabEntry> getCreativeTabs() {
+        return List.of(creativeTab);
     }
 
     @Override public BufferedImage generateModElementPicture() {
-        return MinecraftImageGenerator.Preview.generateMobPreviewPicture(getModElement().getWorkspace(),
-                mobModelTexture, spawnEggBaseColor, spawnEggDotColor, hasSpawnEgg);
+        return MinecraftImageGenerator.Preview.generateMobPreviewPicture(
+                Texture.getImage(getModElement().getWorkspace(), TextureType.ENTITY,
+                        FilenameUtilsPatched.removeExtension(mobModelTexture)), spawnEggBaseColor, spawnEggDotColor,
+                hasSpawnEgg);
     }
 
     public boolean hasDrop() {
@@ -263,6 +268,7 @@ public class AnimatedEntity extends GeneratableElement
             additionalData.put("aicode", unmodifiableAIBases != null && !unmodifiableAIBases.contains(aiBase) ?
                     blocklyToJava.getGeneratedCode() :
                     "");
+            additionalData.put("aiblocks", blocklyToJava.getUsedBlocks());
         };
     }
 

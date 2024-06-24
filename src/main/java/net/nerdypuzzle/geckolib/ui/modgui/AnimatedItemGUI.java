@@ -19,7 +19,7 @@ import net.mcreator.ui.help.HelpUtils;
 import net.mcreator.ui.init.L10N;
 import net.mcreator.ui.minecraft.DataListComboBox;
 import net.mcreator.ui.minecraft.MCItemHolder;
-import net.mcreator.ui.minecraft.TextureHolder;
+import net.mcreator.ui.minecraft.TextureSelectionButton;
 import net.mcreator.ui.modgui.ModElementGUI;
 import net.mcreator.ui.procedure.AbstractProcedureSelector;
 import net.mcreator.ui.procedure.ProcedureSelector;
@@ -43,17 +43,14 @@ import net.nerdypuzzle.geckolib.parts.GeomodelRenderer;
 import net.nerdypuzzle.geckolib.parts.PluginModelActions;
 import net.nerdypuzzle.geckolib.parts.arm_pose_list.JArmPoseList;
 
-import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class AnimatedItemGUI extends ModElementGUI<AnimatedItem> implements GeckolibElement {
-    private TextureHolder texture;
+    private TextureSelectionButton texture;
     private StringListProcedureSelector specialInformation;
     private final VTextField idle = new VTextField(20);
     private final JSpinner stackSize = new JSpinner(new SpinnerNumberModel(64, 0, 64, 1));
@@ -174,7 +171,7 @@ public class AnimatedItemGUI extends ModElementGUI<AnimatedItem> implements Geck
         JPanel foodProperties = new JPanel(new BorderLayout(10, 10));
         JPanel advancedProperties = new JPanel(new BorderLayout(10, 10));
         JPanel pane4 = new JPanel(new BorderLayout(10, 10));
-        this.texture = new TextureHolder(new TypedTextureSelectorDialog(this.mcreator, TextureType.ITEM));
+        this.texture = new TextureSelectionButton(new TypedTextureSelectorDialog(this.mcreator, TextureType.ITEM));
         this.texture.setOpaque(false);
         JPanel destal2 = new JPanel(new BorderLayout(0, 10));
         destal2.setOpaque(false);
@@ -548,7 +545,7 @@ public class AnimatedItemGUI extends ModElementGUI<AnimatedItem> implements Geck
         item.onFinishUsingItem = this.onFinishUsingItem.getSelectedProcedure();
         item.eatResultItem = this.eatResultItem.getBlock();
         item.specialInformation = this.specialInformation.getSelectedProcedure();
-        item.texture = this.texture.getID();
+        item.texture = this.texture.getTextureName();
         item.renderType = 0;
         item.normal = (String)this.geoModel.getSelectedItem();
         item.displaySettings = (String)this.displaySettings.getSelectedItem();

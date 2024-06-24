@@ -14,6 +14,7 @@ import net.mcreator.ui.workspace.resources.TextureType;
 import net.mcreator.util.image.ImageUtils;
 import net.mcreator.workspace.elements.ModElement;
 import net.mcreator.workspace.resources.Model;
+import net.mcreator.workspace.resources.Texture;
 import net.mcreator.workspace.resources.TexturedModel;
 
 import java.awt.image.BufferedImage;
@@ -98,8 +99,9 @@ public class AnimatedItem extends GeneratableElement implements IItem, IItemWith
         this.disableSwing = false;
     }
 
-    public BufferedImage generateModElementPicture() {
-        return ImageUtils.resizeAndCrop(this.getModElement().getFolderManager().getTextureImageIcon(this.texture, TextureType.ITEM).getImage(), 32);
+    @Override public BufferedImage generateModElementPicture() {
+        return ImageUtils.resizeAndCrop(Texture.getImage(getModElement().getWorkspace(), TextureType.ITEM, texture),
+                32);
     }
 
     @Override public List<MCItem> providedMCItems() {
@@ -126,8 +128,8 @@ public class AnimatedItem extends GeneratableElement implements IItem, IItemWith
         return model instanceof TexturedModel && ((TexturedModel)model).getTextureMapping() != null ? ((TexturedModel)model).getTextureMapping().getTextureMap() : null;
     }
 
-    public TabEntry getCreativeTab() {
-        return this.creativeTab;
+    public List<TabEntry> getCreativeTabs() {
+        return List.of(creativeTab);
     }
 
     public String getTexture() {

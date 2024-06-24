@@ -62,14 +62,14 @@ import java.util.stream.Stream;
 
 public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements GeckolibElement {
     private final DataListComboBox material;
-    private TextureHolder texture;
-    private TextureHolder textureTop;
-    private TextureHolder textureLeft;
-    private TextureHolder textureFront;
-    private TextureHolder textureRight;
-    private TextureHolder textureBack;
-    private TextureHolder itemTexture;
-    private TextureHolder particleTexture;
+    private TextureSelectionButton texture;
+    private TextureSelectionButton textureTop;
+    private TextureSelectionButton textureLeft;
+    private TextureSelectionButton textureFront;
+    private TextureSelectionButton textureRight;
+    private TextureSelectionButton textureBack;
+    private TextureSelectionButton itemTexture;
+    private TextureSelectionButton particleTexture;
     private final JCheckBox disableOffset;
     private JBoundingBoxList boundingBoxList;
     private ProcedureSelector onBlockAdded;
@@ -358,14 +358,14 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
         pane8.setOpaque(false);
         JPanel destal = new JPanel(new GridLayout(3, 4));
         destal.setOpaque(false);
-        this.texture = (new TextureHolder(new TypedTextureSelectorDialog(this.mcreator, TextureType.BLOCK))).setFlipUV(true);
-        this.textureTop = (new TextureHolder(new TypedTextureSelectorDialog(this.mcreator, TextureType.BLOCK))).setFlipUV(true);
-        this.textureLeft = new TextureHolder(new TypedTextureSelectorDialog(this.mcreator, TextureType.BLOCK));
-        this.textureFront = new TextureHolder(new TypedTextureSelectorDialog(this.mcreator, TextureType.BLOCK));
-        this.textureRight = new TextureHolder(new TypedTextureSelectorDialog(this.mcreator, TextureType.BLOCK));
-        this.textureBack = new TextureHolder(new TypedTextureSelectorDialog(this.mcreator, TextureType.BLOCK));
-        this.itemTexture = new TextureHolder(new TypedTextureSelectorDialog(this.mcreator, TextureType.ITEM), 32);
-        this.particleTexture = new TextureHolder(new TypedTextureSelectorDialog(this.mcreator, TextureType.BLOCK), 32);
+        this.texture = (new TextureSelectionButton(new TypedTextureSelectorDialog(this.mcreator, TextureType.BLOCK))).setFlipUV(true);
+        this.textureTop = (new TextureSelectionButton(new TypedTextureSelectorDialog(this.mcreator, TextureType.BLOCK))).setFlipUV(true);
+        this.textureLeft = new TextureSelectionButton(new TypedTextureSelectorDialog(this.mcreator, TextureType.BLOCK));
+        this.textureFront = new TextureSelectionButton(new TypedTextureSelectorDialog(this.mcreator, TextureType.BLOCK));
+        this.textureRight = new TextureSelectionButton(new TypedTextureSelectorDialog(this.mcreator, TextureType.BLOCK));
+        this.textureBack = new TextureSelectionButton(new TypedTextureSelectorDialog(this.mcreator, TextureType.BLOCK));
+        this.itemTexture = new TextureSelectionButton(new TypedTextureSelectorDialog(this.mcreator, TextureType.ITEM), 32);
+        this.particleTexture = new TextureSelectionButton(new TypedTextureSelectorDialog(this.mcreator, TextureType.BLOCK), 32);
         this.itemTexture.setOpaque(false);
         this.particleTexture.setOpaque(false);
         this.texture.setOpaque(false);
@@ -387,11 +387,11 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
         destal.add(ComponentUtils.squareAndBorder(this.textureBack, L10N.t("elementgui.block.texture_place_back", new Object[0])));
         this.textureLeft.setActionListener((event) -> {
             if (!this.texture.hasTexture() && !this.textureTop.hasTexture() && !this.textureBack.hasTexture() && !this.textureFront.hasTexture() && !this.textureRight.hasTexture()) {
-                this.texture.setTextureFromTextureName(this.textureLeft.getID());
-                this.textureTop.setTextureFromTextureName(this.textureLeft.getID());
-                this.textureBack.setTextureFromTextureName(this.textureLeft.getID());
-                this.textureFront.setTextureFromTextureName(this.textureLeft.getID());
-                this.textureRight.setTextureFromTextureName(this.textureLeft.getID());
+                this.texture.setTextureFromTextureName(this.textureLeft.getTextureName());
+                this.textureTop.setTextureFromTextureName(this.textureLeft.getTextureName());
+                this.textureBack.setTextureFromTextureName(this.textureLeft.getTextureName());
+                this.textureFront.setTextureFromTextureName(this.textureLeft.getTextureName());
+                this.textureRight.setTextureFromTextureName(this.textureLeft.getTextureName());
             }
 
         });
@@ -1191,14 +1191,14 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
         block.onRedstoneOn = this.onRedstoneOn.getSelectedProcedure();
         block.onRedstoneOff = this.onRedstoneOff.getSelectedProcedure();
         block.onHitByProjectile = this.onHitByProjectile.getSelectedProcedure();
-        block.texture = this.texture.getID();
-        block.itemTexture = this.itemTexture.getID();
-        block.particleTexture = this.particleTexture.getID();
-        block.textureTop = this.textureTop.getID();
-        block.textureLeft = this.textureLeft.getID();
-        block.textureFront = this.textureFront.getID();
-        block.textureRight = this.textureRight.getID();
-        block.textureBack = this.textureBack.getID();
+        block.texture = this.texture.getTextureName();
+        block.itemTexture = this.itemTexture.getTextureName();
+        block.particleTexture = this.particleTexture.getTextureName();
+        block.textureTop = this.textureTop.getTextureName();
+        block.textureLeft = this.textureLeft.getTextureName();
+        block.textureFront = this.textureFront.getTextureName();
+        block.textureRight = this.textureRight.getTextureName();
+        block.textureBack = this.textureBack.getTextureName();
         block.disableOffset = this.disableOffset.isSelected();
         block.boundingBoxes = this.boundingBoxList.getEntries();
         block.beaconColorModifier = this.beaconColorModifier.getColor();

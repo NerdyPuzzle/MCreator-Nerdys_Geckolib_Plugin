@@ -17,11 +17,10 @@ import net.mcreator.ui.help.HelpUtils;
 import net.mcreator.ui.init.L10N;
 import net.mcreator.ui.init.UIRES;
 import net.mcreator.ui.laf.renderer.ModelComboBoxRenderer;
-import net.mcreator.ui.laf.renderer.WTextureComboBoxRenderer;
 import net.mcreator.ui.minecraft.DataListComboBox;
 import net.mcreator.ui.minecraft.MCItemListField;
 import net.mcreator.ui.minecraft.SoundSelector;
-import net.mcreator.ui.minecraft.TextureHolder;
+import net.mcreator.ui.minecraft.TextureSelectionButton;
 import net.mcreator.ui.modgui.ModElementGUI;
 import net.mcreator.ui.procedure.ProcedureSelector;
 import net.mcreator.ui.validation.AggregatedValidationResult;
@@ -41,6 +40,7 @@ import net.nerdypuzzle.geckolib.element.types.GeckolibElement;
 import net.nerdypuzzle.geckolib.parts.GeomodelRenderer;
 import net.nerdypuzzle.geckolib.parts.PluginModelActions;
 import net.nerdypuzzle.geckolib.parts.RefactoredSystemsICopyPastedBecauseIWasTooBloodyLazyToActuallyProperlyReplace;
+import net.nerdypuzzle.geckolib.parts.WTextureComboBoxRenderer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -55,10 +55,10 @@ public class AnimatedArmorGUI extends ModElementGUI<AnimatedArmor> implements Ge
 
     private static final Logger LOG = LogManager.getLogger("Animated Armor UI");
 
-    private TextureHolder textureHelmet;
-    private TextureHolder textureBody;
-    private TextureHolder textureLeggings;
-    private TextureHolder textureBoots;
+    private TextureSelectionButton textureHelmet;
+    private TextureSelectionButton textureBody;
+    private TextureSelectionButton textureLeggings;
+    private TextureSelectionButton textureBoots;
 
     private final VTextField helmetName = new VTextField();
     private final VTextField bodyName = new VTextField();
@@ -209,10 +209,10 @@ public class AnimatedArmorGUI extends ModElementGUI<AnimatedArmor> implements Ge
         destal.setLayout(new BoxLayout(destal, BoxLayout.Y_AXIS));
         destal.setOpaque(false);
 
-        textureHelmet = new TextureHolder(new TypedTextureSelectorDialog(mcreator, TextureType.ITEM));
-        textureBody = new TextureHolder(new TypedTextureSelectorDialog(mcreator, TextureType.ITEM));
-        textureLeggings = new TextureHolder(new TypedTextureSelectorDialog(mcreator, TextureType.ITEM));
-        textureBoots = new TextureHolder(new TypedTextureSelectorDialog(mcreator, TextureType.ITEM));
+        textureHelmet = new TextureSelectionButton(new TypedTextureSelectorDialog(mcreator, TextureType.ITEM));
+        textureBody = new TextureSelectionButton(new TypedTextureSelectorDialog(mcreator, TextureType.ITEM));
+        textureLeggings = new TextureSelectionButton(new TypedTextureSelectorDialog(mcreator, TextureType.ITEM));
+        textureBoots = new TextureSelectionButton(new TypedTextureSelectorDialog(mcreator, TextureType.ITEM));
 
         textureHelmet.setOpaque(false);
         textureBody.setOpaque(false);
@@ -738,7 +738,7 @@ public class AnimatedArmorGUI extends ModElementGUI<AnimatedArmor> implements Ge
     @Override public AnimatedArmor getElementFromGUI() {
         AnimatedArmor armor = new AnimatedArmor(modElement);
         armor.enableHelmet = enableHelmet.isSelected();
-        armor.textureHelmet = textureHelmet.getID();
+        armor.textureHelmet = textureHelmet.getTextureName();
         armor.enableBody = enableBody.isSelected();
         armor.model = (String)this.geoModel.getSelectedItem();
         armor.idle = idle.getText();
@@ -751,11 +751,11 @@ public class AnimatedArmorGUI extends ModElementGUI<AnimatedArmor> implements Ge
         armor.rightBoot = rightBoot.getText();
         armor.leftBoot = leftBoot.getText();
         armor.fullyEquipped = fullyEquipped.isSelected();
-        armor.textureBody = textureBody.getID();
+        armor.textureBody = textureBody.getTextureName();
         armor.enableLeggings = enableLeggings.isSelected();
-        armor.textureLeggings = textureLeggings.getID();
+        armor.textureLeggings = textureLeggings.getTextureName();
         armor.enableBoots = enableBoots.isSelected();
-        armor.textureBoots = textureBoots.getID();
+        armor.textureBoots = textureBoots.getTextureName();
         armor.onHelmetTick = onHelmetTick.getSelectedProcedure();
         armor.onBodyTick = onBodyTick.getSelectedProcedure();
         armor.onLeggingsTick = onLeggingsTick.getSelectedProcedure();

@@ -13,7 +13,7 @@ repositories {
 group = 'net.nerdypuzzle.geckolib'
 version = new JsonSlurper().parse(file('src/main/resources/plugin.json'))['info']['version']
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
 dependencies {
     implementation project(':MCreator')

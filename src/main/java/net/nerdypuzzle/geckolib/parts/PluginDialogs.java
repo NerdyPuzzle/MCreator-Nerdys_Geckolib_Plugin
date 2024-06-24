@@ -66,7 +66,7 @@ public class PluginDialogs {
                         geckoElement.hasSpawnEgg = entity.hasSpawnEgg;
                         geckoElement.spawnEggBaseColor = entity.spawnEggBaseColor;
                         geckoElement.spawnEggDotColor = entity.spawnEggDotColor;
-                        geckoElement.creativeTab = entity.creativeTab;
+                        geckoElement.creativeTab = entity.creativeTabs.getFirst();
                         geckoElement.isBoss = entity.isBoss;
                         geckoElement.bossBarColor = entity.bossBarColor;
                         geckoElement.bossBarType = entity.bossBarType;
@@ -218,7 +218,7 @@ public class PluginDialogs {
                         geckoElement.hasSpawnEgg = entity.hasSpawnEgg;
                         geckoElement.spawnEggBaseColor = entity.spawnEggBaseColor;
                         geckoElement.spawnEggDotColor = entity.spawnEggDotColor;
-                        geckoElement.creativeTab = entity.creativeTab;
+                        geckoElement.creativeTabs.add(entity.creativeTab);
                         geckoElement.isBoss = entity.isBoss;
                         geckoElement.bossBarColor = entity.bossBarColor;
                         geckoElement.bossBarType = entity.bossBarType;

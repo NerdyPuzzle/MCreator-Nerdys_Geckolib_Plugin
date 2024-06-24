@@ -7,7 +7,6 @@ import net.mcreator.element.GeneratableElement;
 import net.mcreator.element.ModElementType;
 import net.mcreator.element.parts.TabEntry;
 import net.mcreator.element.types.GUI;
-import net.mcreator.element.types.Item;
 import net.mcreator.generator.blockly.BlocklyBlockCodeGenerator;
 import net.mcreator.generator.blockly.ProceduralBlockCodeGenerator;
 import net.mcreator.generator.template.TemplateGeneratorException;
@@ -25,7 +24,6 @@ import net.mcreator.ui.dialogs.TextureImportDialogs;
 import net.mcreator.ui.help.HelpUtils;
 import net.mcreator.ui.init.L10N;
 import net.mcreator.ui.init.UIRES;
-import net.mcreator.ui.laf.renderer.WTextureComboBoxRenderer;
 import net.mcreator.ui.minecraft.*;
 import net.mcreator.ui.minecraft.states.entity.JEntityDataList;
 import net.mcreator.ui.modgui.IBlocklyPanelHolder;
@@ -47,6 +45,8 @@ import net.nerdypuzzle.geckolib.element.types.AnimatedEntity;
 import net.nerdypuzzle.geckolib.element.types.GeckolibElement;
 import net.nerdypuzzle.geckolib.parts.GeomodelRenderer;
 import net.nerdypuzzle.geckolib.parts.PluginModelActions;
+import net.nerdypuzzle.geckolib.parts.WTextureComboBoxRenderer;
+import net.nerdypuzzle.geckolib.registry.PluginElementTypes;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -238,6 +238,10 @@ public class AnimatedEntityGUI extends ModElementGUI<AnimatedEntity> implements 
 
     private final VComboBox<String> geoModel;
 
+    private final List<?> unmodifiableAIBases = (List<?>) mcreator.getWorkspace().getGenerator()
+            .getGeneratorConfiguration().getDefinitionsProvider().getModElementDefinition(PluginElementTypes.ANIMATEDENTITY)
+            .get("unmodifiable_ai_bases");
+
     public AnimatedEntityGUI(MCreator mcreator, ModElement modElement, boolean editingMode) {
         super(mcreator, modElement, editingMode);
         this.geoModel = new SearchableComboBox();
@@ -259,7 +263,7 @@ public class AnimatedEntityGUI extends ModElementGUI<AnimatedEntity> implements 
                 + "</block></next></block></next></block></next></block></next></block></xml>");
     }
 
-    private void regenerateAITasks() {
+    private synchronized void regenerateAITasks() {
         BlocklyBlockCodeGenerator blocklyBlockCodeGenerator = new BlocklyBlockCodeGenerator(externalBlocks,
                 mcreator.getGeneratorStats().getBlocklyBlocks(BlocklyEditorType.AI_TASK));
 
@@ -273,23 +277,13 @@ public class AnimatedEntityGUI extends ModElementGUI<AnimatedEntity> implements 
 
         List<BlocklyCompileNote> compileNotesArrayList = blocklyToJava.getCompileNotes();
 
-        List<?> unmodifiableAIBases = (List<?>) mcreator.getWorkspace().getGenerator().getGeneratorConfiguration()
-                .getDefinitionsProvider().getModElementDefinition(ModElementType.LIVINGENTITY)
-                .get("unmodifiable_ai_bases");
         if (unmodifiableAIBases != null && unmodifiableAIBases.contains(aiBase.getSelectedItem()))
             compileNotesArrayList = List.of(aiUnmodifiableCompileNote);
 
         List<BlocklyCompileNote> finalCompileNotesArrayList = compileNotesArrayList;
         SwingUtilities.invokeLater(() -> {
             compileNotesPanel.updateCompileNotes(finalCompileNotesArrayList);
-            hasErrors = false;
-
-            for (BlocklyCompileNote note : finalCompileNotesArrayList) {
-                if (note.type() == BlocklyCompileNote.Type.ERROR) {
-                    hasErrors = true;
-                    break;
-                }
-            }
+            blocklyChangedListeners.forEach(l -> l.blocklyChanged(blocklyPanel));
         });
     }
 
@@ -674,8 +668,8 @@ public class AnimatedEntityGUI extends ModElementGUI<AnimatedEntity> implements 
         blocklyPanel.addTaskToRunAfterLoaded(() -> {
             BlocklyLoader.INSTANCE.getBlockLoader(BlocklyEditorType.AI_TASK)
                     .loadBlocksAndCategoriesInPanel(blocklyPanel, ToolboxType.AI_BUILDER);
-            blocklyPanel.getJSBridge()
-                    .setJavaScriptEventListener(() -> new Thread(AnimatedEntityGUI.this::regenerateAITasks).start());
+            blocklyPanel.addChangeListener(
+                    changeEvent -> new Thread(AnimatedEntityGUI.this::regenerateAITasks, "AITasksRegenerate").start());
             if (!isEditingMode()) {
                 setDefaultAISet();
             }
@@ -1262,12 +1256,7 @@ public class AnimatedEntityGUI extends ModElementGUI<AnimatedEntity> implements 
         if (livingEntity.creativeTab != null)
             creativeTab.setSelectedItem(livingEntity.creativeTab);
 
-        blocklyPanel.setXMLDataOnly(livingEntity.aixml);
-        blocklyPanel.addTaskToRunAfterLoaded(() -> {
-            blocklyPanel.clearWorkspace();
-            blocklyPanel.setXML(livingEntity.aixml);
-            regenerateAITasks();
-        });
+        blocklyPanel.addTaskToRunAfterLoaded(() -> blocklyPanel.setXML(livingEntity.aixml));
 
         if (breedable.isSelected()) {
             hasAI.setSelected(true);
