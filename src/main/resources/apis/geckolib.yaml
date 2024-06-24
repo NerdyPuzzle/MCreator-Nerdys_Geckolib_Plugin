@@ -44,4 +44,18 @@ neoforge-1.20.4:
   update_files:
     - ~
 
+neoforge-1.20.6:
+  gradle: |
+    repositories {
+      maven {
+          url = 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
+      }
+    }
+    
+    dependencies {
+      implementation 'software.bernie.geckolib:geckolib-neoforge-1.20.6:4.5.4'
+    }
+  update_files:
+    - ~
+
 name: "GeckoLib"
