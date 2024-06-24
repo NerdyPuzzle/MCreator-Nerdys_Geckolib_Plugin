@@ -61,6 +61,12 @@ tags:
     condition: "${data.destroyTool == 'hoe'}"
   - tag: BLOCKS:minecraft:replaceable
     condition: isReplaceable
+  - tag: BLOCKS:minecraft:needs_stone_tool
+    condition: "${data.requiresCorrectTool && data.vanillaToolTier == 'STONE'}"
+  - tag: BLOCKS:minecraft:needs_iron_tool
+    condition: "${data.requiresCorrectTool && data.vanillaToolTier == 'IRON'}"
+  - tag: BLOCKS:minecraft:needs_diamond_tool
+    condition: "${data.requiresCorrectTool && data.vanillaToolTier == 'DIAMOND'}"
 
 localizationkeys:
   - key: block.@modid.@registryname

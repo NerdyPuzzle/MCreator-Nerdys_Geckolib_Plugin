@@ -62,14 +62,10 @@ public class ${name}Block extends BaseEntityBlock <#if data.isWaterloggable>impl
 		public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 	</#if>
 
-	public static final MapCodec<${name}Block> CODEC = simpleCodec(${name}Block::new);
+	public static final MapCodec<${name}Block> CODEC = simpleCodec(properties -> new ${name}Block());
 
 	public MapCodec<${name}Block> codec() {
 		return CODEC;
-	}
-
-	public ${name}Block(BlockBehaviour.Properties ignored) {
-		this();
 	}
 
 	<#macro blockProperties>
@@ -163,7 +159,7 @@ public class ${name}Block extends BaseEntityBlock <#if data.isWaterloggable>impl
 	</#macro>
 
 	public ${name}Block() {
-		super(<@blockProperties/>);
+		super(Blocks.AIR.defaultBlockState(), <@blockProperties/>);
 
 	    <#if data.rotationMode != 0 || data.isWaterloggable>
 	    this.registerDefaultState(this.stateDefinition.any()
@@ -439,8 +435,8 @@ public class ${name}Block extends BaseEntityBlock <#if data.isWaterloggable>impl
 	</#if>
 
 	<#if generator.map(data.aiPathNodeType, "pathnodetypes") != "DEFAULT">
-	@Override public BlockPathTypes getBlockPathType(BlockState state, BlockGetter world, BlockPos pos, Mob entity) {
-		return BlockPathTypes.${generator.map(data.aiPathNodeType, "pathnodetypes")};
+	@Override public PathType getBlockPathType(BlockState state, BlockGetter world, BlockPos pos, Mob entity) {
+		return PathType.${generator.map(data.aiPathNodeType, "pathnodetypes")};
 	}
 	</#if>
 
@@ -464,11 +460,16 @@ public class ${name}Block extends BaseEntityBlock <#if data.isWaterloggable>impl
 	}
 	</#if>
 
-	<#if data.requiresCorrectTool>
+	<#if hasProcedure(data.additionalHarvestCondition)>
 	@Override public boolean canHarvestBlock(BlockState state, BlockGetter world, BlockPos pos, Player player) {
-		if(player.getInventory().getSelected().getItem() instanceof TieredItem tieredItem)
-			return tieredItem.getTier().getLevel() >= ${data.breakHarvestLevel};
-		return false;
+		return super.canHarvestBlock(state, world, pos, player) && <@procedureCode data.additionalHarvestCondition, {
+			"x": "pos.getX()",
+			"y": "pos.getY()",
+			"z": "pos.getZ()",
+			"entity": "player",
+			"world": "player.level()",
+			"blockstate": "state"
+		}, false/>;
 	}
 	</#if>
 
@@ -567,8 +568,8 @@ public class ${name}Block extends BaseEntityBlock <#if data.isWaterloggable>impl
 
 	<#if hasProcedure(data.onRightClicked) || data.shouldOpenGUIOnRightClick()>
 	@Override
-	public InteractionResult use(BlockState blockstate, Level world, BlockPos pos, Player entity, InteractionHand hand, BlockHitResult hit) {
-		super.use(blockstate, world, pos, entity, hand, hit);
+	public InteractionResult useWithoutItem(BlockState blockstate, Level world, BlockPos pos, Player entity, BlockHitResult hit) {
+		super.useWithoutItem(blockstate, world, pos, entity, hit);
 		<#if data.shouldOpenGUIOnRightClick()>
 		if(entity instanceof ServerPlayer player) {
 			player.openMenu(new MenuProvider() {

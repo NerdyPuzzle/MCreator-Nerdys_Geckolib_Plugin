@@ -456,11 +456,16 @@ public class ${name}Block extends BaseEntityBlock <#if data.isWaterloggable>impl
 	}
 	</#if>
 
-	<#if data.requiresCorrectTool>
+	<#if hasProcedure(data.additionalHarvestCondition)>
 	@Override public boolean canHarvestBlock(BlockState state, BlockGetter world, BlockPos pos, Player player) {
-		if(player.getInventory().getSelected().getItem() instanceof TieredItem tieredItem)
-			return tieredItem.getTier().getLevel() >= ${data.breakHarvestLevel};
-		return false;
+		return super.canHarvestBlock(state, world, pos, player) && <@procedureCode data.additionalHarvestCondition, {
+			"x": "pos.getX()",
+			"y": "pos.getY()",
+			"z": "pos.getZ()",
+			"entity": "player",
+			"world": "player.level()",
+			"blockstate": "state"
+		}, false/>;
 	}
 	</#if>
 

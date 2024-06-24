@@ -142,6 +142,8 @@ public class AnimatedBlock extends GeneratableElement implements IBlock, ITabCon
     public Procedure generateCondition;
     public String normal;
     public String displaySettings;
+    public String vanillaToolTier;
+    public Procedure additionalHarvestCondition;
 
     public List<BlockstateListEntry> blockstateList = new ArrayList<>();
 
@@ -226,6 +228,7 @@ public class AnimatedBlock extends GeneratableElement implements IBlock, ITabCon
         this.energyMaxExtract = 200;
         this.fluidCapacity = 8000;
         this.animationCount = 1;
+        this.vanillaToolTier = "NONE";
     }
 
     public int renderType() {

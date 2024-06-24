@@ -27,6 +27,7 @@ import net.mcreator.ui.help.IHelpContext;
 import net.mcreator.ui.init.L10N;
 import net.mcreator.ui.init.UIRES;
 import net.mcreator.ui.laf.renderer.ItemTexturesComboBoxRenderer;
+import net.mcreator.ui.laf.themes.Theme;
 import net.mcreator.ui.minecraft.*;
 import net.mcreator.ui.minecraft.boundingboxes.JBoundingBoxList;
 import net.mcreator.ui.modgui.ModElementGUI;
@@ -53,6 +54,7 @@ import net.nerdypuzzle.geckolib.parts.PluginModelActions;
 import net.nerdypuzzle.geckolib.parts.blockstate_list.JBlockstateList;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.io.File;
 import java.util.*;
@@ -153,7 +155,6 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
     private final JComboBox<String> rotationMode;
     private final JCheckBox enablePitch;
     private final JComboBox<String> destroyTool;
-    private final JSpinner breakHarvestLevel;
     private final JCheckBox requiresCorrectTool;
     private final JComboBox<String> transparencyType;
     private final JCheckBox hasInventory;
@@ -175,6 +176,11 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
     private final VComboBox<String> geoModel;
     private final VComboBox<String> displaySettings;
     private JBlockstateList blockstateList;
+
+    private final JComboBox<String> vanillaToolTier = new JComboBox<>(
+            new String[] { "NONE", "STONE", "IRON", "DIAMOND" });
+
+    private ProcedureSelector additionalHarvestCondition;
 
     public AnimatedBlockGUI(MCreator mcreator, ModElement modElement, boolean editingMode) {
         super(mcreator, modElement, editingMode);
@@ -241,7 +247,6 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
         this.rotationMode = new JComboBox(new String[]{"<html>No rotation<br><small>Fixed block orientation", "<html>Y axis rotation (S/W/N/E)<br><small>Rotation from player side", "<html>D/U/N/S/W/E rotation<br><small>Rotation from player side", "<html>Y axis rotation (S/W/N/E)<br><small>Rotation from block face", "<html>D/U/N/S/W/E rotation<br><small>Rotation from block face", "<html>Log rotation (X/Y/Z)<br><small>Imitates vanilla log rotation"});
         this.enablePitch = L10N.checkbox("elementgui.common.enable", new Object[0]);
         this.destroyTool = new JComboBox(new String[]{"Not specified", "pickaxe", "axe", "shovel", "hoe"});
-        this.breakHarvestLevel = new JSpinner(new SpinnerNumberModel(1, -1, 100, 1));
         this.requiresCorrectTool = L10N.checkbox("elementgui.common.enable", new Object[0]);
         this.transparencyType = new JComboBox(new String[]{"SOLID", "CUTOUT", "CUTOUT_MIPPED", "TRANSLUCENT"});
         this.hasInventory = L10N.checkbox("elementgui.block.has_inventory", new Object[0]);
@@ -290,6 +295,7 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
         this.emittedRedstonePower = new NumberProcedureSelector((IHelpContext)null, this.mcreator, new JSpinner(new SpinnerNumberModel(15, 0, 15, 1)), Dependency.fromString("x:number/y:number/z:number/world:world/direction:direction/blockstate:blockstate"));
         this.placingCondition = (new ProcedureSelector(this.withEntry("block/placing_condition"), this.mcreator, L10N.t("elementgui.block.event_placing_condition", new Object[0]), VariableTypeLoader.BuiltInTypes.LOGIC, Dependency.fromString("x:number/y:number/z:number/world:world/blockstate:blockstate"))).setDefaultName(L10N.t("condition.common.no_additional", new Object[0])).makeInline();
         this.generateCondition = (new ProcedureSelector(this.withEntry("block/generation_condition"), this.mcreator, L10N.t("elementgui.block.event_generate_condition", new Object[0]), VariableTypeLoader.BuiltInTypes.LOGIC, Dependency.fromString("x:number/y:number/z:number/world:world"))).setDefaultName(L10N.t("condition.common.no_additional", new Object[0])).makeInline();
+        additionalHarvestCondition = new ProcedureSelector(this.withEntry("block/event_additional_harvest_condition"), mcreator, L10N.t("elementgui.block.event_additional_harvest_condition"), VariableTypeLoader.BuiltInTypes.LOGIC, Dependency.fromString("x:number/y:number/z:number/entity:entity/world:world/blockstate:blockstate")).setDefaultName(L10N.t("condition.common.no_additional")).makeInline();
         specialInformation = new StringListProcedureSelector(this.withEntry("block/special_information"), mcreator, L10N.t("elementgui.common.special_information"), AbstractProcedureSelector.Side.CLIENT, new JStringListField(mcreator, null), 0, Dependency.fromString("x:number/y:number/z:number/entity:entity/world:world/itemstack:itemstack"));
         this.blockBase.addActionListener((e) -> {
             this.disableOffset.setEnabled(true);
@@ -557,8 +563,8 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
         selp3.add(PanelUtils.centerInPanel(this.creativePickItem));
         selp3.add(HelpUtils.wrapWithHelpButton(this.withEntry("block/harvest_tool"), L10N.label("elementgui.block.harvest_tool", new Object[0])));
         selp3.add(this.destroyTool);
-        selp3.add(HelpUtils.wrapWithHelpButton(this.withEntry("block/harvest_level"), L10N.label("elementgui.block.harvest_level", new Object[0])));
-        selp3.add(this.breakHarvestLevel);
+        selp3.add(HelpUtils.wrapWithHelpButton(this.withEntry("block/vanilla_tool_tier"), L10N.label("elementgui.block.vanilla_tool_tier")));
+        selp3.add(vanillaToolTier);
         selp3.add(HelpUtils.wrapWithHelpButton(this.withEntry("block/requires_correct_tool"), L10N.label("elementgui.block.requires_correct_tool", new Object[0])));
         selp3.add(this.requiresCorrectTool);
         selp3.add(HelpUtils.wrapWithHelpButton(this.withEntry("block/unbreakable"), L10N.label("elementgui.block.is_unbreakable", new Object[0])));
@@ -632,12 +638,16 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
 
         });
         selp.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder((Color)UIManager.get("MCreatorLAF.BRIGHT_COLOR"), 1), L10N.t("elementgui.common.properties_general", new Object[0]), 4, 0, this.getFont(), (Color)UIManager.get("MCreatorLAF.BRIGHT_COLOR")));
-        selp3.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder((Color)UIManager.get("MCreatorLAF.BRIGHT_COLOR"), 1), L10N.t("elementgui.common.properties_dropping", new Object[0]), 4, 0, this.getFont(), (Color)UIManager.get("MCreatorLAF.BRIGHT_COLOR")));
         soundProperties.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder((Color)UIManager.get("MCreatorLAF.BRIGHT_COLOR"), 1), L10N.t("elementgui.common.properties_sound", new Object[0]), 4, 0, this.getFont(), (Color)UIManager.get("MCreatorLAF.BRIGHT_COLOR")));
         advancedWithCondition.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder((Color)UIManager.get("MCreatorLAF.BRIGHT_COLOR"), 1), L10N.t("elementgui.block.properties_advanced_block", new Object[0]), 4, 0, this.getFont(), (Color)UIManager.get("MCreatorLAF.BRIGHT_COLOR")));
         selp.setOpaque(false);
         soundProperties.setOpaque(false);
-        pane3.add("Center", PanelUtils.totalCenterInPanel(PanelUtils.westAndEastElement(selp, PanelUtils.centerAndSouthElement(selp3, soundProperties))));
+        JComponent selpWrap = PanelUtils.centerAndSouthElement(selp3, additionalHarvestCondition);
+        selpWrap.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createLineBorder(Theme.current().getForegroundColor(), 1),
+                L10N.t("elementgui.common.properties_dropping"), TitledBorder.LEADING, TitledBorder.DEFAULT_POSITION,
+                getFont(), Theme.current().getForegroundColor()));
+        pane3.add("Center", PanelUtils.totalCenterInPanel(PanelUtils.westAndEastElement(selp, PanelUtils.centerAndSouthElement(selpWrap, soundProperties))));
         pane3.setOpaque(false);
         JPanel events2 = new JPanel(new GridLayout(4, 5, 5, 5));
         events2.setOpaque(false);
@@ -938,6 +948,7 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
         this.emittedRedstonePower.refreshListKeepSelected();
         this.placingCondition.refreshListKeepSelected();
         this.generateCondition.refreshListKeepSelected();
+        this.additionalHarvestCondition.refreshListKeepSelected();
         ComboBoxUtil.updateComboBoxContents(this.guiBoundTo, ListUtils.merge(Collections.singleton("<NONE>"), (Collection)this.mcreator.getWorkspace().getModElements().stream().filter((var) -> {
             return var.getType() == ModElementType.GUI;
         }).map(ModElement::getName).collect(Collectors.toList())), "<NONE>");
@@ -1005,6 +1016,7 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
         this.onEntityWalksOn.setSelectedProcedure(block.onEntityWalksOn);
         this.onBlockPlayedBy.setSelectedProcedure(block.onBlockPlayedBy);
         this.onRightClicked.setSelectedProcedure(block.onRightClicked);
+        this.additionalHarvestCondition.setSelectedProcedure(block.additionalHarvestCondition);
         this.onRedstoneOn.setSelectedProcedure(block.onRedstoneOn);
         this.onRedstoneOff.setSelectedProcedure(block.onRedstoneOff);
         this.onHitByProjectile.setSelectedProcedure(block.onHitByProjectile);
@@ -1033,7 +1045,7 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
         this.defaultSoundType.setSelected(!block.isCustomSoundType);
         this.customSoundType.setSelected(block.isCustomSoundType);
         this.luminance.setValue(block.luminance);
-        this.breakHarvestLevel.setValue(block.breakHarvestLevel);
+        this.vanillaToolTier.setSelectedItem(block.vanillaToolTier);
         this.requiresCorrectTool.setSelected(block.requiresCorrectTool);
         this.customDrop.setBlock(block.customDrop);
         this.dropAmount.setValue(block.dropAmount);
@@ -1146,11 +1158,12 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
         block.stepSound = this.stepSound.getSound();
         block.luminance = (Integer)this.luminance.getValue();
         block.unbreakable = this.unbreakable.isSelected();
-        block.breakHarvestLevel = (Integer)this.breakHarvestLevel.getValue();
+        block.vanillaToolTier = (String) vanillaToolTier.getSelectedItem();
         block.emittedRedstonePower = this.emittedRedstonePower.getSelectedProcedure();
         block.generateCondition = this.generateCondition.getSelectedProcedure();
         block.hasInventory = this.hasInventory.isSelected();
         block.useLootTableForDrops = this.useLootTableForDrops.isSelected();
+        block.additionalHarvestCondition = additionalHarvestCondition.getSelectedProcedure();
         block.openGUIOnRightClick = this.openGUIOnRightClick.isSelected();
         block.inventorySize = (Integer)this.inventorySize.getValue();
         block.inventoryStackSize = (Integer)this.inventoryStackSize.getValue();

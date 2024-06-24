@@ -40,7 +40,7 @@ package ${package}.init;
 <#assign animatedBlockentitiesWithInventory = w.getGElementsOfType("animatedblock")?filter(e -> e.hasInventory)>
 
 <#if blockentitiesWithInventory?size != 0 || animatedBlockentitiesWithInventory?size != 0>
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
+EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 </#if>
 public class ${JavaModName}BlockEntities {
 
