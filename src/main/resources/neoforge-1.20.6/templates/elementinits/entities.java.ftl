@@ -41,7 +41,7 @@ package ${package}.init;
 <#assign animatedEntitiesWithInventory = w.getGElementsOfType("animatedentity")?filter(e -> e.guiBoundTo?has_content && e.guiBoundTo != "<NONE>")>
 
 <#if hasLivingEntities || entitiesWithInventory?size != 0 || animatedEntitiesWithInventory?size != 0>
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
+EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 </#if>
 public class ${JavaModName}Entities {
 
@@ -92,15 +92,13 @@ public class ${JavaModName}Entities {
 	</#if>
 
 	<#if hasLivingEntities>
-	@SubscribeEvent public static void init(FMLCommonSetupEvent event) {
-		event.enqueueWork(() -> {
+	@SubscribeEvent public static void init(SpawnPlacementRegisterEvent event) {
 		<#list entities as entity>
 		    <#assign typestring = entity.getModElement().getTypeString()>
 			<#if  typestring == "livingentity" || typestring == "animatedentity">
-				${entity.getModElement().getName()}Entity.init();
+				${entity.getModElement().getName()}Entity.init(event);
 			</#if>
 		</#list>
-		});
 	}
 
 	@SubscribeEvent public static void registerAttributes(EntityAttributeCreationEvent event) {

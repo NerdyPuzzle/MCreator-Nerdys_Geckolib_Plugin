@@ -1,6 +1,10 @@
 global_templates:
   - template: aentity/animation_sync_factory.java.ftl
     name: "@SRCROOT/@BASEPACKAGEPATH/init/EntityAnimationFactory.java"
+  - template: json/monster_room_mobs.json.ftl
+    writer: json
+    condition: "${(!w.hasElementsOfType('livingentity') || w.getGElementsOfType('animatedentity')?filter(e -> e.spawnInDungeons)?size == 0) && w.getGElementsOfType('animatedentity')?filter(e -> e.spawnInDungeons)?size != 0}"
+    name: "@RESROOT/data/neoforge/data_maps/entity_type/monster_room_mobs.json"
 
 templates:
   - template: aentity/livingentity.java.ftl
@@ -36,3 +40,11 @@ localizationkeys:
 tags:
   - tag: ENTITIES:minecraft:raiders
     condition: "${data.mobBehaviourType == 'Raider'}"
+  - tag: ENTITIES:minecraft:undead
+    condition: "${data.mobCreatureType == 'UNDEAD'}"
+  - tag: ENTITIES:minecraft:arthropod
+    condition: "${data.mobCreatureType == 'ARTHROPOD'}"
+  - tag: ENTITIES:minecraft:illager
+    condition: "${data.mobCreatureType == 'ILLAGER'}"
+  - tag: ENTITIES:minecraft:aquatic
+    condition: "${data.mobCreatureType == 'WATER'}"

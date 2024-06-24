@@ -1,10 +1,10 @@
 package ${package}.init;
 
-@Mod.EventBusSubscriber
+@EventBusSubscriber
 public class EntityAnimationFactory {
 
 	@SubscribeEvent
-	public static void onEntityTick(LivingEvent.LivingTickEvent event) {
+	public static void onEntityTick(EntityTickEvent.Pre event) {
 	if (event != null && event.getEntity() != null) {
 	<#list animatedentitys as syncable>
 	if (event.getEntity() instanceof ${syncable.getModElement().getName()}Entity syncable) {
