@@ -29,11 +29,10 @@
 -->
 
 <#-- @formatter:off -->
-
 package ${package}.item.inventory;
 
 <#compress>
-@Mod.EventBusSubscriber(Dist.CLIENT) public class ${name}InventoryCapability extends ItemStackHandler {
+@EventBusSubscriber(Dist.CLIENT) public class ${name}InventoryCapability extends ComponentItemHandler {
 
 	@SubscribeEvent @OnlyIn(Dist.CLIENT) public static void onItemDropped(ItemTossEvent event) {
 		if (event.getEntity().getItem().getItem() == ${JavaModName}Items.${data.getModElement().getRegistryNameUpper()}.get()) {
@@ -43,8 +42,8 @@ package ${package}.item.inventory;
 		}
 	}
 
-	public ${name}InventoryCapability() {
-		super(${data.inventorySize});
+	public ${name}InventoryCapability(MutableDataComponentHolder parent) {
+		super(parent, DataComponents.CONTAINER, ${data.inventorySize});
 	}
 
 	@Override public int getSlotLimit(int slot) {
@@ -55,7 +54,8 @@ package ${package}.item.inventory;
 		return stack.getItem() != ${JavaModName}Items.${data.getModElement().getRegistryNameUpper()}.get();
 	}
 
-	@Override public void setSize(int size) {
+	@Override public ItemStack getStackInSlot(int slot) {
+		return super.getStackInSlot(slot).copy();
 	}
 
 }
