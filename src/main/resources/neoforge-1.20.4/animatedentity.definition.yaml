@@ -32,3 +32,7 @@ localizationkeys:
     suffix: " Spawn Egg"
   - key: entity.@modid.@registryname
     mapto: mobName
+
+tags:
+  - tag: ENTITIES:minecraft:raiders
+    condition: "${data.mobBehaviourType == 'Raider'}"

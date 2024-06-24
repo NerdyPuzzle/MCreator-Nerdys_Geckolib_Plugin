@@ -113,6 +113,7 @@ public class AnimatedEntity extends GeneratableElement
     public Sound hurtSound;
     public Sound deathSound;
     public Sound stepSound;
+    public Sound raidCelebrationSound;
 
     public Procedure onStruckByLightning;
     public Procedure whenMobFalls;
@@ -171,6 +172,7 @@ public class AnimatedEntity extends GeneratableElement
     public int rangedAttackInterval;
     public double rangedAttackRadius;
     public double height;
+    public int[] raidSpawnsCount;
 
     public boolean spawnThisMob;
     public boolean doesDespawnWhenIdle;
@@ -205,6 +207,8 @@ public class AnimatedEntity extends GeneratableElement
         this.stepHeight = 0.6;
 
         this.entityDataEntries = new ArrayList<>();
+
+        this.raidSpawnsCount = new int[] {4, 3, 3, 4, 4, 4, 2};
     }
 
     @Override

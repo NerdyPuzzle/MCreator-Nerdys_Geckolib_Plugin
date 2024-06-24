@@ -78,6 +78,7 @@ public class AnimatedEntityGUI extends ModElementGUI<AnimatedEntity> implements 
     private final SoundSelector hurtSound = new SoundSelector(mcreator);
     private final SoundSelector deathSound = new SoundSelector(mcreator);
     private final SoundSelector stepSound = new SoundSelector(mcreator);
+    private final SoundSelector raidCelebrationSound = new SoundSelector(mcreator);
 
     private final VTextField mobName = new VTextField();
 
@@ -167,7 +168,11 @@ public class AnimatedEntityGUI extends ModElementGUI<AnimatedEntity> implements 
                     "Pig", "Villager", "Wolf", "Cow", "Bat", "Chicken", "Ocelot", "Squid", "Horse", "Spider",
                     "IronGolem").sorted().toArray(String[]::new));
 
-    private final JComboBox<String> mobBehaviourType = new JComboBox<>(new String[] { "Mob", "Creature" });
+    private final JSpinner[] raidSpawnsCount = new JSpinner[] { new JSpinner(new SpinnerNumberModel(4, 0, 1000, 1)),
+            new JSpinner(new SpinnerNumberModel(3, 0, 1000, 1)), new JSpinner(new SpinnerNumberModel(3, 0, 1000, 1)),
+            new JSpinner(new SpinnerNumberModel(4, 0, 1000, 1)), new JSpinner(new SpinnerNumberModel(4, 0, 1000, 1)),
+            new JSpinner(new SpinnerNumberModel(4, 0, 1000, 1)), new JSpinner(new SpinnerNumberModel(2, 0, 1000, 1)) };
+    private final JComboBox<String> mobBehaviourType = new JComboBox<>(new String[] { "Mob", "Creature", "Raider" });
     private final JComboBox<String> mobCreatureType = new JComboBox<>(
             new String[] { "UNDEFINED", "UNDEAD", "ARTHROPOD", "ILLAGER", "WATER" });
     private final JComboBox<String> bossBarColor = new JComboBox<>(
@@ -737,7 +742,7 @@ public class AnimatedEntityGUI extends ModElementGUI<AnimatedEntity> implements 
 
         pane4.setOpaque(false);
 
-        JPanel selp = new JPanel(new GridLayout(8, 2, 30, 2));
+        JPanel selp = new JPanel(new GridLayout(10, 2, 30, 2));
 
         ComponentUtils.deriveFont(mobName, 16);
 
@@ -780,6 +785,18 @@ public class AnimatedEntityGUI extends ModElementGUI<AnimatedEntity> implements 
         selp.add(HelpUtils.wrapWithHelpButton(this.withEntry("entity/spawn_in_dungeons"),
                 L10N.label("elementgui.living_entity.does_spawn_in_dungeons")));
         selp.add(spawnInDungeons);
+
+        selp.add(HelpUtils.wrapWithHelpButton(this.withEntry("entity/raid_spawns_counts"),
+                L10N.label("elementgui.living_entity.raid_spawns_counts")));
+        selp.add(PanelUtils.gridElements(1, -1, 2, 2, raidSpawnsCount[0], raidSpawnsCount[1], raidSpawnsCount[2],
+                raidSpawnsCount[3], raidSpawnsCount[4], raidSpawnsCount[5], raidSpawnsCount[6]));
+
+        for (JSpinner spinner : raidSpawnsCount)
+            spinner.setPreferredSize(new Dimension(40, 0));
+
+        selp.add(HelpUtils.wrapWithHelpButton(this.withEntry("entity/raid_celebration_sound"),
+                L10N.label("elementgui.living_entity.raid_celebration_sound")));
+        selp.add(raidCelebrationSound);
 
         selp.setOpaque(false);
 
@@ -1234,6 +1251,7 @@ public class AnimatedEntityGUI extends ModElementGUI<AnimatedEntity> implements 
         canControlStrafe.setSelected(livingEntity.canControlStrafe);
         canControlForward.setSelected(livingEntity.canControlForward);
         breedable.setSelected(livingEntity.breedable);
+        raidCelebrationSound.setSound(livingEntity.raidCelebrationSound);
         tameable.setSelected(livingEntity.tameable);
         ranged.setSelected(livingEntity.ranged);
         rangedAttackItem.setBlock(livingEntity.rangedAttackItem);
@@ -1253,10 +1271,23 @@ public class AnimatedEntityGUI extends ModElementGUI<AnimatedEntity> implements 
         inventoryStackSize.setValue(livingEntity.inventoryStackSize);
         entityDataList.setEntries(livingEntity.entityDataEntries);
 
+        for (int i = 0; i < livingEntity.raidSpawnsCount.length; i++)
+            raidSpawnsCount[i].setValue(livingEntity.raidSpawnsCount[i]);
+
         if (livingEntity.creativeTab != null)
             creativeTab.setSelectedItem(livingEntity.creativeTab);
 
         blocklyPanel.addTaskToRunAfterLoaded(() -> blocklyPanel.setXML(livingEntity.aixml));
+
+        boolean isRaider = "Raider".equals(mobBehaviourType.getSelectedItem());
+        if (isRaider) {
+            breedable.setSelected(false);
+            aiBase.setSelectedItem("(none)");
+        }
+
+        raidCelebrationSound.setEnabled(isRaider);
+        for (JSpinner spinner : raidSpawnsCount)
+            spinner.setEnabled(isRaider);
 
         if (breedable.isSelected()) {
             hasAI.setSelected(true);
@@ -1334,6 +1365,7 @@ public class AnimatedEntityGUI extends ModElementGUI<AnimatedEntity> implements 
         livingEntity.boundingBoxScale = boundingBoxScale.getSelectedProcedure();
         livingEntity.solidBoundingBox = solidBoundingBox.getSelectedProcedure();
         livingEntity.spawnEggDotColor = spawnEggDotColor.getColor();
+        livingEntity.raidCelebrationSound = raidCelebrationSound.getSound();
         livingEntity.hasSpawnEgg = hasSpawnEgg.isSelected();
         livingEntity.disableCollisions = disableCollisions.isSelected();
         livingEntity.isBoss = isBoss.isSelected();
@@ -1417,6 +1449,10 @@ public class AnimatedEntityGUI extends ModElementGUI<AnimatedEntity> implements 
         livingEntity.inventoryStackSize = (int) inventoryStackSize.getValue();
         livingEntity.guiBoundTo = (String) guiBoundTo.getSelectedItem();
         livingEntity.entityDataEntries = entityDataList.getEntries();
+
+        for (int i = 0; i < livingEntity.raidSpawnsCount.length; i++)
+            livingEntity.raidSpawnsCount[i] = (int) raidSpawnsCount[i].getValue();
+
         return livingEntity;
     }
 
