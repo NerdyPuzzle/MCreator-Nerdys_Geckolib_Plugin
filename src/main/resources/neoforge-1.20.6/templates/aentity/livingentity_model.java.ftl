@@ -1,6 +1,6 @@
 package ${package}.entity.model;
 
-import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.animation.AnimationState;
 
 public class ${name}Model extends GeoModel<${name}Entity> {
     @Override

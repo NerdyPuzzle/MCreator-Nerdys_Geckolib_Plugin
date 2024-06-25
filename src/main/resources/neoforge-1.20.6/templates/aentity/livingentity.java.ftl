@@ -189,13 +189,6 @@ public class ${name}Entity extends ${extendsClass} <#if data.ranged>implements R
 		return this.entityData.get(TEXTURE);
 	}
 
-	<#if data.eyeHeight>
-	@Override
-    public final float getEyeHeight() {
-        return ${data.height}F;
-	}
-	</#if>
-
 	<#if hasProcedure(data.solidBoundingBox)>
 	@Override
 	public boolean canCollideWith(Entity entity) {
