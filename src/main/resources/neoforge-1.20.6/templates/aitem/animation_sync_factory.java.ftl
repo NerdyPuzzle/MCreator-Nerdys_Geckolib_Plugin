@@ -18,18 +18,18 @@ public class ItemAnimationFactory {
 	}
 
 	@SubscribeEvent
-	public static void animatedItems(TickEvent.PlayerTickEvent event) {
+	public static void animatedItems(PlayerTickEvent.Post event) {
 		String animation = "";
-		ItemStack mainhandItem = event.player.getMainHandItem().copy();
-		ItemStack offhandItem = event.player.getOffhandItem().copy();
-		if (event.phase == TickEvent.Phase.START && (mainhandItem.getItem() instanceof GeoItem || offhandItem.getItem() instanceof GeoItem)) {
+		ItemStack mainhandItem = event.getEntity().getMainHandItem().copy();
+		ItemStack offhandItem = event.getEntity().getOffhandItem().copy();
+		if (mainhandItem.getItem() instanceof GeoItem || offhandItem.getItem() instanceof GeoItem) {
 		<#list animateditems as item>
 			if (mainhandItem.getItem() instanceof ${item.getModElement().getName()}Item animatable) {
-				animation = mainhandItem.getOrCreateTag().getString("geckoAnim");
+				animation = mainhandItem.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag().getString("geckoAnim");
 				if (!animation.isEmpty()) {
-				    event.player.getMainHandItem().getOrCreateTag().putString("geckoAnim", "");
-				    if (event.player.level().isClientSide()) {
-					    ((${item.getModElement().getName()}Item)event.player.getMainHandItem().getItem()).animationprocedure = animation;
+				    CustomData.update(DataComponents.CUSTOM_DATA, event.getEntity().getMainHandItem(), tag -> tag.putString("geckoAnim", ""));
+				    if (event.getEntity().level().isClientSide()) {
+					    ((${item.getModElement().getName()}Item)event.getEntity().getMainHandItem().getItem()).animationprocedure = animation;
 					    <#if item.disableSwing == false>
 					        disableUseAnim("right");
 					    </#if>
@@ -37,11 +37,11 @@ public class ItemAnimationFactory {
                 }
 			}
 			if (offhandItem.getItem() instanceof ${item.getModElement().getName()}Item animatable) {
-				animation = offhandItem.getOrCreateTag().getString("geckoAnim");
+				animation = offhandItem.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag().getString("geckoAnim");
 				if (!animation.isEmpty()) {
-				    event.player.getOffhandItem().getOrCreateTag().putString("geckoAnim", "");
-				    if (event.player.level().isClientSide()) {
-					    ((${item.getModElement().getName()}Item)event.player.getOffhandItem().getItem()).animationprocedure = animation;
+				    CustomData.update(DataComponents.CUSTOM_DATA, event.getEntity().getOffhandItem(), tag -> tag.putString("geckoAnim", ""));
+				    if (event.getEntity().level().isClientSide()) {
+					    ((${item.getModElement().getName()}Item)event.getEntity().getOffhandItem().getItem()).animationprocedure = animation;
 					    <#if item.disableSwing == false>
 					        disableUseAnim("left");
 					    </#if>

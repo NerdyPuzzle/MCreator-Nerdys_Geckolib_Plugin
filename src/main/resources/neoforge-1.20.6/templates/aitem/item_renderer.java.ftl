@@ -57,11 +57,11 @@ public class ${name}ItemRenderer extends GeoItemRenderer<${name}Item> {
 			PlayerRenderer playerRenderer = (PlayerRenderer) mc.getEntityRenderDispatcher().getRenderer(player);
 			PlayerModel<AbstractClientPlayer> model = playerRenderer.getModel();
 			stack.pushPose();
-			RenderUtils.translateMatrixToBone(stack, bone);
-			RenderUtils.translateToPivotPoint(stack, bone);
-			RenderUtils.rotateMatrixAroundBone(stack, bone);
-			RenderUtils.scaleMatrixForBone(stack, bone);
-			RenderUtils.translateAwayFromPivotPoint(stack, bone);
+			RenderUtil.translateMatrixToBone(stack, bone);
+			RenderUtil.translateToPivotPoint(stack, bone);
+			RenderUtil.rotateMatrixAroundBone(stack, bone);
+			RenderUtil.scaleMatrixForBone(stack, bone);
+			RenderUtil.translateAwayFromPivotPoint(stack, bone);
 			ResourceLocation loc = player.getSkin().texture();
 			VertexConsumer armBuilder = this.currentBuffer.getBuffer(RenderType.entitySolid(loc));
 			VertexConsumer sleeveBuilder = this.currentBuffer.getBuffer(RenderType.entityTranslucent(loc));

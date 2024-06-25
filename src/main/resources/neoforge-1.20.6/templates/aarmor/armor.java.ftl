@@ -44,7 +44,7 @@ import net.minecraft.client.model.Model;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationState;
 
-@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD) public abstract class ${name}Item extends ArmorItem implements GeoItem {
+@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD) public class ${name}Item extends ArmorItem implements GeoItem {
 	private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 	public String animationprocedure = "empty";
 
@@ -97,9 +97,8 @@ import software.bernie.geckolib.animation.AnimationState;
 		});
 	}
 
-	@Override
-	public void appendHoverText(ItemStack itemstack, Level world, List<Component> list, TooltipFlag flag) {
-		super.appendHoverText(itemstack, world, list, flag);
+		@Override @OnlyIn(Dist.CLIENT) public void appendHoverText(ItemStack itemstack, Item.TooltipContext context, List<Component> list, TooltipFlag flag) {
+		super.appendHoverText(itemstack, context, list, flag);
 		<#if data.helmetSpecialInfo?has_content>
 		if (itemstack.getItem() instanceof ${name}Item armor && armor.getType() == ArmorItem.Type.HELMET) {
 			<#list data.helmetSpecialInfo as entry>
@@ -163,11 +162,13 @@ import software.bernie.geckolib.animation.AnimationState;
 		<#if data.fullyEquipped>
 			Set<Item> wornArmor = new ObjectOpenHashSet<>();
 
-			for (ItemStack stack : entity.getArmorSlots()) {
-				if (stack.isEmpty())
-					return PlayState.STOP;
+            if (entity instanceof LivingEntity living) {
+			    for (ItemStack stack : living.getArmorSlots()) {
+				    if (stack.isEmpty())
+					    return PlayState.STOP;
 
-				wornArmor.add(stack.getItem());
+				    wornArmor.add(stack.getItem());
+			    }
 			}
 		</#if>
 
@@ -209,11 +210,13 @@ import software.bernie.geckolib.animation.AnimationState;
 		<#if data.fullyEquipped>
 			Set<Item> wornArmor = new ObjectOpenHashSet<>();
 
-			for (ItemStack stack : entity.getArmorSlots()) {
-				if (stack.isEmpty())
-					return PlayState.STOP;
+            if (entity instanceof LivingEntity living) {
+			    for (ItemStack stack : living.getArmorSlots()) {
+				    if (stack.isEmpty())
+					    return PlayState.STOP;
 
-				wornArmor.add(stack.getItem());
+				    wornArmor.add(stack.getItem());
+			    }
 			}
 		</#if>
 
