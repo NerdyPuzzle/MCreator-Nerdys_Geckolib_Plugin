@@ -159,7 +159,7 @@ public class ${name}Block extends BaseEntityBlock <#if data.isWaterloggable>impl
 	</#macro>
 
 	public ${name}Block() {
-		super(Blocks.AIR.defaultBlockState(), <@blockProperties/>);
+		super(<@blockProperties/>);
 
 	    <#if data.rotationMode != 0 || data.isWaterloggable>
 	    this.registerDefaultState(this.stateDefinition.any()
