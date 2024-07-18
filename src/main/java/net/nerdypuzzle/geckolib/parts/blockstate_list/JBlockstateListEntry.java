@@ -123,8 +123,8 @@ public class JBlockstateListEntry extends JSimpleListEntry<AnimatedBlock.Blockst
     public AnimatedBlock.BlockstateListEntry getEntry() {
         AnimatedBlock.BlockstateListEntry entry = new AnimatedBlock.BlockstateListEntry();
         entry.customModelName = this.geoModel.getSelectedItem();
-        entry.particleTexture = this.particleTexture.getTextureName();
-        entry.texture = this.texture.getTextureName();
+        entry.particleTexture = this.particleTexture.getTextureHolder();
+        entry.texture = this.texture.getTextureHolder();
         entry.luminance = (Integer)this.luminance.getValue();
         entry.boundingBoxes = this.boundingBoxList.getEntries();
         return entry;
@@ -132,8 +132,8 @@ public class JBlockstateListEntry extends JSimpleListEntry<AnimatedBlock.Blockst
 
     public void setEntry(AnimatedBlock.BlockstateListEntry e) {
         this.geoModel.setSelectedItem(e.customModelName);
-        this.particleTexture.setTextureFromTextureName(e.particleTexture);
-        this.texture.setTextureFromTextureName(e.texture);
+        this.particleTexture.setTexture(e.particleTexture);
+        this.texture.setTexture(e.texture);
         this.luminance.setValue(e.luminance);
         this.boundingBoxList.setEntries(e.boundingBoxes);
     }

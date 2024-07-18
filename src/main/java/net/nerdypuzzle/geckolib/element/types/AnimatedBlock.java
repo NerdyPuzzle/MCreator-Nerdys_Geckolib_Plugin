@@ -18,7 +18,6 @@ import net.mcreator.workspace.Workspace;
 import net.mcreator.workspace.elements.ModElement;
 import net.mcreator.workspace.references.ModElementReference;
 import net.mcreator.workspace.references.TextureReference;
-import net.mcreator.workspace.resources.Texture;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -30,19 +29,19 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class AnimatedBlock extends GeneratableElement implements IBlock, ITabContainedElement, IBlockWithBoundingBox {
-    public String texture;
-    public String textureTop;
-    public String textureLeft;
-    public String textureFront;
-    public String textureRight;
-    public String textureBack;
+    public TextureHolder texture;
+    public TextureHolder textureTop;
+    public TextureHolder textureLeft;
+    public TextureHolder textureFront;
+    public TextureHolder textureRight;
+    public TextureHolder textureBack;
     public int renderType;
     public int rotationMode;
     public boolean enablePitch;
     public boolean emissiveRendering;
     public boolean displayFluidOverlay;
-    public String itemTexture;
-    public String particleTexture;
+    public TextureHolder itemTexture;
+    public TextureHolder particleTexture;
     public String blockBase;
     public String tintType;
     public boolean isItemTinted;
@@ -153,9 +152,9 @@ public class AnimatedBlock extends GeneratableElement implements IBlock, ITabCon
         }
 
         @TextureReference(TextureType.BLOCK)
-        public String texture;
+        public TextureHolder texture;
         @TextureReference(TextureType.BLOCK)
-        public String particleTexture;
+        public TextureHolder particleTexture;
         public int renderType;
         public String customModelName;
         public int luminance;
@@ -169,8 +168,8 @@ public class AnimatedBlock extends GeneratableElement implements IBlock, ITabCon
     }
 
     public static class BlockstateEntry implements IWorkspaceDependent {
-        public String texture;
-        public String particleTexture;
+        public TextureHolder texture;
+        public TextureHolder particleTexture;
         public String customModelName;
 
         @Nullable
@@ -312,13 +311,13 @@ public class AnimatedBlock extends GeneratableElement implements IBlock, ITabCon
     }
 
     private Image getMainTexture() {
-        return Texture.getImage(getModElement().getWorkspace(), TextureType.BLOCK, texture);
+        return texture.getImage(TextureType.BLOCK);
     }
 
-    private Image getTextureWithFallback(String textureName) {
-        if (textureName.isEmpty())
+    private Image getTextureWithFallback(TextureHolder texture) {
+        if (texture.isEmpty())
             return getMainTexture();
-        return Texture.getImage(getModElement().getWorkspace(), TextureType.BLOCK, textureName);
+        return texture.getImage(TextureType.BLOCK);
     }
 
     public String getRenderType() {

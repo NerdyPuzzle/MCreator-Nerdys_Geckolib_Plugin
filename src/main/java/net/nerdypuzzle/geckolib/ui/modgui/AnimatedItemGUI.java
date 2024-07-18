@@ -448,7 +448,7 @@ public class AnimatedItemGUI extends ModElementGUI<AnimatedItem> implements Geck
         this.firstPersonArms.setSelected(item.firstPersonArms);
         this.rarity.setSelectedItem(item.rarity);
         this.perspective.setSelectedItem(item.perspective);
-        this.texture.setTextureFromTextureName(item.texture);
+        this.texture.setTexture(item.texture);
         this.specialInformation.setSelectedProcedure(item.specialInformation);
         this.onRightClickedInAir.setSelectedProcedure(item.onRightClickedInAir);
         this.onRightClickedOnBlock.setSelectedProcedure(item.onRightClickedOnBlock);
@@ -545,7 +545,7 @@ public class AnimatedItemGUI extends ModElementGUI<AnimatedItem> implements Geck
         item.onFinishUsingItem = this.onFinishUsingItem.getSelectedProcedure();
         item.eatResultItem = this.eatResultItem.getBlock();
         item.specialInformation = this.specialInformation.getSelectedProcedure();
-        item.texture = this.texture.getTextureName();
+        item.texture = this.texture.getTextureHolder();
         item.renderType = 0;
         item.normal = (String)this.geoModel.getSelectedItem();
         item.displaySettings = (String)this.displaySettings.getSelectedItem();

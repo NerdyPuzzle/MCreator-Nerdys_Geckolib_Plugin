@@ -3,6 +3,7 @@ package net.nerdypuzzle.geckolib.element.types;
 import net.mcreator.element.GeneratableElement;
 import net.mcreator.element.parts.MItemBlock;
 import net.mcreator.element.parts.TabEntry;
+import net.mcreator.element.parts.TextureHolder;
 import net.mcreator.element.parts.procedure.Procedure;
 import net.mcreator.element.parts.procedure.StringListProcedure;
 import net.mcreator.element.types.interfaces.IItem;
@@ -24,7 +25,7 @@ import java.util.Map;
 
 public class AnimatedItem extends GeneratableElement implements IItem, IItemWithModel, ITabContainedElement, IItemWithTexture {
     public int renderType;
-    public String texture;
+    public TextureHolder texture;
     public String customModelName;
     public String name;
     public String idle;
@@ -100,8 +101,7 @@ public class AnimatedItem extends GeneratableElement implements IItem, IItemWith
     }
 
     @Override public BufferedImage generateModElementPicture() {
-        return ImageUtils.resizeAndCrop(Texture.getImage(getModElement().getWorkspace(), TextureType.ITEM, texture),
-                32);
+        return ImageUtils.resizeAndCrop(texture.getImage(TextureType.ITEM),32);
     }
 
     @Override public List<MCItem> providedMCItems() {
@@ -123,7 +123,7 @@ public class AnimatedItem extends GeneratableElement implements IItem, IItemWith
         return Model.getModelByParams(this.getModElement().getWorkspace(), this.customModelName, modelType);
     }
 
-    public Map<String, String> getTextureMap() {
+    public Map<String, TextureHolder> getTextureMap() {
         Model model = this.getItemModel();
         return model instanceof TexturedModel && ((TexturedModel)model).getTextureMapping() != null ? ((TexturedModel)model).getTextureMapping().getTextureMap() : null;
     }
@@ -132,7 +132,7 @@ public class AnimatedItem extends GeneratableElement implements IItem, IItemWith
         return List.of(creativeTab);
     }
 
-    public String getTexture() {
+    public TextureHolder getTexture() {
         return this.texture;
     }
 

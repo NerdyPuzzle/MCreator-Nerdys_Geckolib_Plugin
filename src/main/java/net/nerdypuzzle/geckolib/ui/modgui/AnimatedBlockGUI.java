@@ -393,11 +393,11 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
         destal.add(ComponentUtils.squareAndBorder(this.textureBack, L10N.t("elementgui.block.texture_place_back", new Object[0])));
         this.textureLeft.setActionListener((event) -> {
             if (!this.texture.hasTexture() && !this.textureTop.hasTexture() && !this.textureBack.hasTexture() && !this.textureFront.hasTexture() && !this.textureRight.hasTexture()) {
-                this.texture.setTextureFromTextureName(this.textureLeft.getTextureName());
-                this.textureTop.setTextureFromTextureName(this.textureLeft.getTextureName());
-                this.textureBack.setTextureFromTextureName(this.textureLeft.getTextureName());
-                this.textureFront.setTextureFromTextureName(this.textureLeft.getTextureName());
-                this.textureRight.setTextureFromTextureName(this.textureLeft.getTextureName());
+                this.texture.setTexture(this.textureLeft.getTextureHolder());
+                this.textureTop.setTexture(this.textureLeft.getTextureHolder());
+                this.textureBack.setTexture(this.textureLeft.getTextureHolder());
+                this.textureFront.setTexture(this.textureLeft.getTextureHolder());
+                this.textureRight.setTexture(this.textureLeft.getTextureHolder());
             }
 
         });
@@ -980,14 +980,14 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
     }
 
     public void openInEditingMode(AnimatedBlock block) {
-        this.itemTexture.setTextureFromTextureName(block.itemTexture);
-        this.particleTexture.setTextureFromTextureName(block.particleTexture);
-        this.texture.setTextureFromTextureName(block.texture);
-        this.textureTop.setTextureFromTextureName(block.textureTop);
-        this.textureLeft.setTextureFromTextureName(block.textureLeft);
-        this.textureFront.setTextureFromTextureName(block.textureFront);
-        this.textureRight.setTextureFromTextureName(block.textureRight);
-        this.textureBack.setTextureFromTextureName(block.textureBack);
+        this.itemTexture.setTexture(block.itemTexture);
+        this.particleTexture.setTexture(block.particleTexture);
+        this.texture.setTexture(block.texture);
+        this.textureTop.setTexture(block.textureTop);
+        this.textureLeft.setTexture(block.textureLeft);
+        this.textureFront.setTexture(block.textureFront);
+        this.textureRight.setTexture(block.textureRight);
+        this.textureBack.setTexture(block.textureBack);
         this.guiBoundTo.setSelectedItem(block.guiBoundTo);
         this.rotationMode.setSelectedIndex(block.rotationMode);
         this.enablePitch.setSelected(block.enablePitch);
@@ -1204,14 +1204,14 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
         block.onRedstoneOn = this.onRedstoneOn.getSelectedProcedure();
         block.onRedstoneOff = this.onRedstoneOff.getSelectedProcedure();
         block.onHitByProjectile = this.onHitByProjectile.getSelectedProcedure();
-        block.texture = this.texture.getTextureName();
-        block.itemTexture = this.itemTexture.getTextureName();
-        block.particleTexture = this.particleTexture.getTextureName();
-        block.textureTop = this.textureTop.getTextureName();
-        block.textureLeft = this.textureLeft.getTextureName();
-        block.textureFront = this.textureFront.getTextureName();
-        block.textureRight = this.textureRight.getTextureName();
-        block.textureBack = this.textureBack.getTextureName();
+        block.texture = this.texture.getTextureHolder();
+        block.itemTexture = this.itemTexture.getTextureHolder();
+        block.particleTexture = this.particleTexture.getTextureHolder();
+        block.textureTop = this.textureTop.getTextureHolder();
+        block.textureLeft = this.textureLeft.getTextureHolder();
+        block.textureFront = this.textureFront.getTextureHolder();
+        block.textureRight = this.textureRight.getTextureHolder();
+        block.textureBack = this.textureBack.getTextureHolder();
         block.disableOffset = this.disableOffset.isSelected();
         block.boundingBoxes = this.boundingBoxList.getEntries();
         block.beaconColorModifier = this.beaconColorModifier.getColor();

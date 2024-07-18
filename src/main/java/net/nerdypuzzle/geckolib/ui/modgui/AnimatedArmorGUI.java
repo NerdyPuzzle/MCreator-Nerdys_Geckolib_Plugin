@@ -662,8 +662,8 @@ public class AnimatedArmorGUI extends ModElementGUI<AnimatedArmor> implements Ge
                 !leggingsSpecialInfo.getText().isEmpty());
         bootsCollapsiblePanel.toggleVisibility(
                 !bootsSpecialInfo.getText().isEmpty());
-        textureHelmet.setTextureFromTextureName(armor.textureHelmet);
-        textureBody.setTextureFromTextureName(armor.textureBody);
+        textureHelmet.setTexture(armor.textureHelmet);
+        textureBody.setTexture(armor.textureBody);
         this.geoModel.setSelectedItem(armor.model);
         idle.setText(armor.idle);
         head.setText(armor.head);
@@ -675,8 +675,8 @@ public class AnimatedArmorGUI extends ModElementGUI<AnimatedArmor> implements Ge
         rightBoot.setText(armor.rightBoot);
         leftBoot.setText(armor.leftBoot);
         fullyEquipped.setSelected(armor.fullyEquipped);
-        textureLeggings.setTextureFromTextureName(armor.textureLeggings);
-        textureBoots.setTextureFromTextureName(armor.textureBoots);
+        textureLeggings.setTexture(armor.textureLeggings);
+        textureBoots.setTexture(armor.textureBoots);
         armorTextureFile.setSelectedItem(armor.armorTextureFile);
         maxDamage.setValue(armor.maxDamage);
         damageValueBoots.setValue(armor.damageValueBoots);
@@ -738,7 +738,7 @@ public class AnimatedArmorGUI extends ModElementGUI<AnimatedArmor> implements Ge
     @Override public AnimatedArmor getElementFromGUI() {
         AnimatedArmor armor = new AnimatedArmor(modElement);
         armor.enableHelmet = enableHelmet.isSelected();
-        armor.textureHelmet = textureHelmet.getTextureName();
+        armor.textureHelmet = textureHelmet.getTextureHolder();
         armor.enableBody = enableBody.isSelected();
         armor.model = (String)this.geoModel.getSelectedItem();
         armor.idle = idle.getText();
@@ -751,11 +751,11 @@ public class AnimatedArmorGUI extends ModElementGUI<AnimatedArmor> implements Ge
         armor.rightBoot = rightBoot.getText();
         armor.leftBoot = leftBoot.getText();
         armor.fullyEquipped = fullyEquipped.isSelected();
-        armor.textureBody = textureBody.getTextureName();
+        armor.textureBody = textureBody.getTextureHolder();
         armor.enableLeggings = enableLeggings.isSelected();
-        armor.textureLeggings = textureLeggings.getTextureName();
+        armor.textureLeggings = textureLeggings.getTextureHolder();
         armor.enableBoots = enableBoots.isSelected();
-        armor.textureBoots = textureBoots.getTextureName();
+        armor.textureBoots = textureBoots.getTextureHolder();
         armor.onHelmetTick = onHelmetTick.getSelectedProcedure();
         armor.onBodyTick = onBodyTick.getSelectedProcedure();
         armor.onLeggingsTick = onLeggingsTick.getSelectedProcedure();

@@ -4,17 +4,20 @@ import net.mcreator.element.GeneratableElement;
 import net.mcreator.element.parts.MItemBlock;
 import net.mcreator.element.parts.Sound;
 import net.mcreator.element.parts.TabEntry;
+import net.mcreator.element.parts.TextureHolder;
 import net.mcreator.element.parts.procedure.Procedure;
 import net.mcreator.element.types.interfaces.IItem;
 import net.mcreator.element.types.interfaces.ITabContainedElement;
 import net.mcreator.minecraft.MCItem;
 import net.mcreator.minecraft.MinecraftImageGenerator;
 import net.mcreator.ui.workspace.resources.TextureType;
+import net.mcreator.workspace.Workspace;
 import net.mcreator.workspace.elements.ModElement;
 import net.mcreator.workspace.resources.Model;
 import net.mcreator.workspace.resources.Texture;
 import net.mcreator.workspace.resources.TexturedModel;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -25,13 +28,13 @@ import java.util.List;
 public class AnimatedArmor extends GeneratableElement implements IItem, ITabContainedElement {
 
     public boolean enableHelmet;
-    public String textureHelmet;
+    public TextureHolder textureHelmet;
     public boolean enableBody;
-    public String textureBody;
+    public TextureHolder textureBody;
     public boolean enableLeggings;
-    public String textureLeggings;
+    public TextureHolder textureLeggings;
     public boolean enableBoots;
-    public String textureBoots;
+    public TextureHolder textureBoots;
 
     public Procedure onHelmetTick;
     public Procedure onBodyTick;
@@ -119,13 +122,13 @@ public class AnimatedArmor extends GeneratableElement implements IItem, ITabCont
     @Override public BufferedImage generateModElementPicture() {
         List<Image> armorPieces = new ArrayList<>();
         if (enableHelmet)
-            armorPieces.add(Texture.getImage(getModElement().getWorkspace(), TextureType.ITEM, textureHelmet));
+            armorPieces.add(textureHelmet.getImage(TextureType.ITEM));
         if (enableBody)
-            armorPieces.add(Texture.getImage(getModElement().getWorkspace(), TextureType.ITEM, textureBody));
+            armorPieces.add(textureBody.getImage(TextureType.ITEM));
         if (enableLeggings)
-            armorPieces.add(Texture.getImage(getModElement().getWorkspace(), TextureType.ITEM, textureLeggings));
+            armorPieces.add(textureLeggings.getImage(TextureType.ITEM));
         if (enableBoots)
-            armorPieces.add(Texture.getImage(getModElement().getWorkspace(), TextureType.ITEM, textureBoots));
+            armorPieces.add(textureBoots.getImage(TextureType.ITEM));
 
         return MinecraftImageGenerator.Preview.generateArmorPreviewPicture(armorPieces);
     }
@@ -176,7 +179,7 @@ public class AnimatedArmor extends GeneratableElement implements IItem, ITabCont
         };
     }
 
-    public Map<String, String> getItemModelTextureMap(String part) {
+    public Map<String, TextureHolder> getItemModelTextureMap(String part) {
         Model model = switch (part) {
             case "helmet" -> getHelmetItemModel();
             case "body" -> getBodyItemModel();
@@ -189,12 +192,12 @@ public class AnimatedArmor extends GeneratableElement implements IItem, ITabCont
         return new HashMap<>();
     }
 
-    public String getItemTextureFor(String part) {
-        return switch (part) {
-            case "helmet" -> textureHelmet;
-            case "body" -> textureBody;
-            case "leggings" -> textureLeggings;
-            case "boots" -> textureBoots;
+    public ImageIcon getIconForMCItem(Workspace workspace, String suffix) {
+        return switch (suffix) {
+            case "helmet" -> textureHelmet.getImageIcon(TextureType.ITEM);
+            case "body" -> textureBody.getImageIcon(TextureType.ITEM);
+            case "leggings" -> textureLeggings.getImageIcon(TextureType.ITEM);
+            case "boots" -> textureBoots.getImageIcon(TextureType.ITEM);
             default -> null;
         };
     }
