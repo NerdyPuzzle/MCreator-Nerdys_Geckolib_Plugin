@@ -1,10 +1,11 @@
 {
   "geckolib_plugin": {
-    "latest": "5.7.1",
+    "latest": "5.8",
     "changes": [
-      "Updated to work with 2024.1.17319 ONLY, reinstall MCreator",
-      "Fixed animated entity head rotation being weird",
-      "(5.7.1) Reverted head animation changes due to issues"
+      "Support for MCreator 2024.2",
+      "Support for neoforge 1.20.6",
+      "Removed support for all mc versions below 1.20.1",
+      "Animated entities can now switch animations while another is playing"
     ]
   }
 }
