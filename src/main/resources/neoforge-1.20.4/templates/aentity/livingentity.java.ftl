@@ -1107,14 +1107,23 @@ public class ${name}Entity extends ${extendsClass} <#if data.ranged>implements R
    	}
 	</#if>
 
+    String prevAnim = "empty";
 	private PlayState procedurePredicate(AnimationState event) {
+	    if (!this.animationprocedure.equals(prevAnim) && !this.animationprocedure.equals("empty")) {
+	        prevAnim = this.animationprocedure;
+	        event.getController().forceAnimationReset();
+	        event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationprocedure));
+	        return PlayState.CONTINUE;
+	    }
 		if (!animationprocedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
+		    prevAnim = this.animationprocedure;
 			event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationprocedure));
 			if (event.getController().getAnimationState() == AnimationController.State.STOPPED) {
 				this.animationprocedure = "empty";
 				event.getController().forceAnimationReset();
 			}
 		} else if (animationprocedure.equals("empty")) {
+		    prevAnim = "empty";
 			return PlayState.STOP;
 		}
 		return PlayState.CONTINUE;
