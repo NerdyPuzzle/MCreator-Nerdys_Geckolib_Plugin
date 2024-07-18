@@ -230,7 +230,8 @@ public class AnimatedEntity extends GeneratableElement
 
     @Override public BufferedImage generateModElementPicture() {
         return MinecraftImageGenerator.Preview.generateMobPreviewPicture(
-                getModElement().getElementIcon().getImage(), spawnEggBaseColor, spawnEggDotColor,
+                Texture.fromName(getModElement().getWorkspace(), TextureType.ENTITY,
+                        FilenameUtilsPatched.removeExtension(mobModelTexture)).getTextureIcon(getModElement().getWorkspace()).getImage(), spawnEggBaseColor, spawnEggDotColor,
                 hasSpawnEgg);
     }
 
