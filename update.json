@@ -1,7 +1,8 @@
 {
   "geckolib_plugin": {
-    "latest": "5.8",
+    "latest": "5.8.1",
     "changes": [
+      "(5.8.1) Removed support for neoforge 1.20.4 as it prevented workspaces from opening",
       "Support for MCreator 2024.2",
       "Support for neoforge 1.20.6",
       "Removed support for all mc versions below 1.20.1",
