@@ -157,7 +157,7 @@ public class ${name}Item extends Item implements GeoItem {
 		!this.transformType.firstPerson()
 		</#if>
 		: false) {
-		    if (!this.animationprocedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED || !this.animationprocedure.equals(prevAnim)) {
+		    if (!this.animationprocedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED || (!this.animationprocedure.equals(prevAnim) && !this.animationprocedure.equals("empty"))) {
 		        if (!this.animationprocedure.equals(prevAnim))
 		            event.getController().forceAnimationReset();
 			    event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationprocedure));

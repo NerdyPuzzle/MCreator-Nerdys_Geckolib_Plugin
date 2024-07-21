@@ -195,7 +195,7 @@ import software.bernie.geckolib.animation.AnimationState;
 
 	String prevAnim = "empty";
 	private PlayState procedurePredicate(AnimationState event) {
-		if (!this.animationprocedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED || !this.animationprocedure.equals(prevAnim)) {
+		if (!this.animationprocedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED || (!this.animationprocedure.equals(prevAnim) && !this.animationprocedure.equals("empty"))) {
 			if (!this.animationprocedure.equals(prevAnim))
 				event.getController().forceAnimationReset();
 			event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationprocedure));

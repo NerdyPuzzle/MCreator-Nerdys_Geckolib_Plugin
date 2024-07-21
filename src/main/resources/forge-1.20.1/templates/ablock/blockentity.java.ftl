@@ -70,7 +70,7 @@ public class ${name}TileEntity extends RandomizableContainerBlockEntity implemen
     String prevAnim = "0";
 	private PlayState procedurePredicate(AnimationState event) {
 	    String animationprocedure = ("" + this.getBlockState().getValue(${name}Block.ANIMATION));
-		if (!animationprocedure.equals("0") && event.getController().getAnimationState() == AnimationController.State.STOPPED || !animationprocedure.equals(prevAnim)) {
+		if (!animationprocedure.equals("0") && event.getController().getAnimationState() == AnimationController.State.STOPPED || (!animationprocedure.equals(prevAnim) && !animationprocedure.equals("0"))) {
 		    if (!animationprocedure.equals(prevAnim))
                 event.getController().forceAnimationReset();
 			event.getController().setAnimation(RawAnimation.begin().thenPlay(animationprocedure));
