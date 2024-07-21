@@ -197,53 +197,60 @@ public class ${name}Item extends ArmorItem implements GeoItem {
 
 		return <#if data.fullyEquipped>isWearingAll ? PlayState.CONTINUE : PlayState.STOP<#else>PlayState.CONTINUE</#if>;
 		}
-	return PlayState.STOP;
+		return PlayState.STOP;
 	}
 
+	String prevAnim = "empty";
 	private PlayState procedurePredicate(AnimationState event) {
-	if (!this.animationprocedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
-		event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationprocedure));
-	        if (event.getController().getAnimationState() == AnimationController.State.STOPPED) {
-			this.animationprocedure = "empty";
-			event.getController().forceAnimationReset();
-		}
-
-		Entity entity = (Entity) event.getData(DataTickets.ENTITY);
-
-		if (entity instanceof ArmorStand) {
-			return PlayState.CONTINUE;
-		}
-
-		<#if data.fullyEquipped>
-			Set<Item> wornArmor = new ObjectOpenHashSet<>();
-
-			for (ItemStack stack : entity.getArmorSlots()) {
-				if (stack.isEmpty())
-					return PlayState.STOP;
-
-				wornArmor.add(stack.getItem());
+		if (!this.animationprocedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED || !this.animationprocedure.equals(prevAnim)) {
+			if (!this.animationprocedure.equals(prevAnim))
+				event.getController().forceAnimationReset();
+			event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationprocedure));
+			if (event.getController().getAnimationState() == AnimationController.State.STOPPED) {
+				this.animationprocedure = "empty";
+				event.getController().forceAnimationReset();
 			}
-		</#if>
 
-		<#if data.fullyEquipped>
-		boolean isWearingAll = wornArmor.containsAll(ObjectArrayList.of(
-		<#if data.enableBoots>
-		${JavaModName}Items.${(registryname)?upper_case}_BOOTS.get()
-		</#if><#if data.enableBoots && (data.enableLeggings || data.enableBody || data.enableHelmet)>,</#if>
-		<#if data.enableLeggings>
-		${JavaModName}Items.${(registryname)?upper_case}_LEGGINGS.get()
-		</#if><#if data.enableLeggings && (data.enableBody || data.enableHelmet)>,</#if>
-		<#if data.enableBody> 
-		${JavaModName}Items.${(registryname)?upper_case}_CHESTPLATE.get()
-		</#if><#if data.enableBody && data.enableBoots>,</#if>
-		<#if data.enableBoots> 
-		${JavaModName}Items.${(registryname)?upper_case}_HELMET.get()
-		</#if>));
-		</#if>
+			Entity entity = (Entity) event.getData(DataTickets.ENTITY);
 
-		return <#if data.fullyEquipped>isWearingAll ? PlayState.CONTINUE : PlayState.STOP<#else>PlayState.CONTINUE</#if>;
+			if (entity instanceof ArmorStand) {
+				return PlayState.CONTINUE;
+			}
+
+			<#if data.fullyEquipped>
+				Set<Item> wornArmor = new ObjectOpenHashSet<>();
+
+				for (ItemStack stack : entity.getArmorSlots()) {
+					if (stack.isEmpty())
+						return PlayState.STOP;
+
+					wornArmor.add(stack.getItem());
+				}
+			</#if>
+
+			<#if data.fullyEquipped>
+			boolean isWearingAll = wornArmor.containsAll(ObjectArrayList.of(
+			<#if data.enableBoots>
+			${JavaModName}Items.${(registryname)?upper_case}_BOOTS.get()
+			</#if><#if data.enableBoots && (data.enableLeggings || data.enableBody || data.enableHelmet)>,</#if>
+			<#if data.enableLeggings>
+			${JavaModName}Items.${(registryname)?upper_case}_LEGGINGS.get()
+			</#if><#if data.enableLeggings && (data.enableBody || data.enableHelmet)>,</#if>
+			<#if data.enableBody>
+			${JavaModName}Items.${(registryname)?upper_case}_CHESTPLATE.get()
+			</#if><#if data.enableBody && data.enableBoots>,</#if>
+			<#if data.enableBoots>
+			${JavaModName}Items.${(registryname)?upper_case}_HELMET.get()
+			</#if>));
+			</#if>
+
+			return <#if data.fullyEquipped>isWearingAll ? PlayState.CONTINUE : PlayState.STOP<#else>PlayState.CONTINUE</#if>;
+		} else if (animationprocedure.equals("empty")) {
+			prevAnim = "empty";
+			return PlayState.STOP;
 		}
-	return PlayState.CONTINUE;
+		prevAnim = this.animationprocedure;
+		return PlayState.CONTINUE;
 	}
 
 	@Override

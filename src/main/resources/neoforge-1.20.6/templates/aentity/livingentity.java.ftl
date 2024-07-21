@@ -904,9 +904,8 @@ public class ${name}Entity extends ${extendsClass} <#if data.ranged>implements R
 	public static void init(SpawnPlacementRegisterEvent event) {
 		<#if data.spawnThisMob>
 			<#if data.mobSpawningType == "creature">
-					SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-			            event.register(${JavaModName}Entities.${data.getModElement().getRegistryNameUpper()}.get(),
-					        SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+			event.register(${JavaModName}Entities.${data.getModElement().getRegistryNameUpper()}.get(),
+					SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
 				<#if hasProcedure(data.spawningCondition)>
 					(entityType, world, reason, pos, random) -> {
 						int x = pos.getX();
@@ -1106,14 +1105,9 @@ public class ${name}Entity extends ${extendsClass} <#if data.ranged>implements R
 
     String prevAnim = "empty";
 	private PlayState procedurePredicate(AnimationState event) {
-	    if (!this.animationprocedure.equals(prevAnim) && !this.animationprocedure.equals("empty")) {
-	        prevAnim = this.animationprocedure;
-	        event.getController().forceAnimationReset();
-	        event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationprocedure));
-	        return PlayState.CONTINUE;
-	    }
-		if (!animationprocedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
-		    prevAnim = this.animationprocedure;
+		if (!animationprocedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED || !this.animationprocedure.equals(prevAnim)) {
+		    if (!this.animationprocedure.equals(prevAnim))
+		        event.getController().forceAnimationReset();
 			event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationprocedure));
 			if (event.getController().getAnimationState() == AnimationController.State.STOPPED) {
 				this.animationprocedure = "empty";
@@ -1123,6 +1117,7 @@ public class ${name}Entity extends ${extendsClass} <#if data.ranged>implements R
 		    prevAnim = "empty";
 			return PlayState.STOP;
 		}
+		prevAnim = this.animationprocedure;
 		return PlayState.CONTINUE;
 	}
 

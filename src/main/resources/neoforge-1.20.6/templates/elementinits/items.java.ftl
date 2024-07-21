@@ -152,7 +152,7 @@ public class ${JavaModName}Items {
 	</#if>
 
 	<#if hasItemsWithProperties>
-	@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT) public static class ClientSideHandler {
+	@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT) public static class ItemsClientSideHandler {
 		@SubscribeEvent @OnlyIn(Dist.CLIENT) public static void clientLoad(FMLClientSetupEvent event) {
 			event.enqueueWork(() -> {
 			<#compress>
@@ -176,7 +176,7 @@ public class ${JavaModName}Items {
 					</#list>
 				<#elseif item.getModElement().getTypeString() == "tool" && item.toolType == "Shield">
 					ItemProperties.register(${item.getModElement().getRegistryNameUpper()}.get(), new ResourceLocation("blocking"),
-						ItemProperties.getProperty(Items.SHIELD, new ResourceLocation("blocking")));
+						ItemProperties.getProperty(new ItemStack(Items.SHIELD), new ResourceLocation("blocking")));
 				</#if>
 			</#list>
 			</#compress>

@@ -1,7 +1,11 @@
 {
   "geckolib_plugin": {
-    "latest": "5.8.1",
+    "latest": "5.8.2",
     "changes": [
+      "(5.8.2) All animated elements can now switch animations while another is playing",
+      "(5.8.2) Fixed animated armor animations not stopping",
+      "(5.8.2) Fixed tools with the shield type causing build errors",
+      "(5.8.2) Fixed animated entities with the creature spawn option causing build errors",
       "(5.8.1) Removed support for neoforge 1.20.4 as it prevented workspaces from opening",
       "Support for MCreator 2024.2",
       "Support for neoforge 1.20.6",

@@ -67,9 +67,12 @@ public class ${name}TileEntity extends RandomizableContainerBlockEntity implemen
 	    return PlayState.STOP;
 	}
 
+    String prevAnim = "0";
 	private PlayState procedurePredicate(AnimationState event) {
 	    String animationprocedure = ("" + this.getBlockState().getValue(${name}Block.ANIMATION));
-		if (!animationprocedure.equals("0") && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
+		if (!animationprocedure.equals("0") && event.getController().getAnimationState() == AnimationController.State.STOPPED || !animationprocedure.equals(prevAnim)) {
+		    if (!animationprocedure.equals(prevAnim))
+                event.getController().forceAnimationReset();
 			event.getController().setAnimation(RawAnimation.begin().thenPlay(animationprocedure));
 	        if (event.getController().getAnimationState() == AnimationController.State.STOPPED) {
 				if (this.getBlockState().getBlock().getStateDefinition().getProperty("animation") instanceof IntegerProperty _integerProp)
@@ -77,8 +80,10 @@ public class ${name}TileEntity extends RandomizableContainerBlockEntity implemen
 			    event.getController().forceAnimationReset();
 		    }
 		} else if (animationprocedure.equals("0")) {
+		    prevAnim = "0";
 		    return PlayState.STOP;
 		}
+		prevAnim = animationprocedure;
 		return PlayState.CONTINUE;
 	}
 
