@@ -5,12 +5,10 @@ import net.mcreator.blockly.data.*;
 import net.mcreator.blockly.java.BlocklyToJava;
 import net.mcreator.element.GeneratableElement;
 import net.mcreator.element.ModElementType;
-import net.mcreator.element.parts.TabEntry;
 import net.mcreator.element.types.GUI;
 import net.mcreator.generator.blockly.BlocklyBlockCodeGenerator;
 import net.mcreator.generator.blockly.ProceduralBlockCodeGenerator;
 import net.mcreator.generator.template.TemplateGeneratorException;
-import net.mcreator.minecraft.DataListEntry;
 import net.mcreator.minecraft.ElementUtil;
 import net.mcreator.ui.MCreator;
 import net.mcreator.ui.blockly.*;
@@ -129,7 +127,8 @@ public class AnimatedEntityGUI extends ModElementGUI<AnimatedEntity> implements 
     private final JCheckBox flyingMob = L10N.checkbox("elementgui.living_entity.is_flying_mob");
 
     private final JCheckBox hasSpawnEgg = new JCheckBox();
-    private final DataListComboBox creativeTab = new DataListComboBox(mcreator);
+
+    private final TabListField creativeTabs = new TabListField(mcreator);
 
     private final JComboBox<String> mobSpawningType = new JComboBox<>(
             ElementUtil.getDataListAsStringArray("mobspawntypes"));
@@ -574,7 +573,8 @@ public class AnimatedEntityGUI extends ModElementGUI<AnimatedEntity> implements 
 
         spo2.add(HelpUtils.wrapWithHelpButton(this.withEntry("entity/spawn_egg_options"),
                 L10N.label("elementgui.living_entity.spawn_egg_options")));
-        spo2.add(PanelUtils.join(FlowLayout.LEFT, 5, 0, hasSpawnEgg, spawnEggBaseColor, spawnEggDotColor, creativeTab));
+        creativeTabs.setPreferredSize(new Dimension(200, 30));
+        spo2.add(PanelUtils.join(FlowLayout.LEFT, 5, 0, hasSpawnEgg, spawnEggBaseColor, spawnEggDotColor, creativeTabs));
 
         bossBarColor.setEnabled(false);
         bossBarType.setEnabled(false);
@@ -1112,9 +1112,6 @@ public class AnimatedEntityGUI extends ModElementGUI<AnimatedEntity> implements 
                 mcreator.getFolderManager().getTexturesList(TextureType.ENTITY).stream().map(File::getName)
                         .collect(Collectors.toList())), "");
 
-        ComboBoxUtil.updateComboBoxContents(creativeTab, ElementUtil.loadAllTabs(mcreator.getWorkspace()),
-                new DataListEntry.Dummy("MISC"));
-
         ComboBoxUtil.updateComboBoxContents(rangedItemType, ListUtils.merge(Collections.singleton("Default item"),
                 mcreator.getWorkspace().getModElements().stream()
                         .filter(var -> var.getType() == ModElementType.PROJECTILE).map(ModElement::getName)
@@ -1274,8 +1271,10 @@ public class AnimatedEntityGUI extends ModElementGUI<AnimatedEntity> implements 
         for (int i = 0; i < livingEntity.raidSpawnsCount.length; i++)
             raidSpawnsCount[i].setValue(livingEntity.raidSpawnsCount[i]);
 
-        if (livingEntity.creativeTab != null)
-            creativeTab.setSelectedItem(livingEntity.creativeTab);
+        if (livingEntity.creativeTab != null) {
+            creativeTabs.setListElements(List.of(livingEntity.creativeTab));
+            livingEntity.creativeTab = null;
+        } else creativeTabs.setListElements(livingEntity.creativeTabs);
 
         blocklyPanel.addTaskToRunAfterLoaded(() -> blocklyPanel.setXML(livingEntity.aixml));
 
@@ -1444,7 +1443,7 @@ public class AnimatedEntityGUI extends ModElementGUI<AnimatedEntity> implements 
         livingEntity.armorBaseValue = (double) armorBaseValue.getValue();
         livingEntity.waterMob = waterMob.isSelected();
         livingEntity.flyingMob = flyingMob.isSelected();
-        livingEntity.creativeTab = new TabEntry(mcreator.getWorkspace(), creativeTab.getSelectedItem());
+        livingEntity.creativeTabs = creativeTabs.getListElements();
         livingEntity.inventorySize = (int) inventorySize.getValue();
         livingEntity.inventoryStackSize = (int) inventoryStackSize.getValue();
         livingEntity.guiBoundTo = (String) guiBoundTo.getSelectedItem();

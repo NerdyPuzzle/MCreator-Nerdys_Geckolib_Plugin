@@ -10,14 +10,12 @@ import net.mcreator.element.parts.gui.OutputSlot;
 import net.mcreator.element.parts.gui.Slot;
 import net.mcreator.element.types.GUI;
 import net.mcreator.element.types.interfaces.IBlockWithBoundingBox;
-import net.mcreator.minecraft.DataListEntry;
 import net.mcreator.minecraft.ElementUtil;
 import net.mcreator.ui.MCreator;
 import net.mcreator.ui.component.JColor;
 import net.mcreator.ui.component.JEmptyBox;
 import net.mcreator.ui.component.JStringListField;
 import net.mcreator.ui.component.SearchableComboBox;
-import net.mcreator.ui.component.util.ComboBoxFullWidthPopup;
 import net.mcreator.ui.component.util.ComboBoxUtil;
 import net.mcreator.ui.component.util.ComponentUtils;
 import net.mcreator.ui.component.util.PanelUtils;
@@ -148,7 +146,7 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
     private final JComboBox<String> reactionToPushing;
     private final JComboBox<String> offsetType;
     private final JComboBox<String> aiPathNodeType;
-    private final DataListComboBox creativeTab;
+    private final TabListField creativeTabs;
     private final JSpinner slipperiness;
     private final JSpinner speedFactor;
     private final JSpinner jumpFactor;
@@ -239,7 +237,7 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
         this.reactionToPushing = new JComboBox(new String[]{"NORMAL", "DESTROY", "BLOCK", "PUSH_ONLY", "IGNORE"});
         this.offsetType = new JComboBox(new String[]{"NONE", "XZ", "XYZ"});
         this.aiPathNodeType = new JComboBox();
-        this.creativeTab = new DataListComboBox(this.mcreator);
+        this.creativeTabs = new TabListField(this.mcreator);
         this.slipperiness = new JSpinner(new SpinnerNumberModel(0.6, 0.01, 5.0, 0.1));
         this.speedFactor = new JSpinner(new SpinnerNumberModel(1.0, -1000.0, 1000.0, 0.1));
         this.jumpFactor = new JSpinner(new SpinnerNumberModel(1.0, -1000.0, 1000.0, 0.1));
@@ -527,8 +525,8 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
         selp.add(this.name);
         selp.add(HelpUtils.wrapWithHelpButton(this.withEntry("block/material"), L10N.label("elementgui.block.material", new Object[0])));
         selp.add(this.material);
-        selp.add(HelpUtils.wrapWithHelpButton(this.withEntry("common/creative_tab"), L10N.label("elementgui.common.creative_tab", new Object[0])));
-        selp.add(this.creativeTab);
+        selp.add(HelpUtils.wrapWithHelpButton(this.withEntry("common/creative_tab"), L10N.label("elementgui.common.creative_tabs", new Object[0])));
+        selp.add(this.creativeTabs);
         selp.add(HelpUtils.wrapWithHelpButton(this.withEntry("block/hardness"), L10N.label("elementgui.common.hardness", new Object[0])));
         selp.add(this.hardness);
         selp.add(HelpUtils.wrapWithHelpButton(this.withEntry("block/resistance"), L10N.label("elementgui.common.resistance", new Object[0])));
@@ -551,8 +549,6 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
         selp.add(this.emissiveRendering);
         selp.add(HelpUtils.wrapWithHelpButton(this.withEntry("block/replaceable"), L10N.label("elementgui.block.is_replaceable", new Object[0])));
         selp.add(this.isReplaceable);
-        this.creativeTab.setPrototypeDisplayValue(new DataListEntry.Dummy("BUILDING_BLOCKS"));
-        this.creativeTab.addPopupMenuListener(new ComboBoxFullWidthPopup());
         selp3.add(HelpUtils.wrapWithHelpButton(this.withEntry("block/custom_drop"), L10N.label("elementgui.common.custom_drop", new Object[0])));
         selp3.add(PanelUtils.centerInPanel(this.customDrop));
         selp3.add(HelpUtils.wrapWithHelpButton(this.withEntry("block/drop_amount"), L10N.label("elementgui.common.drop_amount", new Object[0])));
@@ -952,7 +948,6 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
         ComboBoxUtil.updateComboBoxContents(this.guiBoundTo, ListUtils.merge(Collections.singleton("<NONE>"), (Collection)this.mcreator.getWorkspace().getModElements().stream().filter((var) -> {
             return var.getType() == ModElementType.GUI;
         }).map(ModElement::getName).collect(Collectors.toList())), "<NONE>");
-        ComboBoxUtil.updateComboBoxContents(this.creativeTab, ElementUtil.loadAllTabs(this.mcreator.getWorkspace()));
         ComboBoxUtil.updateComboBoxContents(this.colorOnMap, Arrays.asList(ElementUtil.getDataListAsStringArray("mapcolors")), "DEFAULT");
         ComboBoxUtil.updateComboBoxContents(this.aiPathNodeType, Arrays.asList(ElementUtil.getDataListAsStringArray("pathnodetypes")), "DEFAULT");
 
@@ -1034,7 +1029,6 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
         this.isWaterloggable.setSelected(block.isWaterloggable);
         this.emissiveRendering.setSelected(block.emissiveRendering);
         this.tickRandomly.setSelected(block.tickRandomly);
-        this.creativeTab.setSelectedItem(block.creativeTab);
         this.destroyTool.setSelectedItem(block.destroyTool);
         this.soundOnStep.setSelectedItem(block.soundOnStep.getUnmappedValue());
         this.breakSound.setSound(block.breakSound);
@@ -1107,6 +1101,11 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
             this.hasGravity.setEnabled(!this.isWaterloggable.isSelected());
         }
 
+        if (block.creativeTab != null) {
+            creativeTabs.setListElements(List.of(block.creativeTab));
+            block.creativeTab = null;
+        } else creativeTabs.setListElements(block.creativeTabs);
+
         this.updateSoundType();
     }
 
@@ -1130,7 +1129,7 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
         block.isWaterloggable = this.isWaterloggable.isSelected();
         block.emissiveRendering = this.emissiveRendering.isSelected();
         block.tickRandomly = this.tickRandomly.isSelected();
-        block.creativeTab = new TabEntry(this.mcreator.getWorkspace(), this.creativeTab.getSelectedItem());
+        block.creativeTabs = this.creativeTabs.getListElements();
         block.destroyTool = (String)this.destroyTool.getSelectedItem();
         block.requiresCorrectTool = this.requiresCorrectTool.isSelected();
         block.customDrop = this.customDrop.getBlock();

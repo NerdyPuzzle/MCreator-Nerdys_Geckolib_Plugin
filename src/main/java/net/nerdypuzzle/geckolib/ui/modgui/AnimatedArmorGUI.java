@@ -1,8 +1,6 @@
 package net.nerdypuzzle.geckolib.ui.modgui;
 
 import net.mcreator.blockly.data.Dependency;
-import net.mcreator.element.parts.TabEntry;
-import net.mcreator.minecraft.DataListEntry;
 import net.mcreator.minecraft.ElementUtil;
 import net.mcreator.ui.MCreator;
 import net.mcreator.ui.component.CollapsiblePanel;
@@ -17,10 +15,7 @@ import net.mcreator.ui.help.HelpUtils;
 import net.mcreator.ui.init.L10N;
 import net.mcreator.ui.init.UIRES;
 import net.mcreator.ui.laf.renderer.ModelComboBoxRenderer;
-import net.mcreator.ui.minecraft.DataListComboBox;
-import net.mcreator.ui.minecraft.MCItemListField;
-import net.mcreator.ui.minecraft.SoundSelector;
-import net.mcreator.ui.minecraft.TextureSelectionButton;
+import net.mcreator.ui.minecraft.*;
 import net.mcreator.ui.modgui.ModElementGUI;
 import net.mcreator.ui.procedure.ProcedureSelector;
 import net.mcreator.ui.validation.AggregatedValidationResult;
@@ -110,7 +105,7 @@ public class AnimatedArmorGUI extends ModElementGUI<AnimatedArmor> implements Ge
     private ProcedureSelector onLeggingsTick;
     private ProcedureSelector onBootsTick;
 
-    private final DataListComboBox creativeTab = new DataListComboBox(mcreator);
+    private final TabListField creativeTabs = new TabListField(mcreator);
 
     private final ValidationGroup group1page = new ValidationGroup();
     private final ValidationGroup group2page = new ValidationGroup();
@@ -393,8 +388,8 @@ public class AnimatedArmorGUI extends ModElementGUI<AnimatedArmor> implements Ge
         JPanel enderpanel = new JPanel(new GridLayout(8, 2, 20, 10));
 
         enderpanel.add(HelpUtils.wrapWithHelpButton(this.withEntry("common/creative_tab"),
-                L10N.label("elementgui.common.creative_tab")));
-        enderpanel.add(creativeTab);
+                L10N.label("elementgui.common.creative_tabs")));
+        enderpanel.add(creativeTabs);
 
         enderpanel.add(HelpUtils.wrapWithHelpButton(this.withEntry("armor/equip_sound"),
                 L10N.label("elementgui.armor.equip_sound")));
@@ -615,8 +610,6 @@ public class AnimatedArmorGUI extends ModElementGUI<AnimatedArmor> implements Ge
         onBodyTick.refreshListKeepSelected();
         onLeggingsTick.refreshListKeepSelected();
         onBootsTick.refreshListKeepSelected();
-        ComboBoxUtil.updateComboBoxContents(creativeTab, ElementUtil.loadAllTabs(mcreator.getWorkspace()),
-                new DataListEntry.Dummy("COMBAT"));
 
         ComboBoxUtil.updateComboBoxContents(helmetItemRenderType, ListUtils.merge(Arrays.asList(normal, tool),
                 Model.getModelsWithTextureMaps(mcreator.getWorkspace()).stream()
@@ -694,7 +687,6 @@ public class AnimatedArmorGUI extends ModElementGUI<AnimatedArmor> implements Ge
         enableBody.setSelected(armor.enableBody);
         enableLeggings.setSelected(armor.enableLeggings);
         enableBoots.setSelected(armor.enableBoots);
-        creativeTab.setSelectedItem(armor.creativeTab);
         textureHelmet.setEnabled(enableHelmet.isSelected());
         textureBody.setEnabled(enableBody.isSelected());
         textureLeggings.setEnabled(enableLeggings.isSelected());
@@ -733,6 +725,11 @@ public class AnimatedArmorGUI extends ModElementGUI<AnimatedArmor> implements Ge
         if (bootsItemModel != null)
             bootsItemRenderType.setSelectedItem(bootsItemModel);
 
+        if (armor.creativeTab != null) {
+            creativeTabs.setListElements(List.of(armor.creativeTab));
+            armor.creativeTab = null;
+        } else creativeTabs.setListElements(armor.creativeTabs);
+
     }
 
     @Override public AnimatedArmor getElementFromGUI() {
@@ -760,7 +757,7 @@ public class AnimatedArmorGUI extends ModElementGUI<AnimatedArmor> implements Ge
         armor.onBodyTick = onBodyTick.getSelectedProcedure();
         armor.onLeggingsTick = onLeggingsTick.getSelectedProcedure();
         armor.onBootsTick = onBootsTick.getSelectedProcedure();
-        armor.creativeTab = new TabEntry(mcreator.getWorkspace(), creativeTab.getSelectedItem());
+        armor.creativeTabs = creativeTabs.getListElements();
         armor.armorTextureFile = (String)this.armorTextureFile.getSelectedItem();
         armor.maxDamage = (int) maxDamage.getValue();
         armor.damageValueHelmet = (int) damageValueHelmet.getValue();

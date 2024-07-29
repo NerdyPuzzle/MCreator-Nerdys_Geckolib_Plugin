@@ -4,7 +4,6 @@ import net.mcreator.blockly.data.BlocklyLoader;
 import net.mcreator.blockly.java.BlocklyToJava;
 import net.mcreator.element.BaseType;
 import net.mcreator.element.GeneratableElement;
-import net.mcreator.element.ModElementType;
 import net.mcreator.element.parts.*;
 import net.mcreator.element.parts.procedure.NumberProcedure;
 import net.mcreator.element.parts.procedure.Procedure;
@@ -55,6 +54,7 @@ public class AnimatedEntity extends GeneratableElement
     public Color spawnEggBaseColor;
     public Color spawnEggDotColor;
     public TabEntry creativeTab;
+    public List<TabEntry> creativeTabs;
 
     public boolean isBoss;
     public String bossBarColor;
@@ -209,6 +209,8 @@ public class AnimatedEntity extends GeneratableElement
         this.entityDataEntries = new ArrayList<>();
 
         this.raidSpawnsCount = new int[] {4, 3, 3, 4, 4, 4, 2};
+
+        this.creativeTabs = new ArrayList<>();
     }
 
     @Override
@@ -225,7 +227,10 @@ public class AnimatedEntity extends GeneratableElement
     }
 
     @Override public List<TabEntry> getCreativeTabs() {
-        return List.of(creativeTab);
+        if (creativeTab != null)
+            if (!creativeTab.isEmpty())
+                return List.of(creativeTab);
+        return creativeTabs;
     }
 
     @Override public BufferedImage generateModElementPicture() {

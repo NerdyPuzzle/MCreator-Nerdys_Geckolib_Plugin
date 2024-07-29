@@ -3,9 +3,7 @@ package net.nerdypuzzle.geckolib.ui.modgui;
 import net.mcreator.blockly.data.Dependency;
 import net.mcreator.element.GeneratableElement;
 import net.mcreator.element.ModElementType;
-import net.mcreator.element.parts.TabEntry;
 import net.mcreator.element.types.GUI;
-import net.mcreator.minecraft.DataListEntry;
 import net.mcreator.minecraft.ElementUtil;
 import net.mcreator.ui.MCreator;
 import net.mcreator.ui.component.JEmptyBox;
@@ -17,8 +15,8 @@ import net.mcreator.ui.component.util.PanelUtils;
 import net.mcreator.ui.dialogs.TypedTextureSelectorDialog;
 import net.mcreator.ui.help.HelpUtils;
 import net.mcreator.ui.init.L10N;
-import net.mcreator.ui.minecraft.DataListComboBox;
 import net.mcreator.ui.minecraft.MCItemHolder;
+import net.mcreator.ui.minecraft.TabListField;
 import net.mcreator.ui.minecraft.TextureSelectionButton;
 import net.mcreator.ui.modgui.ModElementGUI;
 import net.mcreator.ui.procedure.AbstractProcedureSelector;
@@ -47,6 +45,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class AnimatedItemGUI extends ModElementGUI<AnimatedItem> implements GeckolibElement {
@@ -70,7 +69,8 @@ public class AnimatedItemGUI extends ModElementGUI<AnimatedItem> implements Geck
     private final JCheckBox enableArmPose;
     private final JCheckBox disableSwing;
     private ProcedureSelector glowCondition;
-    private final DataListComboBox creativeTab;
+
+    private final TabListField creativeTabs;
     private ProcedureSelector onRightClickedInAir;
     private ProcedureSelector onCrafted;
     private ProcedureSelector onRightClickedOnBlock;
@@ -119,7 +119,7 @@ public class AnimatedItemGUI extends ModElementGUI<AnimatedItem> implements Geck
         this.disableSwing = L10N.checkbox("elementgui.common.enable", new Object[0]);
         this.damageOnCrafting = L10N.checkbox("elementgui.common.enable", new Object[0]);
         this.hasGlow = L10N.checkbox("elementgui.common.enable", new Object[0]);
-        this.creativeTab = new DataListComboBox(this.mcreator);
+        this.creativeTabs = new TabListField(this.mcreator);
         this.page1group = new ValidationGroup();
         this.damageVsEntity = new JSpinner(new SpinnerNumberModel(0.0, 0.0, 128000.0, 0.1));
         this.enableMeleeDamage = new JCheckBox();
@@ -243,8 +243,8 @@ public class AnimatedItemGUI extends ModElementGUI<AnimatedItem> implements Geck
         subpane2.add(this.name);
         subpane2.add(HelpUtils.wrapWithHelpButton(this.withEntry("item/rarity"), L10N.label("elementgui.common.rarity", new Object[0])));
         subpane2.add(this.rarity);
-        subpane2.add(HelpUtils.wrapWithHelpButton(this.withEntry("common/creative_tab"), L10N.label("elementgui.common.creative_tab", new Object[0])));
-        subpane2.add(this.creativeTab);
+        subpane2.add(HelpUtils.wrapWithHelpButton(this.withEntry("common/creative_tab"), L10N.label("elementgui.common.creative_tabs", new Object[0])));
+        subpane2.add(this.creativeTabs);
         subpane2.add(HelpUtils.wrapWithHelpButton(this.withEntry("item/stack_size"), L10N.label("elementgui.common.max_stack_size", new Object[0])));
         subpane2.add(this.stackSize);
         subpane2.add(HelpUtils.wrapWithHelpButton(this.withEntry("item/enchantability"), L10N.label("elementgui.common.enchantability", new Object[0])));
@@ -418,7 +418,6 @@ public class AnimatedItemGUI extends ModElementGUI<AnimatedItem> implements Geck
         this.onDroppedByPlayer.refreshListKeepSelected();
         this.onFinishUsingItem.refreshListKeepSelected();
         this.glowCondition.refreshListKeepSelected();
-        ComboBoxUtil.updateComboBoxContents(this.creativeTab, ElementUtil.loadAllTabs(this.mcreator.getWorkspace()), new DataListEntry.Dummy("MISC"));
         ComboBoxUtil.updateComboBoxContents(this.guiBoundTo, ListUtils.merge(Collections.singleton("<NONE>"), (Collection)this.mcreator.getWorkspace().getModElements().stream().filter((var) -> {
             return var.getType() == ModElementType.GUI;
         }).map(ModElement::getName).collect(Collectors.toList())), "<NONE>");
@@ -459,7 +458,6 @@ public class AnimatedItemGUI extends ModElementGUI<AnimatedItem> implements Geck
         this.onStoppedUsing.setSelectedProcedure(item.onStoppedUsing);
         this.onEntitySwing.setSelectedProcedure(item.onEntitySwing);
         this.onDroppedByPlayer.setSelectedProcedure(item.onDroppedByPlayer);
-        this.creativeTab.setSelectedItem(item.creativeTab);
         this.stackSize.setValue(item.stackSize);
         this.enchantability.setValue(item.enchantability);
         this.toolType.setValue(item.toolType);
@@ -496,6 +494,11 @@ public class AnimatedItemGUI extends ModElementGUI<AnimatedItem> implements Geck
         this.leftArm.setEnabled(firstPersonArms.isSelected());
         this.rightArm.setEnabled(firstPersonArms.isSelected());
         this.armPoseList.setEnabled(enableArmPose.isSelected());
+
+        if (item.creativeTab != null) {
+            creativeTabs.setListElements(List.of(item.creativeTab));
+            item.creativeTab = null;
+        } else creativeTabs.setListElements(item.creativeTabs);
     }
 
     public AnimatedItem getElementFromGUI() {
@@ -507,7 +510,7 @@ public class AnimatedItemGUI extends ModElementGUI<AnimatedItem> implements Geck
         item.firstPersonArms = this.firstPersonArms.isSelected();
         item.rarity = (String)this.rarity.getSelectedItem();
         item.perspective = (String)this.perspective.getSelectedItem();
-        item.creativeTab = new TabEntry(this.mcreator.getWorkspace(), this.creativeTab.getSelectedItem());
+        item.creativeTabs = this.creativeTabs.getListElements();
         item.stackSize = (Integer)this.stackSize.getValue();
         item.enchantability = (Integer)this.enchantability.getValue();
         item.useDuration = (Integer)this.useDuration.getValue();

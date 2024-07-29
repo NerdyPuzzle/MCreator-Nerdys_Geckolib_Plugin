@@ -57,6 +57,7 @@ public class AnimatedBlock extends GeneratableElement implements IBlock, ITabCon
     public boolean hasGravity;
     public boolean isWaterloggable;
     public TabEntry creativeTab;
+    public List<TabEntry> creativeTabs;
     public String destroyTool;
     public MItemBlock customDrop;
     public int dropAmount;
@@ -228,6 +229,7 @@ public class AnimatedBlock extends GeneratableElement implements IBlock, ITabCon
         this.fluidCapacity = 8000;
         this.animationCount = 1;
         this.vanillaToolTier = "NONE";
+        this.creativeTabs = new ArrayList<>();
     }
 
     public int renderType() {
@@ -263,7 +265,10 @@ public class AnimatedBlock extends GeneratableElement implements IBlock, ITabCon
     }
 
     public List<TabEntry> getCreativeTabs() {
-        return List.of(creativeTab);
+        if (creativeTab != null)
+            if (!creativeTab.isEmpty())
+                return List.of(creativeTab);
+        return creativeTabs;
     }
 
     @Nonnull

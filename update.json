@@ -1,7 +1,8 @@
 {
   "geckolib_plugin": {
-    "latest": "5.8.2",
+    "latest": "5.8.3",
     "changes": [
+      "(5.8.3) Fixed inventory tabs in geckolib elements using the old combo boxes",
       "(5.8.2) All animated elements can now switch animations while another is playing",
       "(5.8.2) Fixed animated armor animations not stopping",
       "(5.8.2) Fixed tools with the shield type causing build errors",

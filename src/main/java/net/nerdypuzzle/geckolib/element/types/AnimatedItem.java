@@ -15,7 +15,6 @@ import net.mcreator.ui.workspace.resources.TextureType;
 import net.mcreator.util.image.ImageUtils;
 import net.mcreator.workspace.elements.ModElement;
 import net.mcreator.workspace.resources.Model;
-import net.mcreator.workspace.resources.Texture;
 import net.mcreator.workspace.resources.TexturedModel;
 
 import java.awt.image.BufferedImage;
@@ -35,6 +34,7 @@ public class AnimatedItem extends GeneratableElement implements IItem, IItemWith
     public String rightArm;
     public String perspective;
     public TabEntry creativeTab;
+    public List<TabEntry> creativeTabs;
     public boolean firstPersonArms;
     public int stackSize;
     public int enchantability;
@@ -98,6 +98,7 @@ public class AnimatedItem extends GeneratableElement implements IItem, IItemWith
         this.animation = "eat";
         this.armPoseList = new ArrayList<>();
         this.disableSwing = false;
+        this.creativeTabs = new ArrayList<>();
     }
 
     @Override public BufferedImage generateModElementPicture() {
@@ -129,7 +130,10 @@ public class AnimatedItem extends GeneratableElement implements IItem, IItemWith
     }
 
     public List<TabEntry> getCreativeTabs() {
-        return List.of(creativeTab);
+        if (creativeTab != null)
+            if (!creativeTab.isEmpty())
+                return List.of(creativeTab);
+        return creativeTabs;
     }
 
     public TextureHolder getTexture() {

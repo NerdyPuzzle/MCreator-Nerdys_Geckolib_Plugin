@@ -14,13 +14,11 @@ import net.mcreator.ui.workspace.resources.TextureType;
 import net.mcreator.workspace.Workspace;
 import net.mcreator.workspace.elements.ModElement;
 import net.mcreator.workspace.resources.Model;
-import net.mcreator.workspace.resources.Texture;
 import net.mcreator.workspace.resources.TexturedModel;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.*;
 import java.util.List;
 
@@ -42,6 +40,7 @@ public class AnimatedArmor extends GeneratableElement implements IItem, ITabCont
     public Procedure onBootsTick;
 
     public TabEntry creativeTab;
+    public List<TabEntry> creativeTabs;
     public String armorTextureFile;
     public String model;
     public String idle;
@@ -117,6 +116,7 @@ public class AnimatedArmor extends GeneratableElement implements IItem, ITabCont
         this.bodySpecialInfo = new ArrayList<>();
         this.leggingsSpecialInfo = new ArrayList<>();
         this.bootsSpecialInfo = new ArrayList<>();
+        this.creativeTabs = new ArrayList<>();
     }
 
     @Override public BufferedImage generateModElementPicture() {
@@ -243,7 +243,10 @@ public class AnimatedArmor extends GeneratableElement implements IItem, ITabCont
     }
 
     @Override public List<TabEntry> getCreativeTabs() {
-        return List.of(creativeTab);
+        if (creativeTab != null)
+            if (!creativeTab.isEmpty())
+                return List.of(creativeTab);
+        return creativeTabs;
     }
 
     @Override
