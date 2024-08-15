@@ -1,7 +1,10 @@
 {
   "geckolib_plugin": {
-    "latest": "5.8.3",
+    "latest": "5.8.4",
     "changes": [
+      "(5.8.4) Fixed some missing dependencies in animated entity procedure selectors",
+      "(5.8.4) Fixed animated blocks causing server crashes on load in 1.20.6",
+      "(5.8.4) Fixed a build error when tree decorators were used for biomes",
       "(5.8.3) Fixed inventory tabs in geckolib elements using the old combo boxes",
       "(5.8.2) All animated elements can now switch animations while another is playing",
       "(5.8.2) Fixed animated armor animations not stopping",

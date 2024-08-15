@@ -400,7 +400,8 @@ public class ${name}Entity extends ${extendsClass} <#if data.ranged>implements R
 				"y": "this.getY()",
 				"z": "this.getZ()",
 				"entity": "this",
-				"world": "this.level()"
+				"world": "this.level()",
+				"damagesource": "source"
 			}/>
 		</#if>
 
@@ -423,9 +424,11 @@ public class ${name}Entity extends ${extendsClass} <#if data.ranged>implements R
 				"y": "this.getY()",
 				"z": "this.getZ()",
 				"entity": "this",
+				"damagesource": "source",
 				"world": "this.level()",
 				"sourceentity": "source.getEntity()"
 			}/>
+			Entity immediatesourceentity = source.getDirectEntity();
 		</#if>
 		<#if data.immuneToFire>
 			if (source.is(DamageTypes.IN_FIRE))
@@ -504,8 +507,10 @@ public class ${name}Entity extends ${extendsClass} <#if data.ranged>implements R
 			"y": "this.getY()",
 			"z": "this.getZ()",
 			"sourceentity": "source.getEntity()",
+			"immediatesourceentity": "source.getDirectEntity()",
 			"entity": "this",
-			"world": "this.level()"
+			"world": "this.level()",
+			"damagesource": "source"
 		}/>
 	}
     </#if>
@@ -702,7 +707,9 @@ public class ${name}Entity extends ${extendsClass} <#if data.ranged>implements R
 			"z": "this.getZ()",
 			"entity": "entity",
 			"sourceentity": "this",
-			"world": "this.level()"
+			"immediatesourceentity": "damageSource.getDirectEntity()",
+			"world": "this.level()",
+			"damagesource": "damageSource"
 		}/>
 	}
     </#if>

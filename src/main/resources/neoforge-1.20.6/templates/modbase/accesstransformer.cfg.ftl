@@ -7,6 +7,10 @@ public-f net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator settings
 public net.minecraft.world.level.levelgen.SurfaceRules$SequenceRuleSource
 </#if>
 
+<#if w.getGElementsOfType("biome")?filter(e -> e.hasVines() || e.hasFruits())?size != 0>
+public net.minecraft.world.level.levelgen.feature.treedecorators.TreeDecoratorType <init>(Lcom/mojang/serialization/MapCodec;)V
+</#if>
+
 <#if w.hasElementsOfType("feature")>
 public net.minecraft.world.level.levelgen.feature.ScatteredOreFeature <init>(Lcom/mojang/serialization/Codec;)V #constructor
 public-f net.minecraft.world.level.levelgen.feature.TreeFeature place(Lnet/minecraft/world/level/levelgen/feature/FeaturePlaceContext;)Z
