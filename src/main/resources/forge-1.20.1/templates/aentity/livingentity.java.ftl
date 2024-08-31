@@ -1042,7 +1042,7 @@ public class ${name}Entity extends ${extendsClass} <#if data.ranged>implements R
 		<#if data.enable2>
 		if ((event.isMoving() || !(event.getLimbSwingAmount() > -0.15F && event.getLimbSwingAmount() < 0.15F))
 		<#if data.enable8>&& this.onGround()</#if> <#if data.enable9>&& !this.isVehicle()</#if>
-		<#if data.enable10>&& !this.isAggressive()</#if>) {
+		<#if data.enable10>&& !this.isAggressive()</#if> <#if data.enable7>&& !this.isSprinting()</#if>) {
 			return event.setAndContinue(RawAnimation.begin().thenLoop("${data.animation2}"));
 		}
 		</#if>
