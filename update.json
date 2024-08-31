@@ -1,7 +1,10 @@
 {
   "geckolib_plugin": {
-    "latest": "5.8.4",
+    "latest": "5.8.5",
     "changes": [
+      "(5.8.5) Fixed the sprint animation not playing while the entity moves",
+      "(5.8.5) Fixed vanilla textures not loading with the plugin loaded",
+      "(5.8.5) Updated chinese translations and added chinese help tips",
       "(5.8.4) Fixed some missing dependencies in animated entity procedure selectors",
       "(5.8.4) Fixed animated blocks causing server crashes on load in 1.20.6",
       "(5.8.4) Fixed a build error when tree decorators were used for biomes",
