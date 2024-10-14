@@ -32,7 +32,6 @@ public class AnimatedItem extends GeneratableElement implements IItem, IItemWith
     public String displaySettings;
     public String leftArm;
     public String rightArm;
-    public String perspective;
     public TabEntry creativeTab;
     public List<TabEntry> creativeTabs;
     public boolean firstPersonArms;

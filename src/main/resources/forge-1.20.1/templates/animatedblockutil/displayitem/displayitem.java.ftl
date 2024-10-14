@@ -13,6 +13,9 @@ public class ${name}DisplayItem extends BlockItem implements GeoItem {
     }
 
     private PlayState predicate(AnimationState event) {
+        <#if data.animateBlockItem>
+            event.getController().setAnimation(RawAnimation.begin().thenLoop("0"));
+        </#if>
         return PlayState.CONTINUE;
     }
 

@@ -1095,7 +1095,7 @@ public class ${name}Entity extends ${extendsClass} <#if data.ranged>implements R
 			this.swinging = true;
 			this.lastSwing = level().getGameTime();
 		}
-		if (this.swinging && this.lastSwing + 7L <= level().getGameTime()) {
+		if (this.swinging && this.lastSwing + ${data.attackRate}L <= level().getGameTime()) {
 			this.swinging = false;
 		}
 		if (<#if data.ranged>(</#if>this.swinging<#if data.ranged> || this.entityData.get(SHOOT))</#if>
@@ -1158,7 +1158,7 @@ public class ${name}Entity extends ${extendsClass} <#if data.ranged>implements R
 		<#if data.enable4>
 		data.add(new AnimationController<>(this, "attacking", ${data.lerp}, this::attackingPredicate));
 		</#if>
-                data.add(new AnimationController<>(this, "procedure", ${data.lerp}, this::procedurePredicate));
+        data.add(new AnimationController<>(this, "procedure", ${data.lerp}, this::procedurePredicate));
 	}
 
 	@Override

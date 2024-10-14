@@ -23,8 +23,6 @@ public class ${name}ItemRenderer extends GeoItemRenderer<${name}Item> {
 	@Override
 	public void renderByItem(ItemStack stack, ItemDisplayContext transformType, PoseStack matrixStack, MultiBufferSource bufferIn, int combinedLightIn, int p_239207_6_) {
 		this.transformType = transformType;
-		if (this.animatable != null)
-			this.animatable.getTransformType(transformType);
 		super.renderByItem(stack, transformType, matrixStack, bufferIn, combinedLightIn, p_239207_6_);
 	}
 

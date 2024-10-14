@@ -30,7 +30,7 @@ forge-1.20.1:
   update_files:
     - ~
 
-neoforge-1.20.4:
+neoforge-1.21.1:
   gradle: |
     repositories {
       maven {
@@ -39,21 +39,7 @@ neoforge-1.20.4:
     }
     
     dependencies {
-      implementation 'software.bernie.geckolib:geckolib-neoforge-1.20.4:4.4.4'
-    }
-  update_files:
-    - ~
-
-neoforge-1.20.6:
-  gradle: |
-    repositories {
-      maven {
-          url = 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
-      }
-    }
-    
-    dependencies {
-      implementation 'software.bernie.geckolib:geckolib-neoforge-1.20.6:4.5.4'
+      implementation 'software.bernie.geckolib:geckolib-neoforge-1.21.1:4.6.6'
     }
   update_files:
     - ~

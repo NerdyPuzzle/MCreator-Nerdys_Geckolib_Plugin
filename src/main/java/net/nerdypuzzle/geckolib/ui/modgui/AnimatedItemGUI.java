@@ -55,7 +55,6 @@ public class AnimatedItemGUI extends ModElementGUI<AnimatedItem> implements Geck
     private final JSpinner stackSize = new JSpinner(new SpinnerNumberModel(64, 0, 64, 1));
     private final VTextField name = new VTextField(20);
     private final JComboBox<String> rarity = new JComboBox(new String[]{"COMMON", "UNCOMMON", "RARE", "EPIC"});
-    private final JComboBox<String> perspective = new JComboBox(new String[]{"All Perspectives", "First Person", "Third/Second Person"});
     private final MCItemHolder recipeRemainder;
     private final JSpinner enchantability;
     private final JSpinner useDuration;
@@ -181,15 +180,13 @@ public class AnimatedItemGUI extends ModElementGUI<AnimatedItem> implements Geck
         destal2.add("North", destal3);
 
 
-        JPanel destal = new JPanel(new GridLayout(9, 2, 15, 5));
+        JPanel destal = new JPanel(new GridLayout(8, 2, 15, 5));
         destal.setOpaque(false);
         JComponent destal1 = PanelUtils.join(0, new Component[]{HelpUtils.wrapWithHelpButton(this.withEntry("item/glowing_effect"), L10N.label("elementgui.item.glowing_effect", new Object[0])), this.hasGlow, this.glowCondition});
         destal.add(HelpUtils.wrapWithHelpButton(this.withEntry("item/special_information"), L10N.label("elementgui.item.tooltip_tip", new Object[0])));
         destal.add(this.specialInformation);
         destal.add(HelpUtils.wrapWithHelpButton(this.withEntry("geckolib/animation_name"), L10N.label("elementgui.animateditem.idle_animation", new Object[0])));
         destal.add(this.idle);
-        destal.add(HelpUtils.wrapWithHelpButton(this.withEntry("geckolib/animation_perspective"), L10N.label("elementgui.animateditem.perspective", new Object[0])));
-        destal.add(this.perspective);
         destal.add(HelpUtils.wrapWithHelpButton(this.withEntry("geckolib/disable_swing"), L10N.label("elementgui.animateditem.disable_swing", new Object[0])));
         destal.add(this.disableSwing);
         destal.add(new JEmptyBox()); destal.add(new JEmptyBox());
@@ -446,7 +443,6 @@ public class AnimatedItemGUI extends ModElementGUI<AnimatedItem> implements Geck
         this.rightArm.setText(item.rightArm);
         this.firstPersonArms.setSelected(item.firstPersonArms);
         this.rarity.setSelectedItem(item.rarity);
-        this.perspective.setSelectedItem(item.perspective);
         this.texture.setTexture(item.texture);
         this.specialInformation.setSelectedProcedure(item.specialInformation);
         this.onRightClickedInAir.setSelectedProcedure(item.onRightClickedInAir);
@@ -509,7 +505,6 @@ public class AnimatedItemGUI extends ModElementGUI<AnimatedItem> implements Geck
         item.rightArm = this.rightArm.getText();
         item.firstPersonArms = this.firstPersonArms.isSelected();
         item.rarity = (String)this.rarity.getSelectedItem();
-        item.perspective = (String)this.perspective.getSelectedItem();
         item.creativeTabs = this.creativeTabs.getListElements();
         item.stackSize = (Integer)this.stackSize.getValue();
         item.enchantability = (Integer)this.enchantability.getValue();

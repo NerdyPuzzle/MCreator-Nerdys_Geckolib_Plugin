@@ -155,6 +155,7 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
     private final JComboBox<String> destroyTool;
     private final JCheckBox requiresCorrectTool;
     private final JComboBox<String> transparencyType;
+    private final JCheckBox animateBlockItem;
     private final JCheckBox hasInventory;
     private final JCheckBox openGUIOnRightClick;
     private final JComboBox<String> guiBoundTo;
@@ -197,6 +198,7 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
         this.beaconColorModifier = new JColor(this.mcreator, true, false);
         this.hasGravity = L10N.checkbox("elementgui.common.enable", new Object[0]);
         this.isWaterloggable = L10N.checkbox("elementgui.common.enable", new Object[0]);
+        this.animateBlockItem = L10N.checkbox("elementgui.common.enable", new Object[0]);
         this.tickRandomly = L10N.checkbox("elementgui.common.enable", new Object[0]);
         this.unbreakable = L10N.checkbox("elementgui.common.enable", new Object[0]);
         this.isNotColidable = L10N.checkbox("elementgui.common.enable", new Object[0]);
@@ -434,7 +436,7 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
         transparencySettings.add(HelpUtils.wrapWithHelpButton(this.withEntry("block/fluid_overlay"), L10N.label("elementgui.block.fluid_overlay", new Object[0])));
         transparencySettings.add(this.displayFluidOverlay);
         ComponentUtils.deriveFont(this.rotationMode, 16.0F);
-        JPanel rent = new JPanel(new GridLayout(6, 2, 0, 2));
+        JPanel rent = new JPanel(new GridLayout(7, 2, 0, 2));
         rent.setOpaque(false);
         rent.add(HelpUtils.wrapWithHelpButton(this.withEntry("geckolib/name"), L10N.label("elementgui.animatedblock.model", new Object[0])));
         this.geoModel.setPrototypeDisplayValue("XXXXXXXXXXXXXXXXXXXXXXXXXX");
@@ -448,6 +450,8 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
         rent.add(this.displaySettings);
         rent.add(HelpUtils.wrapWithHelpButton(this.withEntry("geckolib/block_animations"), L10N.label("elementgui.aniblockitems.animation_count", new Object[0])));
         rent.add(animationCount);
+        rent.add(HelpUtils.wrapWithHelpButton(this.withEntry("geckolib/animate_blockitem"), L10N.label("elementgui.aniblockitems.animate_blockitem", new Object[0])));
+        rent.add(animateBlockItem);
         rent.add(HelpUtils.wrapWithHelpButton(this.withEntry("block/rotation_mode"), L10N.label("elementgui.block.rotation_mode", new Object[0])));
         rent.add(this.rotationMode);
         rent.add(HelpUtils.wrapWithHelpButton(this.withEntry("block/enable_pitch"), L10N.label("elementgui.block.enable_pitch", new Object[0])));
@@ -1029,6 +1033,7 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
         this.isWaterloggable.setSelected(block.isWaterloggable);
         this.emissiveRendering.setSelected(block.emissiveRendering);
         this.tickRandomly.setSelected(block.tickRandomly);
+        this.animateBlockItem.setSelected(block.animateBlockItem);
         this.destroyTool.setSelectedItem(block.destroyTool);
         this.soundOnStep.setSelectedItem(block.soundOnStep.getUnmappedValue());
         this.breakSound.setSound(block.breakSound);
@@ -1129,6 +1134,7 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
         block.isWaterloggable = this.isWaterloggable.isSelected();
         block.emissiveRendering = this.emissiveRendering.isSelected();
         block.tickRandomly = this.tickRandomly.isSelected();
+        block.animateBlockItem = this.animateBlockItem.isSelected();
         block.creativeTabs = this.creativeTabs.getListElements();
         block.destroyTool = (String)this.destroyTool.getSelectedItem();
         block.requiresCorrectTool = this.requiresCorrectTool.isSelected();

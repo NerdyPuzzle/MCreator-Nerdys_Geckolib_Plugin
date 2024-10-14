@@ -66,6 +66,7 @@ public class ${name}Block extends BaseEntityBlock <#if data.isWaterloggable>impl
 
 	<#macro blockProperties>
 		BlockBehaviour.Properties.of()
+		${data.material}
 		<#if generator.map(data.colorOnMap, "mapcolors") != "DEFAULT">
 			.mapColor(MapColor.${generator.map(data.colorOnMap, "mapcolors")})
 		</#if>
@@ -78,7 +79,7 @@ public class ${name}Block extends BaseEntityBlock <#if data.isWaterloggable>impl
 				() -> ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("${data.fallSound}"))
 			))
 		<#else>
-			.sound(SoundType.${generator.map(data.soundOnStep, "stepsounds")})
+			.sound(SoundType.${data.soundOnStep})
 		</#if>
 		<#if data.unbreakable>
 			.strength(-1, 3600000)

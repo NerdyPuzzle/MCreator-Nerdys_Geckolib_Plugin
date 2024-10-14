@@ -156,7 +156,6 @@ public class AnimatedArmorGUI extends ModElementGUI<AnimatedArmor> implements Ge
 
         JPanel pane2 = new JPanel(new BorderLayout(10, 10));
         JPanel pane5 = new JPanel(new BorderLayout(10, 10));
-        JPanel pane6 = new JPanel(new BorderLayout(10, 10));
 
         helmetName.setPreferredSize(new Dimension(350, 36));
         bodyName.setPreferredSize(new Dimension(350, 36));
@@ -370,18 +369,6 @@ public class AnimatedArmorGUI extends ModElementGUI<AnimatedArmor> implements Ge
         klo.setHgap(20);
         klo.setVgap(20);
 
-        JPanel events = new JPanel();
-        events.setLayout(new BoxLayout(events, BoxLayout.PAGE_AXIS));
-        JPanel events2 = new JPanel(new GridLayout(1, 4, 8, 8));
-        events2.setOpaque(false);
-        events2.add(onHelmetTick);
-        events2.add(onBodyTick);
-        events2.add(onLeggingsTick);
-        events2.add(onBootsTick);
-        events.add(PanelUtils.join(events2));
-        events.setOpaque(false);
-        pane6.add("Center", PanelUtils.totalCenterInPanel(events));
-
         pane2.setOpaque(false);
         pane2.add("Center", PanelUtils.totalCenterInPanel(sbbp22));
 
@@ -423,7 +410,6 @@ public class AnimatedArmorGUI extends ModElementGUI<AnimatedArmor> implements Ge
         enderpanel.setOpaque(false);
 
         pane5.setOpaque(false);
-        pane6.setOpaque(false);
 
         JPanel clopa = new JPanel(new BorderLayout(35, 35));
         clopa.add("Center", enderpanel);
@@ -580,7 +566,6 @@ public class AnimatedArmorGUI extends ModElementGUI<AnimatedArmor> implements Ge
         addPage(L10N.t("elementgui.common.page_visual"), pane2);
         addPage(L10N.t("elementgui.common.page_properties"), pane5);
         addPage(L10N.t("elementgui.animatedarmor.geckolib_properties"), pane3);
-        addPage(L10N.t("elementgui.common.page_triggers"), pane6);
 
         if (!isEditingMode()) {
             String readableNameFromModElement = StringUtils.machineToReadableName(modElement.getName());

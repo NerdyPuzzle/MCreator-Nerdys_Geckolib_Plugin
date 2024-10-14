@@ -31,7 +31,6 @@
 <#-- @formatter:off -->
 <#include "../mcitems.ftl">
 <#include "../procedures.java.ftl">
-<#include "../armor_trigger.java.ftl">
 
 package ${package}.item;
 
@@ -135,26 +134,6 @@ public class ${name}Item extends ArmorItem implements GeoItem {
 			list.add(Component.literal("${JavaConventions.escapeStringForJava(entry)}"));
 			</#list>
 		}
-		</#if>
-	}
-
-	@Override 
-	public void onArmorTick(ItemStack itemstack, Level world, Player entity) {
-		<#if hasProcedure(data.onHelmetTick)>
-		if (itemstack.getItem() instanceof ${name}Item armor && armor.getType() == ArmorItem.Type.HELMET)
-			<@onArmorTick data.onHelmetTick/>
-		</#if>
-		<#if hasProcedure(data.onBodyTick)>
-		if (itemstack.getItem() instanceof ${name}Item armor && armor.getType() == ArmorItem.Type.CHESTPLATE)
-			<@onArmorTick data.onBodyTick/>
-		</#if>
-		<#if hasProcedure(data.onLeggingsTick)>
-		if (itemstack.getItem() instanceof ${name}Item armor && armor.getType() == ArmorItem.Type.LEGGINGS)
-			<@onArmorTick data.onLeggingsTick/>
-		</#if>
-		<#if hasProcedure(data.onBootsTick)>
-		if (itemstack.getItem() instanceof ${name}Item armor && armor.getType() == ArmorItem.Type.BOOTS)
-			<@onArmorTick data.onBootsTick/>
 		</#if>
 	}
 

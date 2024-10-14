@@ -172,6 +172,7 @@ public class AnimatedEntity extends GeneratableElement
     public int rangedAttackInterval;
     public double rangedAttackRadius;
     public double height;
+    public double attackRate;
     public int[] raidSpawnsCount;
 
     public boolean spawnThisMob;
@@ -211,6 +212,7 @@ public class AnimatedEntity extends GeneratableElement
         this.raidSpawnsCount = new int[] {4, 3, 3, 4, 4, 4, 2};
 
         this.creativeTabs = new ArrayList<>();
+        this.attackRate = 7;
     }
 
     @Override

@@ -87,6 +87,7 @@ public class AnimatedEntityGUI extends ModElementGUI<AnimatedEntity> implements 
     private final JSpinner knockbackResistance = new JSpinner(new SpinnerNumberModel(0, 0, 1000, 0.1));
     private final JSpinner attackKnockback = new JSpinner(new SpinnerNumberModel(0, 0, 1000, 0.1));
     private final JSpinner stepHeight = new JSpinner(new SpinnerNumberModel(0.6, 0, 255, 0.1));
+    private final JSpinner attackRate = new JSpinner(new SpinnerNumberModel(7, 0, 255, 1));
 
     private final JSpinner trackingRange = new JSpinner(new SpinnerNumberModel(64, 0, 10000, 1));
     private final JSpinner followRange = new JSpinner(new SpinnerNumberModel(16, 0, 2048, 1));
@@ -223,15 +224,15 @@ public class AnimatedEntityGUI extends ModElementGUI<AnimatedEntity> implements 
     private final JTextField animation9 = new JTextField();
     private final JTextField animation10 = new JTextField();
 
-    private final JCheckBox enable2 = L10N.checkbox("elementgui.common.enable", new Object[0]);
-    private final JCheckBox enable3 = L10N.checkbox("elementgui.common.enable", new Object[0]);
-    private final JCheckBox enable4 = L10N.checkbox("elementgui.common.enable", new Object[0]);
-    private final JCheckBox enable5 = L10N.checkbox("elementgui.common.enable", new Object[0]);
-    private final JCheckBox enable6 = L10N.checkbox("elementgui.common.enable", new Object[0]);
-    private final JCheckBox enable7 = L10N.checkbox("elementgui.common.enable", new Object[0]);
-    private final JCheckBox enable8 = L10N.checkbox("elementgui.common.enable", new Object[0]);
-    private final JCheckBox enable9 = L10N.checkbox("elementgui.common.enable", new Object[0]);
-    private final JCheckBox enable10 = L10N.checkbox("elementgui.common.enable", new Object[0]);
+    private final JCheckBox enable2 = new JCheckBox();
+    private final JCheckBox enable3 = new JCheckBox();
+    private final JCheckBox enable4 = new JCheckBox();
+    private final JCheckBox enable5 = new JCheckBox();
+    private final JCheckBox enable6 = new JCheckBox();
+    private final JCheckBox enable7 = new JCheckBox();
+    private final JCheckBox enable8 = new JCheckBox();
+    private final JCheckBox enable9 = new JCheckBox();
+    private final JCheckBox enable10 = new JCheckBox();
 
     private ProcedureSelector finishedDying;
 
@@ -850,17 +851,25 @@ public class AnimatedEntityGUI extends ModElementGUI<AnimatedEntity> implements 
         //animations page start
 
         //built in animations panel
-        JPanel animations = new JPanel(new GridLayout(21, 2, 20, 2));
+        JPanel animations = new JPanel(new GridLayout(11, 2, 20, 2));
 
         animations.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder((Color)UIManager.get("MCreatorLAF.BRIGHT_COLOR"), 1),
                 L10N.t("elementgui.animatedentity.animations_boarder", new Object[0]),
                 0, 0, this.getFont().deriveFont(12.0F), (Color)UIManager.get("MCreatorLAF.BRIGHT_COLOR")));
 
+        animation1.setPreferredSize(new Dimension(110, 10));
+        animation2.setPreferredSize(new Dimension(180, 30));
+        animation3.setPreferredSize(new Dimension(180, 30));
+        animation4.setPreferredSize(new Dimension(180, 30));
+        animation5.setPreferredSize(new Dimension(180, 30));
+        animation6.setPreferredSize(new Dimension(180, 30));
+        animation7.setPreferredSize(new Dimension(180, 30));
+        animation8.setPreferredSize(new Dimension(180, 30));
+        animation9.setPreferredSize(new Dimension(180, 30));
+        animation10.setPreferredSize(new Dimension(180, 30));
+
         animations.add(HelpUtils.wrapWithHelpButton(this.withEntry("geckolib/idle_animation"),
                 L10N.label("elementgui.animatedentity.idle_animation")));
-        animations.add(new JEmptyBox());
-        animations.add(HelpUtils.wrapWithHelpButton(this.withEntry("geckolib/animation_name"),
-                L10N.label("elementgui.animatedentity.animation_name")));
         animations.add(animation1);
 
         animation1.setValidator(
@@ -869,57 +878,39 @@ public class AnimatedEntityGUI extends ModElementGUI<AnimatedEntity> implements 
 
         animations.add(HelpUtils.wrapWithHelpButton(this.withEntry("geckolib/walk_animation"),
                 L10N.label("elementgui.animatedentity.walk_animation")));
-        animations.add(enable2);
-        animations.add(L10N.label("elementgui.animatedentity.animation_name"));
-        animations.add(animation2);
+        animations.add(PanelUtils.join(enable2, animation2));
 
         animations.add(HelpUtils.wrapWithHelpButton(this.withEntry("geckolib/death_animation"),
                 L10N.label("elementgui.animatedentity.death_animation")));
-        animations.add(enable3);
-        animations.add(L10N.label("elementgui.animatedentity.animation_name"));
-        animations.add(animation3);
+        animations.add(PanelUtils.join(enable3, animation3));
 
         animations.add(HelpUtils.wrapWithHelpButton(this.withEntry("geckolib/attack_animation"),
                 L10N.label("elementgui.animatedentity.attack_animation")));
-        animations.add(enable4);
-        animations.add(L10N.label("elementgui.animatedentity.animation_name"));
-        animations.add(animation4);
+        animations.add(PanelUtils.join(enable4, animation4));
 
         animations.add(HelpUtils.wrapWithHelpButton(this.withEntry("geckolib/swim_animation"),
                 L10N.label("elementgui.animatedentity.swim_animation")));
-        animations.add(enable5);
-        animations.add(L10N.label("elementgui.animatedentity.animation_name"));
-        animations.add(animation5);
+        animations.add(PanelUtils.join(enable5, animation5));
 
         animations.add(HelpUtils.wrapWithHelpButton(this.withEntry("geckolib/sneak_animation"),
                 L10N.label("elementgui.animatedentity.sneak_animation")));
-        animations.add(enable6);
-        animations.add(L10N.label("elementgui.animatedentity.animation_name"));
-        animations.add(animation6);
+        animations.add(PanelUtils.join(enable6, animation6));
 
         animations.add(HelpUtils.wrapWithHelpButton(this.withEntry("geckolib/sprint_animation"),
                 L10N.label("elementgui.animatedentity.sprint_animation")));
-        animations.add(enable7);
-        animations.add(L10N.label("elementgui.animatedentity.animation_name"));
-        animations.add(animation7);
+        animations.add(PanelUtils.join(enable7, animation7));
 
         animations.add(HelpUtils.wrapWithHelpButton(this.withEntry("geckolib/flight_animation"),
                 L10N.label("elementgui.animatedentity.flight_animation")));
-        animations.add(enable8);
-        animations.add(L10N.label("elementgui.animatedentity.animation_name"));
-        animations.add(animation8);
+        animations.add(PanelUtils.join(enable8, animation8));
 
         animations.add(HelpUtils.wrapWithHelpButton(this.withEntry("geckolib/riding_animation"),
                 L10N.label("elementgui.animatedentity.riding_animation")));
-        animations.add(enable9);
-        animations.add(L10N.label("elementgui.animatedentity.animation_name"));
-        animations.add(animation9);
+        animations.add(PanelUtils.join(enable9, animation9));
 
         animations.add(HelpUtils.wrapWithHelpButton(this.withEntry("geckolib/aggression_animation"),
                 L10N.label("elementgui.animatedentity.aggression_animation")));
-        animations.add(enable10);
-        animations.add(L10N.label("elementgui.animatedentity.animation_name"));
-        animations.add(animation10);
+        animations.add(PanelUtils.join(enable10, animation10));
 
         animations.add(HelpUtils.wrapWithHelpButton(this.withEntry("geckolib/lerp"),
                 L10N.label("elementgui.animatedentity.lerp")));
@@ -958,21 +949,19 @@ public class AnimatedEntityGUI extends ModElementGUI<AnimatedEntity> implements 
                 L10N.t("elementgui.animatedentity.extras_boarder", new Object[0]),
                 0, 0, this.getFont().deriveFont(12.0F), (Color)UIManager.get("MCreatorLAF.BRIGHT_COLOR")));
 
-        JPanel extras_head = new JPanel(new GridLayout(2, 2, 10, 2));
+        JPanel extras_head = new JPanel(new GridLayout(4, 2, 10, 2));
 
         extras_head.add(HelpUtils.wrapWithHelpButton(this.withEntry("geckolib/head_movement"),
                 L10N.label("elementgui.animatedentity.head_movement")));
         extras_head.add(headMovement);
         extras_head.add(L10N.label("elementgui.animatedentity.group_name"));
         extras_head.add(groupName);
+        extras_head.add(new JEmptyBox()); extras_head.add(new JEmptyBox());
+        extras_head.add(HelpUtils.wrapWithHelpButton(this.withEntry("geckolib/attack_interval"),
+                L10N.label("elementgui.animatedentity.attack_interval")));
+        extras_head.add(attackRate);
 
         extras.add(PanelUtils.centerInPanel(extras_head));
-
-        JPanel extras_condition = new JPanel(new GridLayout(2, 1, 10, 2));
-
-        // empty panel where the procedure selectors were
-
-        extras.add(PanelUtils.centerInPanel(extras_condition));
 
         //merge the right side panels
         JPanel merged_extras = new JPanel(new GridLayout(2, 1, 20, 2));
@@ -1200,6 +1189,7 @@ public class AnimatedEntityGUI extends ModElementGUI<AnimatedEntity> implements 
         attackStrength.setValue(livingEntity.attackStrength);
         attackKnockback.setValue(livingEntity.attackKnockback);
         stepHeight.setValue(livingEntity.stepHeight);
+        attackRate.setValue(livingEntity.attackRate);
         knockbackResistance.setValue(livingEntity.knockbackResistance);
         movementSpeed.setValue(livingEntity.movementSpeed);
         mobDrop.setBlock(livingEntity.mobDrop);
@@ -1385,6 +1375,7 @@ public class AnimatedEntityGUI extends ModElementGUI<AnimatedEntity> implements 
         livingEntity.health = (int) health.getValue();
         livingEntity.trackingRange = (int) trackingRange.getValue();
         livingEntity.followRange = (int) followRange.getValue();
+        livingEntity.attackRate = (int) attackRate.getValue();
         livingEntity.immuneToFire = immuneToFire.isSelected();
         livingEntity.immuneToArrows = immuneToArrows.isSelected();
         livingEntity.immuneToFallDamage = immuneToFallDamage.isSelected();

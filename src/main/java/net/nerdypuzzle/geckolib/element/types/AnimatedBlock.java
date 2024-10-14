@@ -40,6 +40,7 @@ public class AnimatedBlock extends GeneratableElement implements IBlock, ITabCon
     public boolean enablePitch;
     public boolean emissiveRendering;
     public boolean displayFluidOverlay;
+    public boolean animateBlockItem;
     public TextureHolder itemTexture;
     public TextureHolder particleTexture;
     public String blockBase;

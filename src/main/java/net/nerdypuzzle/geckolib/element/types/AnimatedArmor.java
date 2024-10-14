@@ -179,6 +179,16 @@ public class AnimatedArmor extends GeneratableElement implements IItem, ITabCont
         };
     }
 
+    public TextureHolder getItemTextureFor(String part) {
+        return switch (part) {
+            case "helmet" -> textureHelmet;
+            case "body" -> textureBody;
+            case "leggings" -> textureLeggings;
+            case "boots" -> textureBoots;
+            default -> null;
+        };
+    }
+
     public Map<String, TextureHolder> getItemModelTextureMap(String part) {
         Model model = switch (part) {
             case "helmet" -> getHelmetItemModel();
