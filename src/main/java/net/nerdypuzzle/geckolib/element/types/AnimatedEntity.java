@@ -172,7 +172,7 @@ public class AnimatedEntity extends GeneratableElement
     public int rangedAttackInterval;
     public double rangedAttackRadius;
     public double height;
-    public double attackRate;
+    public Number attackRate;
     public int[] raidSpawnsCount;
 
     public boolean spawnThisMob;

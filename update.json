@@ -1,7 +1,9 @@
 {
   "geckolib_plugin": {
-    "latest": "5.9",
+    "latest": "5.9.1",
     "changes": [
+      "(5.9.1) Fixed animated entities being unable to save",
+      "(5.9.1) Fixed animated items in 1.20.1 causing build errors",
       "Ported to MCreator 2024.3 and neoforge 1.21.1",
       "Added the option to play the idle animation of a block to its item",
       "Added the option to adjust the delay between entity attack animations",

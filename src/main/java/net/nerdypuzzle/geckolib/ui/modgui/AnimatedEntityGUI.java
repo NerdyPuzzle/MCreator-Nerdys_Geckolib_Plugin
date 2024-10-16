@@ -1375,7 +1375,7 @@ public class AnimatedEntityGUI extends ModElementGUI<AnimatedEntity> implements 
         livingEntity.health = (int) health.getValue();
         livingEntity.trackingRange = (int) trackingRange.getValue();
         livingEntity.followRange = (int) followRange.getValue();
-        livingEntity.attackRate = (int) attackRate.getValue();
+        livingEntity.attackRate = (Number) attackRate.getValue();
         livingEntity.immuneToFire = immuneToFire.isSelected();
         livingEntity.immuneToArrows = immuneToArrows.isSelected();
         livingEntity.immuneToFallDamage = immuneToFallDamage.isSelected();

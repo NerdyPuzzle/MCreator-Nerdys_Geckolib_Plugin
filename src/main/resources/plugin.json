@@ -7,7 +7,7 @@
   ],
   "info": {
     "name": "GeckoLib Plugin",
-    "version": "5.9",
+    "version": "5.9.1",
     "description": "Adds GeckoLib support for 1.20.1 and 1.21.1",
     "author": "NerdyPuzzle",
     "pluginPageID": 91484,

@@ -35,7 +35,6 @@
 
 package ${package}.item;
 
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 
 import javax.annotation.Nullable;

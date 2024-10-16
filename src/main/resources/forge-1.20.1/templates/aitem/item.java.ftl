@@ -35,7 +35,6 @@
 
 package ${package}.item;
 
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 
 import javax.annotation.Nullable;
@@ -126,10 +125,6 @@ public class ${name}Item extends Item implements GeoItem {
             }
         	</#if>
 		});
-	}
-
-	public void getTransformType(ItemDisplayContext type) {
-		this.transformType = type;
 	}
 
 	private PlayState idlePredicate(AnimationState event) {
