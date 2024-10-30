@@ -105,6 +105,7 @@ public class PluginEventTriggers {
                             () -> listenerslist.forEach(listener -> listener.stateChanged(new ChangeEvent(blocklyPanel)))));
 
                     WebView browser = new WebView();
+                    browser.setContextMenuEnabled(false);
                     Scene scene = new Scene(browser);
                     java.awt.Color bg = Theme.current().getSecondAltBackgroundColor();
                     scene.setFill(javafx.scene.paint.Color.rgb(bg.getRed(), bg.getGreen(), bg.getBlue()));

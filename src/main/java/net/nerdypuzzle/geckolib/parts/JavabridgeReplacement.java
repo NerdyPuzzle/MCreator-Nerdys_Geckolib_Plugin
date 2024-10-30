@@ -278,10 +278,6 @@ public final class JavabridgeReplacement {
         return L10N.t(key);
     }
 
-    @SuppressWarnings("unused") public String getGlobalTriggers() {
-        return new Gson().toJson(ext_triggers, Map.class);
-    }
-
     @SuppressWarnings("unused") public String[] getListOf(String type) {
         return getListOfForWorkspace(mcreator.getWorkspace(), type);
     }
@@ -390,7 +386,10 @@ public final class JavabridgeReplacement {
             case "entity", "spawnableEntity" -> datalist = "entities";
             case "biome" -> datalist = "biomes";
             case "arrowProjectile", "projectiles" -> datalist = "projectiles";
-            default -> datalist = type;
+            case "global_triggers" -> {
+                return ext_triggers.get(value);
+            }
+            default -> { return ""; }
         }
         return DataListLoader.loadDataMap(datalist).containsKey(value) ?
                 DataListLoader.loadDataMap(datalist).get(value).getReadableName() :
