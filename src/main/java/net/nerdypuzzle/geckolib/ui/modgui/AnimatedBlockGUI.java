@@ -391,7 +391,7 @@ public class AnimatedBlockGUI extends ModElementGUI<AnimatedBlock> implements Ge
         destal.add(ComponentUtils.squareAndBorder(this.textureFront, L10N.t("elementgui.block.texture_place_front_side", new Object[0])));
         destal.add(ComponentUtils.squareAndBorder(this.textureRight, L10N.t("elementgui.block.texture_place_right", new Object[0])));
         destal.add(ComponentUtils.squareAndBorder(this.textureBack, L10N.t("elementgui.block.texture_place_back", new Object[0])));
-        this.textureLeft.setActionListener((event) -> {
+        this.textureLeft.addTextureSelectedListener((event) -> {
             if (!this.texture.hasTexture() && !this.textureTop.hasTexture() && !this.textureBack.hasTexture() && !this.textureFront.hasTexture() && !this.textureRight.hasTexture()) {
                 this.texture.setTexture(this.textureLeft.getTextureHolder());
                 this.textureTop.setTexture(this.textureLeft.getTextureHolder());

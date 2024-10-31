@@ -1,7 +1,8 @@
 {
   "geckolib_plugin": {
-    "latest": "5.9.2",
+    "latest": "5.9.3",
     "changes": [
+      "(5.9.3) Fixed animated blocks not working in the latest 2024.3 patch",
       "(5.9.2) Fixed the plugin breaking global trigger names when saved",
       "(5.9.1) Fixed animated entities being unable to save",
       "(5.9.1) Fixed animated items in 1.20.1 causing build errors",
