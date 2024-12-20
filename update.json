@@ -1,22 +1,9 @@
 {
   "geckolib_plugin": {
-    "latest": "5.9.3",
+    "latest": "6.0",
     "changes": [
-      "(5.9.3) Fixed animated blocks not working in the latest 2024.3 patch",
-      "(5.9.2) Fixed the plugin breaking global trigger names when saved",
-      "(5.9.1) Fixed animated entities being unable to save",
-      "(5.9.1) Fixed animated items in 1.20.1 causing build errors",
-      "Ported to MCreator 2024.3 and neoforge 1.21.1",
-      "Added the option to play the idle animation of a block to its item",
-      "Added the option to adjust the delay between entity attack animations",
-      "Improved the UI of the animated entity animations page",
-      "Removed the item animation perspective option due to bad implementation",
-      "Removed animated armor tick triggers as they are redundant",
-      "Fixed animated block materials doing nothing",
-      "Fixed animated block sounds being incorrect for some options",
-      "Fixed the raider option for animated entities not working",
-      "Fixed animated armor items' json model option not working",
-      "Fixed animated armor procedure blocks causing build errors"
+      "Ported the plugin to 2024.4",
+      "Fixed some missing translation keys in animated blocks"
     ]
   }
 }
