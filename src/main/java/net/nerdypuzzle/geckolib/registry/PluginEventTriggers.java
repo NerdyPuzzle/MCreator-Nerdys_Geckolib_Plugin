@@ -30,6 +30,7 @@ import net.mcreator.ui.init.UIRES;
 import net.mcreator.ui.laf.themes.Theme;
 import net.mcreator.ui.modgui.ModElementGUI;
 import net.mcreator.ui.modgui.ProcedureGUI;
+import net.mcreator.ui.variants.modmaker.ModMaker;
 import net.mcreator.util.DesktopUtils;
 import net.mcreator.util.image.ImageUtils;
 import net.mcreator.workspace.elements.VariableTypeLoader;
@@ -263,11 +264,13 @@ public class PluginEventTriggers {
         geckolib.addSeparator();
         geckolib.add(Launcher.ACTION_REGISTRY.tutorial);
 
-        PluginPanelGeckolib panel = new PluginPanelGeckolib(mcreator.getWorkspacePanel());
-        panel.setOpaque(false);
+        if (mcreator instanceof ModMaker modmaker) {
+            PluginPanelGeckolib panel = new PluginPanelGeckolib(modmaker.getWorkspacePanel());
+            panel.setOpaque(false);
 
-        mcreator.getWorkspacePanel().resourcesPan.addResourcesTab(L10N.t("menubar.geckolib", new Object[0]), panel);
-        mcreator.getMainMenuBar().add(geckolib);
+            modmaker.getWorkspacePanel().resourcesPan.addResourcesTab("geckolib", L10N.t("menubar.geckolib", new Object[0]), panel);
+            mcreator.getMainMenuBar().add(geckolib);
+        }
 
         forceCheckUpdates(mcreator);
     }

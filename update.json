@@ -1,7 +1,8 @@
 {
   "geckolib_plugin": {
-    "latest": "6.0",
+    "latest": "6.0.1",
     "changes": [
+      "(6.0.1) Fixed the plugin's menus missing",
       "Ported the plugin to 2024.4",
       "Fixed some missing translation keys in animated blocks",
       "Fixed animated armor not using durability in 1.21.1"
