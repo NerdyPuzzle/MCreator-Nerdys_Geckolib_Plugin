@@ -3,11 +3,11 @@
   "weight": 3001,
   "javaplugin": "net.nerdypuzzle.geckolib.Launcher",
   "supportedversions": [
-    2024003
+    2024004
   ],
   "info": {
     "name": "GeckoLib Plugin",
-    "version": "5.9.3",
+    "version": "6.0",
     "description": "Adds GeckoLib support for 1.20.1 and 1.21.1",
     "author": "NerdyPuzzle",
     "pluginPageID": 91484,

@@ -63,7 +63,7 @@ public class JBlockstateListEntry extends JSimpleListEntry<AnimatedBlock.Blockst
         this.texture.setOpaque(false);
         destal.add(PanelUtils.totalCenterInPanel(ComponentUtils.squareAndBorder(this.texture, new Color(125, 255, 174), L10N.t("elementgui.block.texture_place_bottom_main", new Object[0]))));
         JPanel sbbp22 = PanelUtils.totalCenterInPanel(destal);
-        sbbp22.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Theme.current().getForegroundColor(), 1), L10N.t("elementgui.block.block_textures", new Object[0]), 0, 0, this.getFont().deriveFont(12.0F), Theme.current().getForegroundColor()));
+        sbbp22.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Theme.current().getForegroundColor(), 1), L10N.t("elementgui.animatedblock.blockstate_texture", new Object[0]), 0, 0, this.getFont().deriveFont(12.0F), Theme.current().getForegroundColor()));
         JPanel topnbot = new JPanel(new BorderLayout());
         topnbot.setOpaque(false);
         topnbot.add("Center", sbbp22);

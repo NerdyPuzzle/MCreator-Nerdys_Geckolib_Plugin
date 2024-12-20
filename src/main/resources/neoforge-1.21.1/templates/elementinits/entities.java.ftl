@@ -37,7 +37,7 @@
 package ${package}.init;
 
 <#assign hasLivingEntities = w.hasElementsOfType("livingentity") || w.hasElementsOfType("animatedentity")>
-<#assign entitiesWithInventory = w.getGElementsOfType("livingentity")?filter(e -> e.guiBoundTo?has_content && e.guiBoundTo != "<NONE>")>
+<#assign entitiesWithInventory = w.getGElementsOfType("livingentity")?filter(e -> e.guiBoundTo?has_content)>
 <#assign animatedEntitiesWithInventory = w.getGElementsOfType("animatedentity")?filter(e -> e.guiBoundTo?has_content && e.guiBoundTo != "<NONE>")>
 
 <#if hasLivingEntities || entitiesWithInventory?size != 0 || animatedEntitiesWithInventory?size != 0>

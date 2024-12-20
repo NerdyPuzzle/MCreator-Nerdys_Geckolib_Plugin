@@ -263,10 +263,10 @@ public class PluginEventTriggers {
         geckolib.addSeparator();
         geckolib.add(Launcher.ACTION_REGISTRY.tutorial);
 
-        PluginPanelGeckolib panel = new PluginPanelGeckolib(mcreator.mv);
+        PluginPanelGeckolib panel = new PluginPanelGeckolib(mcreator.getWorkspacePanel());
         panel.setOpaque(false);
 
-        mcreator.mv.resourcesPan.addResourcesTab(L10N.t("menubar.geckolib", new Object[0]), panel);
+        mcreator.getWorkspacePanel().resourcesPan.addResourcesTab(L10N.t("menubar.geckolib", new Object[0]), panel);
         mcreator.getMainMenuBar().add(geckolib);
 
         forceCheckUpdates(mcreator);
