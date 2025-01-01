@@ -76,15 +76,15 @@ public class ${JavaModName}Items {
 			</#if>
 			<#if item.enableBody>
             public static final DeferredItem<Item> ${item.getModElement().getRegistryNameUpper()}_CHESTPLATE =
-				REGISTRY.register("${item.getModElement().getRegistryName()}_chestplate", () -> new ${item.getModElement().getName()}Item(ArmorItem.Type.CHESTPLATE, new Item.Properties()<#if item.bodyImmuneToFire>.fireResistant()</#if>.durability(ArmorItem.Type.CHESTPLATE.getDurability(${item.maxDamage})));
+				REGISTRY.register("${item.getModElement().getRegistryName()}_chestplate", () -> new ${item.getModElement().getName()}Item(ArmorItem.Type.CHESTPLATE, new Item.Properties()<#if item.bodyImmuneToFire>.fireResistant()</#if>.durability(ArmorItem.Type.CHESTPLATE.getDurability(${item.maxDamage}))));
 			</#if>
 			<#if item.enableLeggings>
             public static final DeferredItem<Item> ${item.getModElement().getRegistryNameUpper()}_LEGGINGS =
-				REGISTRY.register("${item.getModElement().getRegistryName()}_leggings", () -> new ${item.getModElement().getName()}Item(ArmorItem.Type.LEGGINGS, new Item.Properties()<#if item.leggingsImmuneToFire>.fireResistant()</#if>.durability(ArmorItem.Type.LEGGINGS.getDurability(${item.maxDamage})));
+				REGISTRY.register("${item.getModElement().getRegistryName()}_leggings", () -> new ${item.getModElement().getName()}Item(ArmorItem.Type.LEGGINGS, new Item.Properties()<#if item.leggingsImmuneToFire>.fireResistant()</#if>.durability(ArmorItem.Type.LEGGINGS.getDurability(${item.maxDamage}))));
 			</#if>
 			<#if item.enableBoots>
             public static final DeferredItem<Item> ${item.getModElement().getRegistryNameUpper()}_BOOTS =
-				REGISTRY.register("${item.getModElement().getRegistryName()}_boots", () -> new ${item.getModElement().getName()}Item(ArmorItem.Type.BOOTS, new Item.Properties()<#if item.bootsImmuneToFire>.fireResistant()</#if>.durability(ArmorItem.Type.BOOTS.getDurability(${item.maxDamage})));
+				REGISTRY.register("${item.getModElement().getRegistryName()}_boots", () -> new ${item.getModElement().getName()}Item(ArmorItem.Type.BOOTS, new Item.Properties()<#if item.bootsImmuneToFire>.fireResistant()</#if>.durability(ArmorItem.Type.BOOTS.getDurability(${item.maxDamage}))));
 			</#if>
 		<#elseif item.getModElement().getTypeString() == "livingentity" || item.getModElement().getTypeString() == "animatedentity">
 			public static final DeferredItem<Item> ${item.getModElement().getRegistryNameUpper()}_SPAWN_EGG =
@@ -121,6 +121,13 @@ public class ${JavaModName}Items {
 	<#compress>
 	@SubscribeEvent public static void registerCapabilities(RegisterCapabilitiesEvent event) {
 		<#list itemsWithInventory as item>
+			event.registerItem(
+				Capabilities.ItemHandler.ITEM,
+				(stack, context) -> new ${item.getModElement().getName()}InventoryCapability(stack),
+				${item.getModElement().getRegistryNameUpper()}.get()
+			);
+		</#list>
+		<#list animatedItemsWithInventory as item>
 			event.registerItem(
 				Capabilities.ItemHandler.ITEM,
 				(stack, context) -> new ${item.getModElement().getName()}InventoryCapability(stack),

@@ -1,7 +1,10 @@
 {
   "geckolib_plugin": {
-    "latest": "6.0.1",
+    "latest": "6.0.2",
     "changes": [
+      "(6.0.2) Fixed inventories of animated items in 1.21.1 not holding items",
+      "(6.0.2) Fixed animated armor in 1.21.1 build error",
+      "(6.0.2) Fixed animated block item descriptions",
       "(6.0.1) Fixed the plugin's menus missing",
       "Ported the plugin to 2024.4",
       "Fixed some missing translation keys in animated blocks",

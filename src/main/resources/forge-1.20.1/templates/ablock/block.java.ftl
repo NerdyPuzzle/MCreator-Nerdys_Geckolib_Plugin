@@ -198,7 +198,7 @@ public class ${name}Block extends BaseEntityBlock <#if data.isWaterloggable>impl
 		return ${JavaModName}BlockEntities.${(regname)?upper_case}.get().create(blockPos, blockState);
 	}
 
-	<@addSpecialInformation data.specialInformation, true/>
+	<@addSpecialInformation data.specialInformation, "block." + modid + "." + registryname, true/>
 
 	<#if data.displayFluidOverlay>
 	@Override public boolean shouldDisplayFluidOverlay(BlockState state, BlockAndTintGetter world, BlockPos pos, FluidState fluidstate) {
